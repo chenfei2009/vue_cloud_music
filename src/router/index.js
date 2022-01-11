@@ -7,13 +7,18 @@ const routes = [
   {
     path: '/',
     name: 'Layout',
-    component: () => import(/* webpackChunkName: "home" */ '@/views/Layout.vue'),
+    component: () => import(/* webpackChunkName: "home" */ '@/views/layout/index.vue'),
     redirect: 'home',
     children: [
       {
         path: '/home',
         name: 'Home',
-        component: () => import(/* webpackChunkName: "home" */ '@/views/Home.vue')
+        component: () => import(/* webpackChunkName: "home" */ '@/views/home/index.vue')
+      },
+      {
+        path: '/vlog',
+        name: 'Vlog',
+        component: () => import(/* webpackChunkName: "home" */ '@/views/vlog/index.vue')
       }
     ]
   }
