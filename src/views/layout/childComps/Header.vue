@@ -1,5 +1,5 @@
 <template>
-  <el-header height="60px">
+  <el-header>
     <div class="logo-wrap">
       <div class="logo"></div>
     </div>
