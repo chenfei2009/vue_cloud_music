@@ -60,6 +60,8 @@ export default {
 <style lang="less" scoped>
 .el-menu {
   padding: 10px 2px 10px 10px;
+  box-sizing: border-box;
+  height: 100%;
 }
 
 .el-menu-item {

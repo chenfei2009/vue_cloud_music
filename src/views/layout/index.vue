@@ -7,17 +7,21 @@
         <router-view />
       </el-main>
     </el-container>
-    <el-footer>Footer</el-footer>
+    <el-footer class="footer-container" height="70px">
+      <Footer></Footer>
+    </el-footer>
   </el-container>
 </template>
 
 <script>
 import Header from './childComps/Header.vue'
 import Aside from './childComps/Aside.vue'
+import Footer from './childComps/Footer.vue'
 
 export default {
   name: 'LayoutIndex',
-  components: { Header, Aside },
+  // components: { Header, Aside },
+  components: { Header, Aside, Footer },
   data () {
     return {}
   },
@@ -27,6 +31,10 @@ export default {
 
 <style lang="less" scoped>
 .layout-container {
+  width: 100vw;
   height: 100%;
+  .el-footer {
+    border-top: 1px solid #ccc;
+  }
 }
 </style>

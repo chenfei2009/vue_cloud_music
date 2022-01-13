@@ -12,7 +12,8 @@ import {
   MenuItemGroup,
   Dropdown,
   DropdownMenu,
-  DropdownItem
+  DropdownItem,
+  Slider
 } from 'element-ui'
 
 import App from './App.vue'
@@ -33,6 +34,7 @@ Vue.use(MenuItemGroup)
 Vue.use(Dropdown)
 Vue.use(DropdownMenu)
 Vue.use(DropdownItem)
+Vue.use(Slider)
 
 Vue.config.productionTip = false
 
