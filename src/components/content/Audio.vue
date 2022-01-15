@@ -4,7 +4,6 @@
       :src="url" :preload="audio.preload"
       @play="onPlay"
       @error="onError"
-      @waiting="onWaiting"
       @pause="onPause"
       @timeupdate="onTimeupdate"
       @loadedmetadata="onLoadedmetadata"
@@ -24,10 +23,10 @@
       <!-- 进度条 -->
       <div class="slider-wrap">
         <span>{{ audio.currentTime | formatSecond}}</span>
-        <el-slider v-model="sliderTime"
-          :format-tooltip="formatProcessToolTip"
-          @change="changeCurrentTime"
-          class="slider"></el-slider>
+        <SliderBar height="6px" width="350px"
+          @drag="changeTimeByDrag"
+          @change="changeTimeByClick"
+          :value="sliderTime"></SliderBar>
         <span>{{ audio.maxTime | formatSecond }}</span>
       </div>
     </div>
@@ -36,6 +35,7 @@
 
 <script>
 import formatTime from '@/utils/formatTime.js'
+import SliderBar from '@/components/content/SliderBar.vue'
 
 export default {
   name: 'VueAudio',
@@ -49,28 +49,27 @@ export default {
       default: 1
     }
   },
+  components: { SliderBar },
   data () {
     return {
       audio: {
-        currentTime: 0,
-        maxTime: 0,
-        playing: false,
-        muted: false,
-        speed: 1,
-        waiting: true,
-        preload: 'auto'
+        playing: false, // 该字段是音频是否处于播放状态
+        currentTime: 0, // 音频当前播放时长
+        maxTime: 0, // 音频最大播放时长
+        waiting: false
       },
-      sliderTime: 0
+      sliderTime: 0 // 进度条对应的值
     }
   },
   methods: {
-    // 进度条toolTip
-    formatProcessToolTip (index = 0) {
-      index = parseInt(this.audio.maxTime / 100 * index)
-      return '进度条: ' + formatTime(index)
+    // 进度条拖拽事件
+    changeTimeByDrag (index) {
+      this.sliderTime = index
+      // this.$refs.audio.currentTime = parseInt(index / 100 * this.audio.maxTime)
     },
-    // 播放跳转
-    changeCurrentTime (index) {
+    // 进度条单击事件
+    changeTimeByClick (index) {
+      this.sliderTime = index
       this.$refs.audio.currentTime = parseInt(index / 100 * this.audio.maxTime)
     },
     startPlayOrPause () {
@@ -91,10 +90,6 @@ export default {
     // 当发生错误, 就出现loading状态
     onError () {
       this.audio.waiting = true
-    },
-    // 当音频开始等待
-    onWaiting (res) {
-      console.log(res)
     },
     // 当音频开始播放
     onPlay (res) {
@@ -165,19 +160,6 @@ export default {
     .slider-wrap {
       display: flex;
       align-items: center;
-      overflow: hidden;
-      .el-slider {
-        box-sizing: border-box;
-        width: 350px;
-        position: relative;
-        margin: 0 10px ;
-        .el-slider__runway {
-          // margin: 5px 0;
-          /deep/ .el-slider__bar {
-            background-color: #ec4141;
-          }
-        }
-      }
     }
   }
 

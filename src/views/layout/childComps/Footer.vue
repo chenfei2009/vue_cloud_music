@@ -38,7 +38,7 @@ export default {
       name: 'Butterfly',
       singer: 'Mariah Carey',
       audio: {
-        url: 'public/upload/test.mp3',
+        url: 'upload/test.mp3',
         speed: 1
       }
     }
