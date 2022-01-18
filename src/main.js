@@ -13,7 +13,7 @@ import {
   Dropdown,
   DropdownMenu,
   DropdownItem,
-  Slider
+  Popover
 } from 'element-ui'
 
 import App from './App.vue'
@@ -34,7 +34,7 @@ Vue.use(MenuItemGroup)
 Vue.use(Dropdown)
 Vue.use(DropdownMenu)
 Vue.use(DropdownItem)
-Vue.use(Slider)
+Vue.use(Popover)
 
 Vue.config.productionTip = false
 

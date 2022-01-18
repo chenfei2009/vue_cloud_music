@@ -16,8 +16,21 @@
       <div class="tools-item speed">倍速</div>
       <div class="tools-item">音效</div>
       <div class="tools-item">
-        <i class="iconfont icon-24gl-volumeMiddle"></i>
+        <el-popover
+          placement="top-start"
+          width="50"
+          trigger="hover">
+          <SliderBar vertical
+            height="150px" width="6px"
+            @drag="changVolByDrag"
+            @change="changVolByClick"
+            ></SliderBar>
+          <i slot="reference" class="iconfont icon-24gl-volumeMiddle"></i>
+        </el-popover>
       </div>
+      <!-- <div class="tools-item">
+        <i class="iconfont icon-24gl-volumeMiddle"></i>
+      </div> -->
       <div class="tools-item">
         <i class="iconfont icon-friends"></i>
       </div>
@@ -30,6 +43,7 @@
 
 <script>
 import Audio from '@/components/content/Audio.vue'
+import SliderBar from '@/components/content/SliderBar.vue'
 
 export default {
   name: 'FooterIndex',
@@ -38,14 +52,21 @@ export default {
       name: 'Butterfly',
       singer: 'Mariah Carey',
       audio: {
-        url: 'public/upload/test.mp3',
+        url: 'upload/test.mp3',
         speed: 1
       }
     }
   },
-  components: { Audio },
+  components: { Audio, SliderBar },
   computed: {},
-  methods: {}
+  methods: {
+    changVolByDrag (val) {
+      console.log(val)
+    },
+    changVolByClick (val) {
+      console.log(val)
+    }
+  }
 }
 </script>
 

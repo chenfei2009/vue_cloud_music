@@ -1,23 +1,30 @@
 <template>
   <div class="home-container">
     Home
-    <Audio :url="audio.url" />
+    <SliderBar vertical
+      height="150px" width="6px"
+      @drag="changVolByDrag"
+      @change="changVolByClick"
+      ></SliderBar>
   </div>
 </template>
 
 <script>
-import Audio from '@/components/content/Audio.vue'
+import SliderBar from '@/components/content/SliderBar.vue'
 
 export default {
   name: 'HomeIndex',
-  components: { Audio },
+  components: { SliderBar },
   data () {
-    return {
-      audio: {
-        url: 'public/upload/test.mp3'
-      }
-    }
+    return {}
   },
-  methods: {}
+  methods: {
+    changVolByDrag (val) {
+      console.log(val)
+    },
+    changVolByClick (val) {
+      console.log(val)
+    }
+  }
 }
 </script>
