@@ -5,5 +5,10 @@ module.exports = {
   // publicPath: '/src/assets'
   // publicPath: ''
   // publicPath: '/'
+<<<<<<< HEAD
   publicPath: './'
+=======
+  publicPath: '/'
+  // assetsDir: '/src/assets'
+>>>>>>> home
 }
