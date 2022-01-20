@@ -2,9 +2,7 @@
   <div class="slider-bar-wrapper" :style="wrapStyle">
     <div class="runway" :style="runwayStyle" ref="runway"
       @mousedown="onMousedown"
-      @mouseover="onMouseover"
-      @mousemove="onMousemove"
-      @mouseup="onMouseup">
+      @mouseover="onMouseover">
       <div class="bar" :style="barStyle">
         <div class="btn" :style="btnStyle"></div>
       </div>
@@ -43,7 +41,7 @@ export default {
       type: Number,
       default: 0
     },
-    vertical: {
+    vertical: { // 是否为竖向
       type: Boolean,
       default: false
     }
@@ -61,7 +59,6 @@ export default {
       return (this.pValue - this.pMin) / (this.pMax - this.pMin) * 100
     },
     runway () {
-      // return this.$el.getElementsByClassName('runway')[0]
       return this.$refs.runway
     },
     wrapStyle () {
@@ -104,11 +101,14 @@ export default {
       // 修改进度条本身
       let decimal = null
       if (this.vertical) {
-        decimal = 1 - (e.clientY - this.$el.offsetTop) / this.runway.clientHeight
+        // decimal = 1 - (e.clientY - this.runway.offsetTop) / this.runway.clientHeight
+        decimal = 1 - (e.clientY - this.runway.getBoundingClientRect().top) / this.runway.clientHeight
       } else {
-        decimal = (e.clientX - this.$el.offsetLeft) / this.runway.clientWidth
-        // this.barStyle.width = decimal * 100 + '%'
+        // decimal = (e.clientX - this.runway.offsetLeft) / this.runway.clientWidth
+        decimal = (e.clientX - this.runway.getBoundingClientRect().left) / this.runway.clientWidth
       }
+      if (decimal < 0) decimal = 0
+      if (decimal > 1) decimal = 1
       // 修改value
       this.pValue = this.pMin + decimal * (this.pMax - this.pMin)
       const index = parseInt(decimal * 100)
@@ -117,6 +117,8 @@ export default {
     onMousedown (e) {
       if (e.which === 1) {
         this.isMouseDownOnBall = true
+        window.addEventListener('mouseup', this.onMouseup)
+        window.addEventListener('mousemove', this.onMousemove)
       }
     },
     onMousemove (e) {
