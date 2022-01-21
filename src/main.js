@@ -13,7 +13,11 @@ import {
   Dropdown,
   DropdownMenu,
   DropdownItem,
+<<<<<<< HEAD
   Popover
+=======
+  Slider
+>>>>>>> c328e313f635a0411e9df97f5b4e059ab27f3b87
 } from 'element-ui'
 
 import App from './App.vue'
@@ -34,7 +38,11 @@ Vue.use(MenuItemGroup)
 Vue.use(Dropdown)
 Vue.use(DropdownMenu)
 Vue.use(DropdownItem)
+<<<<<<< HEAD
 Vue.use(Popover)
+=======
+Vue.use(Slider)
+>>>>>>> c328e313f635a0411e9df97f5b4e059ab27f3b87
 
 Vue.config.productionTip = false
 
