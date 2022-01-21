@@ -1,0 +1,106 @@
+@font-face {
+  font-family: "iconfont"; /* Project id 3131786 */
+  src: url('//at.alicdn.com/t/font_3131786_zd9blihycw.woff2?t=1642067491739') format('woff2'),
+       url('//at.alicdn.com/t/font_3131786_zd9blihycw.woff?t=1642067491739') format('woff'),
+       url('//at.alicdn.com/t/font_3131786_zd9blihycw.ttf?t=1642067491739') format('truetype');
+}
+
+.iconfont {
+  font-family: "iconfont" !important;
+  font-size: 16px;
+  font-style: normal;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.icon-friends:before {
+  content: "\e629";
+}
+
+.icon-24gl-volumeDisable:before {
+  content: "\ea0c";
+}
+
+.icon-24gl-volumeMiddle:before {
+  content: "\ea0d";
+}
+
+.icon-play_list:before {
+  content: "\e61b";
+}
+
+.icon-pause:before {
+  content: "\e7fe";
+}
+
+.icon-caret-right:before {
+  content: "\e8ec";
+}
+
+.icon-step-backward:before {
+  content: "\e8ef";
+}
+
+.icon-step-forward:before {
+  content: "\e8f0";
+}
+
+.icon-collect:before {
+  content: "\e681";
+}
+
+.icon-xunhuan:before {
+  content: "\e636";
+}
+
+.icon-user01:before {
+  content: "\e6fd";
+}
+
+.icon-arrow:before {
+  content: "\e664";
+}
+
+.icon-search:before {
+  content: "\e644";
+}
+
+.icon-plus:before {
+  content: "\e66c";
+}
+
+.icon-yifu:before {
+  content: "\e613";
+}
+
+.icon-setting:before {
+  content: "\e670";
+}
+
+.icon-Email:before {
+  content: "\ea9c";
+}
+
+.icon-recentsicon:before {
+  content: "\e63e";
+}
+
+.icon-download:before {
+  content: "\e651";
+}
+
+.icon-huatong:before {
+  content: "\e67e";
+}
+
+.icon-heart:before {
+  content: "\e637";
+}
+
+.icon-tubiaozhizuomoban-:before {
+  content: "\e60a";
+}
+
+.icon-dianzan:before {
+  content: "\e601";
+}
