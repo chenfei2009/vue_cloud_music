@@ -1,9 +1,9 @@
 <template>
   <div class="audio-container">
-    <Info></Info>
+    <Info :infoProp="audio"></Info>
     <div class="di main-wrap">
       <audio ref="audio" class="hidden"
-        :src="url" :preload="audio.preload"
+        :src="audioProp.url" :preload="audio.preload"
         @play="onPlay"
         @error="onError"
         @pause="onPause"
@@ -35,7 +35,10 @@
         </div>
       </div>
     </div>
-    <Tools @changeVol="handleChangeVol"></Tools>
+    <Tools @changeVol="handleChangeVol"
+      @changeSpeed="handleChangeSpeed"
+      @showListClick="handleShowList"
+      ></Tools>
   </div>
 </template>
 
@@ -48,14 +51,20 @@ import Info from './Info.vue'
 export default {
   name: 'VueAudio',
   props: {
-    url: {
-      type: String,
-      required: true
-    },
-    speed: {
-      type: Number,
-      default: 1
+    audioProp: {
+      type: Object,
+      default () {
+        return {}
+      }
     }
+    // url: {
+    //   type: String,
+    //   required: true
+    // }
+    // speed: {
+    //   type: Number,
+    //   default: 1
+    // }
   },
   components: { SliderBar, Info, Tools },
   data () {
@@ -64,6 +73,7 @@ export default {
         playing: false, // 该字段是音频是否处于播放状态
         currentTime: 0, // 音频当前播放时长
         maxTime: 0, // 音频最大播放时长
+        speed: 1,
         waiting: false
       },
       sliderTime: 0, // 播放进度条对应的值
@@ -79,7 +89,6 @@ export default {
 
     // 播放条单击事件
     changeTimeByClick (...args) {
-      console.log(arguments[0])
       this.sliderTime = arguments[0]
       // this.$refs.audio.currentTime = parseInt(index / 100 * this.audio.maxTime)
       this.$refs.audio.currentTime = this.sliderTime
@@ -87,8 +96,17 @@ export default {
 
     // 音量调节事件
     handleChangeVol (...args) {
-      console.log(arguments[0][1])
       this.$refs.audio.volume = arguments[0][1] / 100
+    },
+
+    // 倍速调节事件
+    handleChangeSpeed (speed) {
+      this.$refs.audio.playbackRate = speed
+    },
+
+    // 播放列表按钮点击事件
+    handleShowList () {
+      this.$emit('showList')
     },
 
     startPlayOrPause () {

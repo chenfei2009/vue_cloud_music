@@ -9,7 +9,8 @@
         }">
         <div class="popper">
           <ul class="select-wrap">
-            <li :class="optionClass" class="select-item"
+            <li :class="speed===item.value ? activeClass : optionClass"
+              class="select-item"
               v-for="item in speedOptions"
               :key=item.value
               @click="speedOptionClick(item)">
@@ -18,7 +19,7 @@
             </li>
           </ul>
         </div>
-        <span slot="reference">倍速</span>
+        <span slot="reference">{{speedText}}</span>
       </Popper>
     </div>
     <div class="tools-item">音效</div>
@@ -33,6 +34,7 @@
             height="100px" width="6px"
             @drag="changVolByDrag"
             @change="changVolByClick"
+            :value=20
             ></SliderBar>
         </div>
         <i slot="reference" class="iconfont icon-24gl-volumeMiddle"></i>
@@ -41,7 +43,7 @@
     <div class="tools-item">
       <i class="iconfont icon-friends"></i>
     </div>
-    <div class="tools-item">
+    <div class="tools-item" @click="showListClick">
       <i class="iconfont icon-play_list"></i>
     </div>
   </div>
@@ -57,12 +59,11 @@ export default {
   components: { SliderBar, Popper },
   data () {
     return {
-      name: 'Butterfly',
-      singer: 'Mariah Carey',
-      audio: {
-        url: 'upload/test.mp3',
-        speed: 1
-      },
+      // audio: {
+      //   url: 'upload/test.mp3',
+      //   speed: 1
+      // },
+      speed: 1,
       speedOptions: [
         { value: 0.5, isSelected: false },
         { value: 0.75, isSelected: false },
@@ -74,8 +75,17 @@ export default {
     }
   },
   computed: {
-    optionClass (item) {
+    audio () {
+      return this.$store.state.audio
+    },
+    optionClass () {
       return 'item-default'
+    },
+    activeClass () {
+      return 'item-active'
+    },
+    speedText () {
+      return this.speed === 1 ? '倍速' : `${this.speed}x`
     }
   },
   methods: {
@@ -86,11 +96,14 @@ export default {
       this.$emit('changeVol', arguments)
     },
     speedOptionClick (item) {
-      console.log(item.value)
-      this.audio.speed = item.value
+      this.speed = item.value
       this.speedOptions.forEach(v => {
         v.isSelected = (v.value === item.value)
       })
+      this.$emit('changeSpeed', item.value)
+    },
+    showListClick () {
+      this.$emit('showListClick')
     }
   }
 }
@@ -99,8 +112,9 @@ export default {
 <style lang="less" scoped>
 .tools-container {
   display: flex;
-  justify-content: right;
+  justify-content: flex-end;
   align-items: center;
+  width: 200px;
   height: 100%;
   .tools-item {
     margin: 0 5px;
@@ -116,19 +130,24 @@ export default {
     width: 100%;
     .item-text {
       text-align: center;
-      padding: 0 20px;
+      padding: 2px 25px;
+      font-size: 10px;
+      // margin: 2px 0;
     }
     .item-tag {
       position: absolute;
       right: 5px;
       bottom: 0;
-      // float: right;
+      color: red;
     }
   }
   .select-item:hover {
     .item-text {
       color: #000;
     }
+  }
+  .item-active {
+    color: #000;
   }
   .item-default {
     color: #ccc;

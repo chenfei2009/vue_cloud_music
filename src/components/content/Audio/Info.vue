@@ -1,10 +1,12 @@
 <template>
   <!-- 歌曲信息模块 -->
   <div class="info-container">
-    <div class="info-cover">封面</div>
+    <div class="info-cover">
+      <img :src="audio.cover" alt="#">
+    </div>
     <div class="info-text">
-      <div class="info-name">{{name}}</div>
-      <div class="info-singer">{{singer}}</div>
+      <div class="info-name">{{audio.name}}</div>
+      <div class="info-singer">{{audio.singer}}</div>
     </div>
     <div class="info-zan"><i class="iconfont icon-dianzan"></i></div>
   </div>
@@ -13,13 +15,15 @@
 <script>
 export default {
   name: 'FooterIndex',
-  data () {
-    return {
-      name: 'Butterfly',
-      singer: 'Mariah Carey'
+  props: {},
+  computed: {
+    audio () {
+      return this.$store.state.audio
     }
   },
-  computed: {},
+  data () {
+    return {}
+  },
   methods: {}
 }
 </script>
@@ -28,6 +32,7 @@ export default {
 .info-container {
   display: flex;
   align-items: center;
+  width: 200px;
   height: 100%;
   .info-cover {
     width: 50px;
