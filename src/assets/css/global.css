@@ -1,9 +1,13 @@
 /* 全局样式表 */
 <<<<<<< HEAD
+<<<<<<< HEAD
 html, body, #app, ul, li {
 =======
 html, body, #app {
 >>>>>>> c328e313f635a0411e9df97f5b4e059ab27f3b87
+=======
+html, body, #app, ul, li {
+>>>>>>> 26079ebd076347dca3a5d55cd9a77edb1ed0794e
   height: 100%;
   margin: 0;
   padding: 0;
@@ -11,6 +15,7 @@ html, body, #app {
   font-size: 14px;
 }
 
+<<<<<<< HEAD
 <<<<<<< HEAD
 ul {
   padding-inline-start: 0;
@@ -37,4 +42,12 @@ li {
 .el-scrollbar__wrap{
   height: 300px;
 >>>>>>> c328e313f635a0411e9df97f5b4e059ab27f3b87
+=======
+ul {
+  padding-inline-start: 0;
+}
+
+li {
+  list-style-type: none;
+>>>>>>> 26079ebd076347dca3a5d55cd9a77edb1ed0794e
 }
