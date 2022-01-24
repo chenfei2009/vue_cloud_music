@@ -14,16 +14,17 @@
 
 <script>
 export default {
-  name: 'FooterIndex',
+  name: 'Info',
   props: {},
   computed: {
     audio () {
-      return this.$store.state.audio
+      return this.$store.state.playContent
     }
   },
   data () {
     return {}
   },
+  mounted () {},
   methods: {}
 }
 </script>

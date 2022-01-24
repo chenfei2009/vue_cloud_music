@@ -3,9 +3,10 @@
     <Info :infoProp="audio"></Info>
     <div class="di main-wrap">
       <audio ref="audio" class="hidden"
-        :src="audioProp.url" :preload="audio.preload"
+        :src="playContent.url" :preload="audio.preload" :autoplay="audio.autoplay"
         @play="onPlay"
         @error="onError"
+        @ended="onEnded"
         @pause="onPause"
         @timeupdate="onTimeupdate"
         @loadedmetadata="onLoadedmetadata"
@@ -13,13 +14,13 @@
       <div class="audio-wrap">
         <!-- 播放控制按钮组 -->
         <div class="action-bar">
-          <i class="iconfont icon-xunhuan"></i>
-          <i class="iconfont icon-step-backward"></i>
+          <i class="iconfont" :class="loopOptionClass" @click="switchLoop"></i>
+          <i class="iconfont icon-step-backward" @click="setPrev"></i>
           <div class="btn play-btn" @click="startPlayOrPause">
             <i class="iconfont icon-caret-right" v-if="!audio.playing"></i>
             <i class="iconfont icon-pause" v-else></i>
           </div>
-          <i class="iconfont icon-step-forward"></i>
+          <i class="iconfont icon-step-forward" @click="setNext"></i>
           <i class="iconfont icon-collect"></i>
         </div>
         <!-- 进度条 -->
@@ -50,32 +51,42 @@ import Info from './Info.vue'
 
 export default {
   name: 'VueAudio',
-  props: {
-    audioProp: {
-      type: Object,
-      default () {
-        return {}
-      }
-    }
-    // url: {
-    //   type: String,
-    //   required: true
-    // }
-    // speed: {
-    //   type: Number,
-    //   default: 1
-    // }
-  },
   components: { SliderBar, Info, Tools },
+  computed: {
+    playContent () {
+      return this.$store.state.playContent
+    },
+    playList () {
+      return this.$store.state.playList
+    },
+    loopOptionClass () {
+      const index = this.loopOptions.findIndex(v => v.id === this.audio.loop)
+      return this.loopOptions[index].icon
+    },
+    loopOptionText () {
+      const index = this.loopOptions.findIndex(v => v.id === this.audio.loop.id)
+      return this.loopOptions[index].text
+    }
+
+  },
   data () {
     return {
       audio: {
         playing: false, // 该字段是音频是否处于播放状态
+        autoplay: false,
         currentTime: 0, // 音频当前播放时长
         maxTime: 0, // 音频最大播放时长
         speed: 1,
-        waiting: false
+        loop: 0,
+        waiting: false,
+        url: ''
       },
+      loopOptions: [
+        { id: 0, text: '顺序播放', icon: 'icon-shunxubofang' }, // 'notLoop' 顺序播放
+        { id: 1, text: '列表循环', icon: 'icon-xunhuan' }, // 'listLoop' 列表循环
+        { id: 2, text: '单曲循环', icon: 'icon-single' }, // 'singleLoop' 单曲循环
+        { id: 3, text: '随机播放', icon: 'icon-random' } // 'randomLoop' 随机播放
+      ],
       sliderTime: 0, // 播放进度条对应的值
       sliderVol: 0 // 音量滑动条对应的值
     }
@@ -104,17 +115,82 @@ export default {
       this.$refs.audio.playbackRate = speed
     },
 
+    /**
+     * 播放模式及歌曲切换相关事件
+     */
+
+    switchLoop () {
+      let index = this.loopOptions.findIndex(v => v.id === this.audio.loop)
+      index === this.loopOptions.length - 1 ? index = 0 : index = index + 1
+      this.audio.loop = this.loopOptions[index].id
+    },
+
+    switchContent () {
+      let index = this.playList.indexOf(this.playContent)
+      if (this.audio.loop === 0) { // 顺序播放
+        index = index + 1
+        this.$store.commit('setContent', this.playList[index])
+      } else if (this.audio.loop === 1) { // 列表循环
+        index === this.playList.length - 1 ? index = 0 : index = index + 1
+        this.$store.commit('setContent', this.playList[index])
+      } else if (this.audio.loop === 2) { // 随机播放
+        let newIndex
+        while (newIndex === index) {
+          newIndex = parseInt(Math.random().this.playList.length)
+          return newIndex
+        }
+        this.$store.commit('setContent', this.playList[newIndex])
+      }
+      // 切换歌曲后自动开始播放
+      // if (this.audio.playing === false) {
+      //   this.startPlay()
+      // }
+    },
+
+    // setNotLoop () {
+    //   this.audio.loop = 'notLoop'
+    // },
+
+    // setSingleLoop () {
+    //   this.audio.loop = 'singleLoop'
+    // },
+
+    // setListLoop () {
+    //   this.audio.loop = 'listLoop'
+    // },
+
+    // setRandomLoop () {
+    //   this.audio.loop = 'randomLoop'
+    // },
+
+    // 上一首
+    setPrev () {
+      let index = this.playList.indexOf(this.playContent)
+      // 如果是第一首则跳转到列表末尾
+      index === 0 ? index = this.playList.length - 1 : index = index - 1
+      this.$store.commit('setContent', this.playList[index])
+    },
+
+    // 下一首
+    setNext () {
+      this.switchContent()
+    },
+
     // 播放列表按钮点击事件
     handleShowList () {
       this.$emit('showList')
     },
 
+    /**
+     * audio 标签相关事件
+     */
     startPlayOrPause () {
       return this.audio.playing ? this.pausePlay() : this.startPlay()
     },
 
     // 开始播放
     startPlay () {
+      this.audio.autoplay = true
       this.$refs.audio.play()
     },
 
@@ -137,6 +213,13 @@ export default {
     onPlay (res) {
       this.audio.playing = true
       this.audio.loading = false
+    },
+
+    // 当音频播放结束
+    onEnded (res) {
+      this.audio.playing = false
+      this.audio.loading = true
+      this.switchContent()
     },
 
     // 当timeupdate事件大概每秒一次，用来更新音频流的当前播放时间
@@ -162,8 +245,14 @@ export default {
       return formatTime(second)
     }
   },
-  created () {
-    // this.setControlList()
+  created () {},
+  watch: {
+    playContent (oldVal, newVal) {
+      // console.log(newVal)
+      this.audio.url = this.playContent.url
+      this.audio.currentTime = 0
+      this.startPlay()
+    }
   }
 }
 </script>

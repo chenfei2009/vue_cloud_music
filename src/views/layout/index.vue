@@ -9,8 +9,8 @@
     </el-container>
     <el-footer class="footer-container" height="70px">
       <!-- 播放器模块 -->
-      <Audio :audioProp="audio"
-        @showList="handleShowList"/>
+      <!-- <Audio :audioProp="audio" @showList="handleShowList"/> -->
+      <Audio @showList="handleShowList"/>
     </el-footer>
     <!-- 播放列表侧边栏 -->
     <PlayList :tableData=playList
@@ -36,9 +36,17 @@ export default {
         url: 'upload/test.mp3',
         speed: 1
       },
-      playList: [], // 播放列表数据
+      // playList: [], // 播放列表数据
       activeId: 0, // 当前选中歌曲 id
       isShowPlayList: false // 是否显示播放列表
+    }
+  },
+  computed: {
+    playContent () {
+      return this.$store.state.playContent
+    },
+    playList () {
+      return this.$store.state.playList
     }
   },
   created () {
@@ -61,7 +69,7 @@ export default {
         tag: 0,
         singer: 'mariah carey',
         url: 'upload/Butterfly.m4a',
-        link: '#',
+        cover: '#',
         time: 500
       }, {
         id: 1,
@@ -69,22 +77,22 @@ export default {
         tag: 0,
         singer: 'mariah carey',
         url: 'upload/The_Roof_(Back_in_Time).m4a',
-        link: '#',
+        cover: '#',
         time: 500
       }]
       for (let i = 0; i < 20; i++) {
         arr.push({
-          id: `${i + 2}`,
+          id: i + 2,
           name: `test${i}`,
           tag: 0,
           singer: 'mariah carey',
-          url: '#',
-          link: '#',
+          url: 'upload/test.mp3',
+          cover: '#',
           time: 500
         })
       }
       this.playList.push(...arr)
-      this.$store.commit('savePlayList', this.playList)
+      this.$store.commit('addToPlayList', ...arr)
     },
     /**
      * 设置当前歌曲数据
@@ -92,7 +100,7 @@ export default {
     setAudio () {
       const index = this.playList.findIndex(v => v.id === this.activeId)
       this.audio = this.playList[index]
-      this.$store.commit('saveAudio', this.audio)
+      this.$store.commit('setContent', this.audio)
     }
   }
 }

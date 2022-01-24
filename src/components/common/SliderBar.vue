@@ -169,6 +169,7 @@ export default {
 
 <style lang="less" scoped>
 .slider-bar-wrapper {
+  margin: auto 15px;
   &:hover {
     cursor: pointer;
   }

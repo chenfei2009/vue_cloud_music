@@ -5,6 +5,7 @@ html, body, #app, ul, li {
   padding: 0;
   /* min-width: 1366px; */
   font-size: 14px;
+  --themeColor: #ec4141;
 }
 
 ul {
