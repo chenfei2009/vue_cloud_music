@@ -14,7 +14,9 @@ import {
   DropdownMenu,
   DropdownItem,
   Table,
-  TableColumn
+  TableColumn,
+  Tabs,
+  TabPane
 } from 'element-ui'
 
 import App from './App.vue'
@@ -40,6 +42,8 @@ Vue.use(DropdownMenu)
 Vue.use(DropdownItem)
 Vue.use(Table)
 Vue.use(TableColumn)
+Vue.use(Tabs)
+Vue.use(TabPane)
 
 Vue.config.productionTip = false
 
