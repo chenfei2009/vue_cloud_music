@@ -55,14 +55,10 @@ import Popper from 'vue-popperjs'
 import 'vue-popperjs/dist/vue-popper.css'
 
 export default {
-  name: 'FooterIndex',
+  name: 'Tools',
   components: { SliderBar, Popper },
   data () {
     return {
-      // audio: {
-      //   url: 'upload/test.mp3',
-      //   speed: 1
-      // },
       speed: 1,
       speedOptions: [
         { value: 0.5, isSelected: false },
@@ -76,7 +72,7 @@ export default {
   },
   computed: {
     audio () {
-      return this.$store.state.audio
+      return this.$store.state.playContent
     },
     optionClass () {
       return 'item-default'

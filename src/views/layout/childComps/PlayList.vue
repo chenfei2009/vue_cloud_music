@@ -13,8 +13,9 @@
     </div>
     <div class="table-wrap">
       <el-table
-        :data="tableData"
+        :data="playList"
         :show-header="false"
+        @row-dblclick="onDbClick"
         stripe
         style="width: 100%">
         <el-table-column
@@ -22,14 +23,11 @@
           label="歌曲"
           width="200">
           <template slot-scope="scope">
+            <i class="active-tag iconfont icon-caret-right" v-show="scope.row.id === activeId"></i>
             <span :class="scope.row.id === activeId ? 'active' : ''"
               class="cell-text">{{scope.row.name}}</span>
           </template>
         </el-table-column>
-        <!-- <el-table-column
-          prop="tag"
-          label="标签">
-        </el-table-column> -->
         <el-table-column
           prop="singer"
           label="歌手"
@@ -56,27 +54,41 @@
 <script>
 export default {
   name: 'PlayList',
-  props: {
-    tableData: {
-      type: Array,
-      default () {
-        return []
-      }
+  // props: {
+  //   tableData: {
+  //     type: Array,
+  //     default () {
+  //       return []
+  //     }
+  //   },
+  //   activeId: {
+  //     type: Number,
+  //     default: 0
+  //   }
+  // },
+  computed: {
+    playContent () {
+      return this.$store.state.playContent
     },
-    activeId: {
-      type: Number,
-      default: 0
+    playList () {
+      return this.$store.state.playList
+    },
+    activeId () {
+      return this.playList.indexOf(this.playContent)
     }
   },
   data () {
-    return {
-      // tableData: []
-    }
+    return {}
   },
   created () {
-    console.log(this.tableData)
+    this.setActiveId()
   },
-  methods: {}
+  methods: {
+    onDbClick (row, column, event) {
+      // console.log('row', row.id)
+      this.$store.commit('setContent', this.playList[row.id])
+    }
+  }
 }
 </script>
 
@@ -87,6 +99,7 @@ export default {
   width: 450px;
   top: 60px;
   bottom: 70px;
+  z-index: 99;
   // height: calc(~'100% - 70px');
   background-color: #fff;
   .title-wrap {
@@ -119,7 +132,7 @@ export default {
     overflow: scroll;
     /deep/ tr {
       :first-child {
-        padding-left: 6px;
+        padding-left: 10px;
       }
       td {
         font-size: 12px;
@@ -132,7 +145,13 @@ export default {
       text-overflow: ellipsis;
     }
     .active {
-      color: red;
+      color: var(--themeColor);
+    }
+    .active-tag {
+      position: absolute;
+      left: 0;
+      transform: translateX(-10%);
+      color: var(--themeColor);
     }
   }
 }

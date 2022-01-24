@@ -1,2 +1,2 @@
-export const SAVE_AUDIO = 'saveAudio'
-export const SAVE_PLAYLIST = 'savePlayList'
+export const SET_CONTENT = 'setContent'
+export const ADD_TO_PLAYLIST = 'addToPlayList'
