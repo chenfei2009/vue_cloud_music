@@ -1,10 +1,10 @@
 <template>
   <el-aside width="200px">
     <el-menu
-      default-active="/home"
+      default-active="/discover"
       class="el-menu-vertical-demo"
       router>
-      <el-menu-item index="/home">
+      <el-menu-item index="/discover">
         <span slot="title">发现音乐</span>
       </el-menu-item>
       <el-menu-item index="/vlog">

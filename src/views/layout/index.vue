@@ -1,7 +1,7 @@
 <template>
   <el-container class="layout-container">
     <Header></Header>
-    <el-container>
+    <el-container class="main-container">
       <Aside></Aside>
       <el-main>
         <router-view />
@@ -110,6 +110,9 @@ export default {
 .layout-container {
   width: 100vw;
   height: 100%;
+  .main-container {
+    height: calc(~"100vh - 130px");
+  }
   .el-footer {
     border-top: 1px solid #ccc;
     box-sizing: border-box;
