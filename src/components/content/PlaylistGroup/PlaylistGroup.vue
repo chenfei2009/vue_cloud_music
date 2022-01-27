@@ -6,9 +6,8 @@
         <i class="iconfont icon-arrow"></i>
       </router-link>
     </div>
-    <!-- <div class="rec-list-main" v-if="list.length!==0"> -->
     <div class="rec-list-main">
-      <PlaylistItem v-for="item in list" :key="item" :url="item.url" :text="item.text" />
+      <PlaylistItem v-for="item in list" :key="item.id" :picUrl="item.picUrl" :name="item.name" />
     </div>
   </div>
 </template>
@@ -31,7 +30,9 @@ export default {
       }
     }
   },
-  data () {}
+  data () {
+    return {}
+  }
 }
 </script>
 
@@ -45,6 +46,7 @@ export default {
 .title a {
   display: flex;
   align-items: center;
+  margin-top: 15px;
   h3 {
     margin: 5px;
   }

@@ -8,7 +8,7 @@
     </div>
     <!-- <div class="rec-list-main" v-if="list.length!==0"> -->
     <div class="vlog-list-main">
-      <VlogItem v-for="item in list" :key="item" :item="item" />
+      <VlogItem v-for="item in list" :key="item.id" :item="item" :column="column" />
     </div>
   </div>
 </template>
@@ -29,6 +29,10 @@ export default {
       default () {
         return []
       }
+    },
+    column: {
+      type: Number,
+      default: 2
     }
   },
   data () {
@@ -47,6 +51,7 @@ export default {
 .title a {
   display: flex;
   align-items: center;
+  margin-top: 15px;
   h3 {
     margin: 5px;
   }

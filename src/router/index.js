@@ -8,17 +8,17 @@ const routes = [
     path: '/',
     name: 'Layout',
     component: () => import(/* webpackChunkName: "home" */ '@/views/layout/index.vue'),
-    redirect: 'Discover',
+    redirect: 'discover',
     children: [
       {
         path: '/discover',
-        name: 'Discover',
+        name: 'DiscoverIndex',
         component: () => import(/* webpackChunkName: "home" */ '@/views/discover/index.vue'),
         children: [
           {
             path: '/',
-            name: 'Recommend',
-            component: () => import(/* webpackChunkName: "home" */ '@/views/discover/recommend.vue')
+            name: 'Discover',
+            component: () => import(/* webpackChunkName: "home" */ '@/views/discover/discover.vue')
           },
           { // 专属定制
             path: '/djradio',
