@@ -25,6 +25,8 @@ import Aside from './childComps/Aside.vue'
 import PlayList from './childComps/PlayList.vue'
 import Audio from '@/components/content/Audio/Audio.vue'
 
+import request from '@/utils/request.js'
+
 export default {
   name: 'LayoutIndex',
   components: { Header, Aside, Audio, PlayList },
@@ -53,8 +55,20 @@ export default {
     // 加载播放列表数据
     this.setPlayListData()
     this.setAudio()
+    this.loginTest()
   },
   methods: {
+    async loginTest () {
+      const res = await request({
+        method: 'GET',
+        url: '/login/cellphone',
+        params: {
+          phone: '15811121817',
+          password: 'chenfei2013'
+        }
+      })
+      console.log(res)
+    },
     handleShowList () {
       this.isShowPlayList = !this.isShowPlayList
     },
