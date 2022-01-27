@@ -1,13 +1,13 @@
 <template>
   <div class="playlist-item-container">
     <div class="item-cover-wrap">
-      <el-image :src="url" :fit="cover" class="item-img"></el-image>
-      <div class="item-btn" @click="onBtnClick" v-show="isShowBtn">
+      <el-image :src="picUrl" fit="cover" class="item-img"></el-image>
+      <div class="item-btn" v-show="isShowBtn">
         <i class="iconfont icon-caret-right" v-if="1"></i>
         <i class="iconfont icon-pause" v-else></i>
       </div>
     </div>
-    <div class="item-text">{{text}}</div>
+    <div class="item-name">{{name}}</div>
   </div>
 </template>
 
@@ -15,11 +15,11 @@
 export default {
   name: 'PlaylistItem',
   props: {
-    url: {
+    picUrl: {
       type: String,
       default: '#'
     },
-    text: {
+    name: {
       type: String,
       default: ''
     }
@@ -35,6 +35,7 @@ export default {
 <style lang="less" scoped>
 .playlist-item-container {
   margin: 10px 0;
+  width: 200px;
   .item-cover-wrap {
     position: relative;
     .item-img {
