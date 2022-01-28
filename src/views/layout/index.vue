@@ -66,29 +66,50 @@ export default {
       const arr = [{
         id: 0,
         name: 'Butterfly',
+        ar: [{ // 歌手信息
+          id: 0,
+          name: 'Mariah Carey'
+        }],
+        al: { // 专辑信息
+          id: 0,
+          name: 'Butterfly',
+          picUrl: '#' // 专辑封面
+        },
         tag: 0,
-        singer: 'mariah carey',
         url: 'upload/Butterfly.m4a',
-        cover: '#',
-        time: 500
+        dt: 500
       }, {
         id: 1,
         name: 'The Roof (Back in Time)',
+        ar: [{ // 歌手信息
+          id: 0,
+          name: 'Mariah Carey'
+        }],
+        al: { // 专辑信息
+          id: 0,
+          name: 'Butterfly',
+          picUrl: '#' // 专辑封面
+        },
         tag: 0,
-        singer: 'mariah carey',
         url: 'upload/The_Roof_(Back_in_Time).m4a',
-        cover: '#',
-        time: 500
+        dt: 700
       }]
       for (let i = 0; i < 20; i++) {
         arr.push({
           id: i + 2,
           name: `test${i}`,
+          ar: [{ // 歌手信息
+            id: 0,
+            name: 'Craig David'
+          }],
+          al: { // 专辑信息
+            id: 0,
+            name: 'Test',
+            picUrl: '#' // 专辑封面
+          },
           tag: 0,
-          singer: 'mariah carey',
           url: 'upload/test.mp3',
-          cover: '#',
-          time: 500
+          dt: 500
         })
       }
       this.playList.push(...arr)

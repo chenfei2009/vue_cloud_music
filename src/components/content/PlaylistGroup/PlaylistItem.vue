@@ -35,12 +35,12 @@ export default {
 <style lang="less" scoped>
 .playlist-item-container {
   margin: 10px 0;
-  width: 200px;
+  max-width: 200px;
+  width: calc(~"(100% - 60px) / 5");
   .item-cover-wrap {
     position: relative;
     .item-img {
-      width: 200px;
-      height: 200px;
+      width: 100%;
       border-radius: 5px;
       overflow: hidden;
     }

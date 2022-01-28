@@ -248,10 +248,12 @@ export default {
   created () {},
   watch: {
     playContent (oldVal, newVal) {
-      // console.log(newVal)
+      console.log('newVal', newVal)
       this.audio.url = this.playContent.url
-      this.audio.currentTime = 0
+      // this.audio.currentTime = 0
+      // this.$refs.audio.currentTime = 0
       this.startPlay()
+      this.$refs.audio.currentTime = 0
     }
   }
 }

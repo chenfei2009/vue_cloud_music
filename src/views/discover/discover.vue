@@ -29,6 +29,7 @@
 import PlaylistGroup from '@/components/content/PlaylistGroup/PlaylistGroup.vue'
 import VlogGroup from '@/components/content/VlogGroup/VlogGroup.vue'
 
+import request from '@/network/request.js'
 import {
   _getBanner,
   _getPersonalized,
@@ -99,8 +100,31 @@ export default {
       console.log('BtnClick')
     },
 
-    handleItemClick (item) {
+    /** 点击轮播图 */
+    async handleItemClick (item) {
       console.log(item)
+      if (item.targetType === 1) {
+        // 获取歌曲
+        // const { data: res } = await request({
+        //   url: 'song/url',
+        //   params: { id: item.targetId }
+        // })
+        // console.log(res.data[0].url)
+        // this.$store.commit('setContent', res.data[0].url)
+        if (this.$store.state.playList.findIndex(v => v.id === item.id) >= 0) return console.log('已存在')
+        const { data: res } = await request({
+          url: 'song/detail',
+          params: { ids: item.targetId }
+        })
+        // console.log(res.songs)
+        this.$store.commit('setContent', ...res.songs)
+      } else if (item.targetType === 10) {
+        // https://music.163.com/#/album?id=90049201
+        return console.log('获取专辑信息，跳转到专辑页面', item.targetType)
+      } else {
+        // 1004
+        return console.log('跳转页面', item.targetType, item.url)
+      }
     }
   }
 }

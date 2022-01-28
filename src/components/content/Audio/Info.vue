@@ -2,11 +2,13 @@
   <!-- 歌曲信息模块 -->
   <div class="info-container">
     <div class="info-cover">
-      <img :src="audio.cover" alt="#">
+      <img :src="audio.al.picUrl" alt="#">
     </div>
     <div class="info-text">
       <div class="info-name">{{audio.name}}</div>
-      <div class="info-singer">{{audio.singer}}</div>
+      <div class="info-singer">
+        <span v-for="item in audio.ar" :key="item.id">{{item.name}}</span>
+      </div>
     </div>
     <div class="info-zan"><i class="iconfont icon-dianzan"></i></div>
   </div>
@@ -39,6 +41,9 @@ export default {
     width: 50px;
     height: 50px;
     background-color: rgb(129, 116, 116);
+    img {
+      width: 100%;
+    }
   }
   .info-text {
     margin-left: 10px;
