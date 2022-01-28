@@ -1,6 +1,7 @@
 import {
   SET_CONTENT,
-  ADD_TO_PLAYLIST
+  ADD_TO_PLAYLIST,
+  RESET_PLAYLIST
 } from './mutations-type'
 
 function setPlayList (state, payload) {
@@ -22,5 +23,9 @@ export default {
   },
   [ADD_TO_PLAYLIST] (state, payload) {
     setPlayList(state, payload)
+  },
+  [RESET_PLAYLIST] (state, payload) {
+    state.playList = payload
+    state.playContent = payload[0]
   }
 }

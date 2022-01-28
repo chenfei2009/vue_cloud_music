@@ -36,7 +36,6 @@ export default {
         url: 'upload/test.mp3',
         speed: 1
       },
-      // playList: [], // 播放列表数据
       activeId: 0, // 当前选中歌曲 id
       isShowPlayList: false // 是否显示播放列表
     }

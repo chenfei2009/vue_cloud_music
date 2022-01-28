@@ -90,8 +90,7 @@ export default {
   created () {},
   methods: {
     onDbClick (row, column, event) {
-      // console.log('row', row.id)
-      this.$store.commit('setContent', this.playList[row.id])
+      this.$store.commit('setContent', row)
     }
   },
   filters: {

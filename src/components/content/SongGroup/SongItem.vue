@@ -122,6 +122,7 @@ export default {
       background-color: #eee;
       border-radius: 50%;
       color: var(--themeColor);
+      opacity: 0.9;
     }
   }
   .item-right-wrap {
