@@ -34,7 +34,7 @@
           width="100">
           <template slot-scope="scope">
             <span :class="scope.row.id === activeId ? 'active' : ''"
-              class="cell-text">{{scope.row.singer}}</span>
+              class="cell-text">{{scope.row.ar[0].name}}</span>
           </template>
         </el-table-column>
         <el-table-column
@@ -43,8 +43,12 @@
           width="30">
         </el-table-column>
         <el-table-column
-          prop="time"
+          prop="dt"
           label="时长">
+          <template slot-scope="scope">
+            <span :class="scope.row.id === activeId ? 'active' : ''"
+              class="cell-text">{{scope.row.dt | formatSecond}}</span>
+          </template>
         </el-table-column>
       </el-table>
     </div>
@@ -52,6 +56,8 @@
 </template>
 
 <script>
+import formatTime from '@/utils/formatTime.js'
+
 export default {
   name: 'PlayList',
   // props: {
@@ -74,19 +80,22 @@ export default {
       return this.$store.state.playList
     },
     activeId () {
-      return this.playList.indexOf(this.playContent)
+      const index = this.playList.findIndex(v => v.id === this.playContent.id)
+      return this.playList[index].id
     }
   },
   data () {
     return {}
   },
-  created () {
-    this.setActiveId()
-  },
+  created () {},
   methods: {
     onDbClick (row, column, event) {
-      // console.log('row', row.id)
-      this.$store.commit('setContent', this.playList[row.id])
+      this.$store.commit('setContent', row)
+    }
+  },
+  filters: {
+    formatSecond (second = 0) {
+      return formatTime(second / 1000)
     }
   }
 }

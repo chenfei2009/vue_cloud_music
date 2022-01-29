@@ -28,4 +28,18 @@ export default {
 </script>
 
 <style lang="less" scoped>
+/deep/ .el-menu--horizontal {
+  border-bottom: 0;
+  .el-menu-item {
+    height: 30px;
+    line-height: 30px;
+    padding: 0;
+    margin: 0 10px 10px 10px;
+  }
+  .is-active {
+    border-bottom: 2px solid var(--themeColor);
+    font-size: 18px;
+    font-weight: 800;
+  }
+}
 </style>

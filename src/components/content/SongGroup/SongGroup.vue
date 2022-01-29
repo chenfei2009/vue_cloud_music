@@ -8,17 +8,17 @@
     </div>
     <!-- <div class="rec-list-main" v-if="list.length!==0"> -->
     <div class="vlog-list-main">
-      <VlogItem v-for="item in list" :key="item.id" :item="item" :column="column" />
+      <SongItem v-for="item in list" :key="item.id" :item="item" :column="column" />
     </div>
   </div>
 </template>
 
 <script>
-import VlogItem from '@/components/content/VlogGroup/VlogItem.vue'
+import SongItem from '@/components/content/SongGroup/SongItem.vue'
 
 export default {
-  name: 'VlogGroup',
-  components: { VlogItem },
+  name: 'SongGroup',
+  components: { SongItem },
   props: {
     title: {
       type: String,

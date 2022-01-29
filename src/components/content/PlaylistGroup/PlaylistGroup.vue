@@ -7,7 +7,7 @@
       </router-link>
     </div>
     <div class="rec-list-main">
-      <PlaylistItem v-for="item in list" :key="item.id" :picUrl="item.picUrl" :name="item.name" />
+      <PlaylistItem v-for="item in list" :key="item.id" :item="item" :column="column" />
     </div>
   </div>
 </template>
@@ -28,6 +28,10 @@ export default {
       default () {
         return []
       }
+    },
+    column: {
+      type: Number,
+      default: 5
     }
   },
   data () {
