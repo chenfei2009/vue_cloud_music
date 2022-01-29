@@ -2,6 +2,12 @@
   <div class="playlist-item-container" :style="itemStyle">
     <div class="item-cover-wrap" @click="onItemClick">
       <el-image :src="item.picUrl" fit="cover" class="item-img"></el-image>
+      <!-- 播放量 -->
+      <div class="item-play-count" v-if="item.playCount">
+        <i class="iconfont icon-play"></i>
+        <span class="count-text">{{playCount}}</span>
+        </div>
+      <!-- 播放按钮 -->
       <div class="item-btn" @click.stop="onBtnClick"><i class="iconfont icon-caret-right"></i></div>
     </div>
     <span class="item-name" @click="onItemClick">{{item.name}}</span>
@@ -36,6 +42,9 @@ export default {
         // width: `calc((100% - 60px) / ${this.column})`
         width: `calc((100% - ${dividsion}) / ${this.column})`
       }
+    },
+    playCount () {
+      return this.item.playCount > 10000 ? parseInt(this.item.playCount / 10000) + '万' : this.item.playCount
     }
   },
   data () {
@@ -78,6 +87,19 @@ export default {
       border-radius: 5px;
       overflow: hidden;
     }
+    /* 播放量 */
+    .item-play-count {
+      position: absolute;
+      top: 2px;
+      right: 5px;
+      color: #fff;
+      font-size: 12px;
+      .iconfont {
+        font-size: 10px;
+        margin-right: 3px;
+      }
+    }
+    /* 播放按钮 */
     .item-btn {
       // display: none;
       display: flex;

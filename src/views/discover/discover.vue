@@ -52,7 +52,7 @@ export default {
       personalizedList: [
         {
           name: '每日歌曲推荐',
-          imageUrl: './image/default.png'
+          picUrl: '/image/default.png'
         }
       ], // 推荐歌单
       privateContent: [],
@@ -70,7 +70,7 @@ export default {
     this.getPrivateContent()
     this.getNewSong()
     // this.getTopSongs()
-    this.getDaySongs()
+    // this.getDaySongs() // 需要登录
     this.getPersonalizedMv()
   },
   mounted () {},
@@ -79,7 +79,6 @@ export default {
     async getBanner () {
       const { data: res } = await _getBanner()
       this.banners = res.banners
-      // console.log(this.banners)
     },
 
     /** 获取推荐歌单数据 */
@@ -164,12 +163,4 @@ export default {
   height: 6px;
   border-radius: 3px;
 }
-
-// .title a {
-//   display: flex;
-//   align-items: center;
-//   h3 {
-//     margin: 5px;
-//   }
-// }
 </style>
