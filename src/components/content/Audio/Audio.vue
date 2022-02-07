@@ -14,14 +14,29 @@
       <div class="audio-wrap">
         <!-- 播放控制按钮组 -->
         <div class="action-bar">
-          <i class="iconfont" :class="loopOptionClass" @click="switchLoop"></i>
-          <i class="iconfont icon-step-backward" @click="setPrev"></i>
-          <div class="btn play-btn" @click="startPlayOrPause">
-            <i class="iconfont icon-caret-right" v-if="!audio.playing"></i>
-            <i class="iconfont icon-pause" v-else></i>
-          </div>
-          <i class="iconfont icon-step-forward" @click="setNext"></i>
-          <i class="iconfont icon-collect"></i>
+          <!-- 循环模式切换 -->
+          <el-tooltip :content="loopOptionText" placement="bottom" effect="light" :open-delay=500>
+            <i class="iconfont icon" :class="loopOptionClass" @click="switchLoop"></i>
+          </el-tooltip>
+          <!-- 上一首 -->
+          <el-tooltip content="上一首" placement="bottom" effect="light" :open-delay=500>
+            <i class="iconfont icon icon-step-backward" @click="setPrev"></i>
+          </el-tooltip>
+          <!-- 播放/暂停 -->
+          <el-tooltip :content="playBtnText" placement="bottom" effect="light" :open-delay=500>
+            <div class="btn play-btn" @click="startPlayOrPause">
+              <i class="iconfont icon-caret-right" v-if="!audio.playing"></i>
+              <i class="iconfont icon-pause" v-else></i>
+            </div>
+          </el-tooltip>
+          <!-- 下一首 -->
+          <el-tooltip content="下一首" placement="bottom" effect="light" :open-delay=500>
+            <i class="iconfont icon icon-step-forward" @click="setNext"></i>
+          </el-tooltip>
+          <!-- 打开歌词 -->
+          <el-tooltip content="打开歌词" placement="bottom" effect="light" :open-delay=500>
+            <span class="icon">词</span>
+          </el-tooltip>
         </div>
         <!-- 进度条 -->
         <div class="slider-wrap">
@@ -64,10 +79,12 @@ export default {
       return this.loopOptions[index].icon
     },
     loopOptionText () {
-      const index = this.loopOptions.findIndex(v => v.id === this.audio.loop.id)
+      const index = this.loopOptions.findIndex(v => v.id === this.audio.loop)
       return this.loopOptions[index].text
+    },
+    playBtnText () {
+      return this.audio.playing ? '暂停' : '播放'
     }
-
   },
   data () {
     return {
@@ -118,13 +135,14 @@ export default {
     /**
      * 播放模式及歌曲切换相关事件
      */
-
+    // 切换歌曲循环类型
     switchLoop () {
       let index = this.loopOptions.findIndex(v => v.id === this.audio.loop)
       index === this.loopOptions.length - 1 ? index = 0 : index = index + 1
       this.audio.loop = this.loopOptions[index].id
     },
 
+    // 根据循环类型切换歌曲
     switchContent () {
       let index = this.playList.indexOf(this.playContent)
       if (this.audio.loop === 0) { // 顺序播放
@@ -133,35 +151,22 @@ export default {
       } else if (this.audio.loop === 1) { // 列表循环
         index === this.playList.length - 1 ? index = 0 : index = index + 1
         this.$store.commit('setContent', this.playList[index])
-      } else if (this.audio.loop === 2) { // 随机播放
+      } else if (this.audio.loop === 2) { // 单曲循环
+        this.$store.commit('setContent', this.playList[index])
+      } else if (this.audio.loop === 3) { // 随机播放
         let newIndex
+        newIndex = parseInt(Math.random() * this.playList.length)
         while (newIndex === index) {
-          newIndex = parseInt(Math.random().this.playList.length)
+          newIndex = parseInt(Math.random() * this.playList.length)
           return newIndex
         }
         this.$store.commit('setContent', this.playList[newIndex])
       }
       // 切换歌曲后自动开始播放
-      // if (this.audio.playing === false) {
-      //   this.startPlay()
-      // }
+      if (this.audio.playing === false) {
+        this.startPlay()
+      }
     },
-
-    // setNotLoop () {
-    //   this.audio.loop = 'notLoop'
-    // },
-
-    // setSingleLoop () {
-    //   this.audio.loop = 'singleLoop'
-    // },
-
-    // setListLoop () {
-    //   this.audio.loop = 'listLoop'
-    // },
-
-    // setRandomLoop () {
-    //   this.audio.loop = 'randomLoop'
-    // },
 
     // 上一首
     setPrev () {
@@ -282,6 +287,9 @@ export default {
       width: 200px;
       justify-content: space-between;
       align-items: center;
+      .icon:hover {
+        color: var(--themeColor);
+      }
       .play-btn {
         display: flex;
         justify-content: center;
@@ -294,6 +302,9 @@ export default {
         .iconfont {
           font-size: 18px;
         }
+      }
+      .play-btn:hover {
+        background-color: #ccc;
       }
     }
 

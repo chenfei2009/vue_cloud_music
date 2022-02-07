@@ -80,9 +80,7 @@ export default {
   data () {
     return {}
   },
-  created () {
-    this.setActiveId()
-  },
+  created () {},
   methods: {
     onDbClick (row, column, event) {
       // console.log('row', row.id)

@@ -16,7 +16,8 @@ import {
   Table,
   TableColumn,
   Tabs,
-  TabPane
+  TabPane,
+  Tooltip
 } from 'element-ui'
 
 import App from './App.vue'
@@ -44,6 +45,7 @@ Vue.use(Table)
 Vue.use(TableColumn)
 Vue.use(Tabs)
 Vue.use(TabPane)
+Vue.use(Tooltip)
 
 Vue.config.productionTip = false
 
