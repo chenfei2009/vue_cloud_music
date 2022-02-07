@@ -17,7 +17,10 @@ import {
   TableColumn,
   Carousel,
   CarouselItem,
-  Image
+  Image,
+  Tabs,
+  TabPane,
+  Tooltip
 } from 'element-ui'
 
 import App from './App.vue'
@@ -46,6 +49,9 @@ Vue.use(TableColumn)
 Vue.use(Carousel)
 Vue.use(CarouselItem)
 Vue.use(Image)
+Vue.use(Tabs)
+Vue.use(TabPane)
+Vue.use(Tooltip)
 
 Vue.config.productionTip = false
 
