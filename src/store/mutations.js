@@ -1,7 +1,8 @@
 import {
   SET_CONTENT,
   ADD_TO_PLAYLIST,
-  RESET_PLAYLIST
+  RESET_PLAYLIST,
+  RESET_THEMECOLOR
 } from './mutations-type'
 
 function setPlayList (state, payload) {
@@ -27,5 +28,9 @@ export default {
   [RESET_PLAYLIST] (state, payload) {
     state.playList = payload
     state.playContent = payload[0]
+  },
+  [RESET_THEMECOLOR] (state, payload) {
+    const themeItem = state.themeList.find(item => item.name === payload)
+    state.themeColor = themeItem.color
   }
 }

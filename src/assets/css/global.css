@@ -1,12 +1,15 @@
 /* 全局样式表 */
 html, body, #app, ul, li {
-  height: 100%;
   margin: 0;
   padding: 0;
   /* min-width: 1366px; */
   font-size: 14px;
   box-sizing: border-box;
-  --themeColor: #ec4141;
+  /* --themeColor: #ec4141; */
+}
+
+#app {
+  height: 100%;
 }
 
 ul {
@@ -20,6 +23,10 @@ li {
 a {
   text-decoration: none;
   color: #333;
+}
+
+#app {
+  --themeColor: #ec4141;
 }
 
 .container {

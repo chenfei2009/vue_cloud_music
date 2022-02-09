@@ -33,8 +33,11 @@ export default {
   mounted () {},
   methods: {
     handleCoverClick () {
-      console.log('展开音乐详情页，获取当前歌曲id')
-      console.log(this.$store.state.playContent)
+      console.log('展开音乐详情页，获取当前歌曲id', this.$store.state.playContent.id)
+      this.$router.push({
+        path: '/song',
+        query: { id: this.$store.state.playContent.id }
+      })
     }
   }
 }

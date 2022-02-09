@@ -20,9 +20,9 @@
 </template>
 
 <script>
-import Header from './childComps/Header.vue'
 import Aside from './childComps/Aside.vue'
 import PlayList from './childComps/PlayList.vue'
+import Header from '@/components/content/Header/Header.vue'
 import Audio from '@/components/content/Audio/Audio.vue'
 
 import request from '@/utils/request.js'
