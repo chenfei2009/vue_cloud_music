@@ -4,5 +4,8 @@ export default {
   },
   audio (state) {
     return state.audio
+  },
+  themeColor (state) {
+    return state.themeColor
   }
 }
