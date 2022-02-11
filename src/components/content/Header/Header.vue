@@ -7,7 +7,9 @@
         </div>
         <span>网易云音乐</span>
       </div>
-      <i class="btn iconfont icon-arrow" v-else></i>
+      <i class="btn iconfont icon-arrow"
+        @click="onArrowClick"
+        v-else></i>
     </div>
     <div class="action-bar">
       <div class="action-btn"><i class="iconfont icon-arrow back-btn"></i></div>
@@ -63,7 +65,11 @@ export default {
       inputVal: ''
     }
   },
-  methods: {}
+  methods: {
+    onArrowClick () {
+      this.$emit('arrowClick')
+    }
+  }
 }
 </script>
 

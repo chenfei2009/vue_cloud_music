@@ -60,18 +60,6 @@ import formatTime from '@/utils/formatTime.js'
 
 export default {
   name: 'PlayList',
-  // props: {
-  //   tableData: {
-  //     type: Array,
-  //     default () {
-  //       return []
-  //     }
-  //   },
-  //   activeId: {
-  //     type: Number,
-  //     default: 0
-  //   }
-  // },
   computed: {
     playContent () {
       return this.$store.state.playContent

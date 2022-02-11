@@ -4,13 +4,13 @@
     <div class="info-cover">
       <!-- 遮罩层 -->
       <el-tooltip content="展开音乐详情页" placement="bottom" effect="light" :open-delay=500>
-        <div class=info-tooltip @click="handleCoverClick"></div>
+        <div class=info-tooltip @click="onCoverClick"></div>
       </el-tooltip>
       <img :src="audio.cover" alt="#">
     </div>
     <div class="info-text">
       <div class="info-name">{{audio.name}}</div>
-      <div class="info-singer">
+      <div class="info-artist">
         <span v-for="item in audio.ar" :key="item.id">{{item.name}}</span>
       </div>
     </div>
@@ -32,12 +32,9 @@ export default {
   },
   mounted () {},
   methods: {
-    handleCoverClick () {
-      console.log('展开音乐详情页，获取当前歌曲id', this.$store.state.playContent.id)
-      this.$router.push({
-        path: '/song',
-        query: { id: this.$store.state.playContent.id }
-      })
+    onCoverClick () {
+      console.log('showDetailClick')
+      this.$emit('showDetailClick')
     }
   }
 }
@@ -70,7 +67,10 @@ export default {
   .info-text {
     margin-left: 10px;
     width: 120px;
-    .info-singer {
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    .info-artist {
       font-size: 12px;
       margin-top: 2px;
     }
