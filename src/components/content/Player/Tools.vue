@@ -109,7 +109,7 @@ export default {
 .tools-container {
   display: flex;
   justify-content: flex-end;
-  align-items: center;
+  // align-items: center;
   width: 200px;
   height: 100%;
   .tools-item {

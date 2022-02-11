@@ -21,27 +21,27 @@ const routes = [
             component: () => import(/* webpackChunkName: "home" */ '@/views/discover/discover.vue')
           },
           { // 专属定制
-            path: '/djradio',
+            path: 'djradio',
             name: 'DjRadio',
             component: () => import(/* webpackChunkName: "home" */ '@/views/discover/djradio.vue')
           },
           { // 歌单
-            path: '/playlist',
+            path: 'playlist',
             name: 'Playlist',
             component: () => import(/* webpackChunkName: "home" */ '@/views/discover/playlist.vue')
           },
           { // 排行榜
-            path: '/toplist',
+            path: 'toplist',
             name: 'Toplist',
             component: () => import(/* webpackChunkName: "home" */ '@/views/discover/toplist.vue')
           },
           { // 歌手
-            path: '/artist',
+            path: 'artist',
             name: 'Artist',
             component: () => import(/* webpackChunkName: "home" */ '@/views/discover/artist.vue')
           },
           { // 新歌
-            path: '/newest',
+            path: 'newest',
             name: 'Newest',
             component: () => import(/* webpackChunkName: "home" */ '@/views/discover/newest.vue')
           }
@@ -53,11 +53,6 @@ const routes = [
         component: () => import(/* webpackChunkName: "home" */ '@/views/vlog/index.vue')
       }
     ]
-  },
-  {
-    path: '/song',
-    name: 'Song',
-    component: () => import(/* webpackChunkName: "home" */ '@/views/song/index.vue')
   }
 ]
 

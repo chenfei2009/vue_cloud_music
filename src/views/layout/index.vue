@@ -9,27 +9,21 @@
     </el-container>
     <el-footer class="footer-container" height="70px">
       <!-- 播放器模块 -->
-      <!-- <Audio :audioProp="audio" @showList="handleShowList"/> -->
-      <Audio @showList="handleShowList"/>
+      <Player />
     </el-footer>
-    <!-- 播放列表侧边栏 -->
-    <PlayList :tableData=playList
-      :activeId="activeId"
-      v-if="isShowPlayList"/>
   </el-container>
 </template>
 
 <script>
 import Aside from './childComps/Aside.vue'
-import PlayList from './childComps/PlayList.vue'
 import Header from '@/components/content/Header/Header.vue'
-import Audio from '@/components/content/Audio/Audio.vue'
+import Player from '@/components/content/Player/Player.vue'
 
 import request from '@/utils/request.js'
 
 export default {
   name: 'LayoutIndex',
-  components: { Header, Aside, Audio, PlayList },
+  components: { Header, Aside, Player },
   data () {
     return {
       name: 'Butterfly',
@@ -150,6 +144,7 @@ export default {
   .el-footer {
     border-top: 1px solid #ccc;
     box-sizing: border-box;
+    padding-top: 5px;
   }
 }
 </style>

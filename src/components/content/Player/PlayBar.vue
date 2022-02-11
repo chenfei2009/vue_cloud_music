@@ -1,6 +1,6 @@
 <template>
-  <div class="audio-container">
-    <Info :infoProp="audio"></Info>
+  <div class="play-bar-container">
+    <Info @showDetailClick="handleShowDetail" />
     <div class="di main-wrap">
       <audio ref="audio" class="hidden"
         :src="playContent.url" :preload="audio.preload" :autoplay="audio.autoplay"
@@ -53,8 +53,7 @@
     </div>
     <Tools @changeVol="handleChangeVol"
       @changeSpeed="handleChangeSpeed"
-      @showListClick="handleShowList"
-      ></Tools>
+      @showListClick="handleShowList" />
   </div>
 </template>
 
@@ -65,7 +64,7 @@ import Tools from './Tools.vue'
 import Info from './Info.vue'
 
 export default {
-  name: 'VueAudio',
+  name: 'AudioBar',
   components: { SliderBar, Info, Tools },
   computed: {
     playContent () {
@@ -168,6 +167,16 @@ export default {
       }
     },
 
+    // 播放列表按钮点击事件
+    handleShowList () {
+      this.$emit('showList')
+    },
+
+    // 点击封面
+    handleShowDetail () {
+      this.$emit('showDetail')
+    },
+
     // 上一首
     setPrev () {
       let index = this.playList.indexOf(this.playContent)
@@ -179,11 +188,6 @@ export default {
     // 下一首
     setNext () {
       this.switchContent()
-    },
-
-    // 播放列表按钮点击事件
-    handleShowList () {
-      this.$emit('showList')
     },
 
     /**
@@ -229,9 +233,8 @@ export default {
 
     // 当timeupdate事件大概每秒一次，用来更新音频流的当前播放时间
     onTimeupdate (res) {
-      // console.log('timeupdate')
-      // console.log(res)
       this.audio.currentTime = res.target.currentTime
+      this.$store.commit('setCurrentTime', res.target.currentTime)
       // this.sliderTime = parseInt(this.audio.currentTime / this.audio.maxTime * 100)
       if (!this.$refs.sliderBar.isMouseDownOnBall) this.sliderTime = this.audio.currentTime
     },
@@ -265,59 +268,64 @@ export default {
 </script>
 
 <style lang="less" scoped>
-.audio-container {
+.play-bar-container {
+  // box-sizing: border-box;
+  flex: 1;
+  // height: 70px;
   display: flex;
   justify-content: space-between;
-  height: 100%;
+  align-items: center;
+  background-color: #fff;
+  z-index: 99;
 }
 
-  .main-wrap{
-    padding: 5px 15px;
-    overflow: hidden;
-    height: 59px;
-  }
+.main-wrap{
+  padding: 0 15px;
+  overflow: hidden;
+  height: 59px;
+}
 
-  .audio-wrap {
+.audio-wrap {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 60px;
+
+  .action-bar {
     display: flex;
-    flex-direction: column;
-    justify-content: center;
+    width: 200px;
+    justify-content: space-between;
     align-items: center;
-    height: 60px;
-
-    .action-bar {
+    .icon:hover {
+      color: var(--themeColor);
+    }
+    .play-btn {
       display: flex;
-      width: 200px;
-      justify-content: space-between;
+      justify-content: center;
       align-items: center;
-      .icon:hover {
-        color: var(--themeColor);
-      }
-      .play-btn {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        width: 30px;
-        height: 30px;
-        background-color: #eee;
-        border-radius: 50%;
-        font-size: 16px;
-        .iconfont {
-          font-size: 18px;
-        }
-      }
-      .play-btn:hover {
-        background-color: #ccc;
+      width: 30px;
+      height: 30px;
+      background-color: #eee;
+      border-radius: 50%;
+      font-size: 16px;
+      .iconfont {
+        font-size: 18px;
       }
     }
-
-    .slider-wrap {
-      display: flex;
-      align-items: center;
+    .play-btn:hover {
+      background-color: #ccc;
     }
   }
 
-  .hidden {
-    display: none;
+  .slider-wrap {
+    display: flex;
+    align-items: center;
   }
+}
+
+.hidden {
+  display: none;
+}
 
 </style>

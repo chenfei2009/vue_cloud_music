@@ -19,3 +19,13 @@ export function _getSongUrlById (id) {
     params: { id }
   })
 }
+
+/**
+ * 获取 id 对应歌词
+ */
+export function _getLyricById (id) {
+  return request({
+    url: 'lyric',
+    params: { id }
+  })
+}
