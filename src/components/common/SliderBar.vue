@@ -174,7 +174,7 @@ export default {
     cursor: pointer;
   }
   .runway {
-    margin: 10px 5px;
+    margin: 10px 3px;
   }
 }
 </style>

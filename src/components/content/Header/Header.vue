@@ -43,21 +43,14 @@
 export default {
   name: 'Header',
   props: {
-    transparent: {
-      type: Boolean,
-      default: false
+    bgColor: {
+      type: String,
+      default: 'var(--themeColor)'
     }
   },
   computed: {
     bgStyle () {
-      // const themeColor = this.$store.state.themeColor
-      if (this.transparent) {
-        return {
-          color: '#000',
-          backgroundColor: 'rgba(0, 0, 0, 0)'
-        }
-      }
-      return { backgroundColor: 'var(--themeColor)' }
+      return { backgroundColor: this.bgColor }
     }
   },
   data () {

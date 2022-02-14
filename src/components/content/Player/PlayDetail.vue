@@ -8,7 +8,7 @@
       </div>
       <div class="center">
         <div class="title">
-          <h1 class="name">{{playContent.name}}</h1>
+          <div class="name">{{playContent.name}}</div>
           <div class="ar-al-wrap">
             <div class="artist" v-for="item in playContent.ar" :key="item.id">
             -{{item.name}}
@@ -19,13 +19,24 @@
         <LyricPanel :id="playContent.id" :currentTime="currentTime" />
       </div>
       <div class="right" v-show="!isCollapsed">
+        <el-tooltip :content="playListInfo.name" placement="bottom" effect="light" :open-delay=500>
+          <div class="play-list-info">播放来源：{{playListInfo.name}}</div>
+        </el-tooltip>
+        <div class="title">包含这首歌的歌单</div>
+        <!-- 相关歌单列表 -->
+        <ul class="rec-list-wrap">
+          <li v-for="item in simiPlaylists" :key="item.id" class="rec-list-item">
+            <el-image fit :src="item.coverImgUrl" class="item-cover"></el-image>
+            <div class="item-name">{{item.name}}</div>
+          </li>
+        </ul>
         <div class="title">喜欢这首歌的人也听</div>
-        <ul>
-          <li>111</li>
-          <li>222</li>
-          <li>333</li>
-          <li>444</li>
-          <li>555</li>
+        <!-- 推荐歌曲列表 -->
+        <ul class="rec-list-wrap">
+          <li v-for="item in simiSongs" :key="item.id" class="rec-list-item">
+            <el-image fit :src="item.album.picUrl" class="item-cover"></el-image>
+            <div class="item-name">{{item.name}}</div>
+          </li>
         </ul>
       </div>
     </div>
@@ -36,6 +47,8 @@
 </template>
 
 <script>
+import { _getSimiPlaylistsById, _getSimiSongsById } from '@/network/song.js'
+
 import LyricPanel from './LyricPanel.vue'
 
 export default {
@@ -47,16 +60,41 @@ export default {
     },
     currentTime () {
       return this.$store.state.currentTime
+    },
+    playListInfo () {
+      return this.$store.state.playListInfo
     }
   },
   data () {
     return {
       id: null,
+      simiPlaylists: [],
+      simiSongs: [],
       isCollapsed: false
     }
   },
-  created () {},
-  methods: {}
+  created () {
+    this.getRelatedPlaylistsById()
+    this.getSimiSongsById()
+  },
+  methods: {
+    async getSimiPlaylistsById () {
+      const { data: res } = await _getSimiPlaylistsById(this.playContent.id)
+      this.simiPlaylists = res.playlists
+      console.log(this.simiPlaylists)
+    },
+    async getSimiSongsById () {
+      const { data: res } = await _getSimiSongsById(this.playContent.id)
+      this.simiSongs = res.songs
+      console.log(this.simiSongs)
+    }
+  },
+  watch: {
+    playContent () {
+      this.getSimiPlaylistsById()
+      this.getSimiSongsById()
+    }
+  }
 }
 </script>
 
@@ -64,21 +102,22 @@ export default {
 .play-detail-container {
   position: relative;
   width: 100%;
-  height: 66%;
+  height: 60%;
   min-height: 400px;
   max-height: 600px;
-  margin-top: 20px;
+  padding-top: 20px;
   .main {
     display: flex;
     height: 100%;
+    margin: 10px 30px;
     .left {
       flex: 2;
       display: flex;
       justify-content: center;
       align-items: center;
       .cover-wrap {
-        width: 140px;
-        height: 140px;
+        width: 260px;
+        height: 260px;
         border-radius: 50%;
         padding: 30px;
         overflow: hidden;
@@ -99,6 +138,10 @@ export default {
       justify-content: space-around;
       padding: 0 20px;
       .title {
+        .name {
+          font-size: 24px;
+          margin-bottom: 10px;
+        }
         .ar-al-wrap {
           display: flex;
           justify-content: center;
@@ -112,7 +155,35 @@ export default {
     .right {
       width: 20vw;
       margin-top: 120px;
-      height: 200px;
+      height: 300px;
+      overflow: hidden;
+      box-shadow: #fff 0px -30px 30px -15px inset;
+      .play-list-info {
+        white-space: nowrap;
+        text-overflow: ellipsis;
+        overflow: hidden;
+      }
+      .title {
+        margin: 10px 0;
+        font-weight: 600;
+      }
+      .rec-list-wrap {
+        .rec-list-item {
+          display: flex;
+          align-items: center;
+          .item-cover {
+            width: 30px;
+            height: 30px;
+            margin: 10px 10px 10px 0;
+            border-radius: 10%;
+            overflow: hidden;
+          }
+          .item-name {
+            flex: 1;
+            font-size: 12px;
+          }
+        }
+      }
     }
   }
 
@@ -121,6 +192,10 @@ export default {
     right: 0;
     top: 0;
     bottom: 0;
+    width: 30px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
   }
 }
 </style>

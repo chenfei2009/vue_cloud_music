@@ -141,10 +141,9 @@ export default {
   .main-container {
     height: calc(~"100vh - 130px");
   }
-  .el-footer {
-    border-top: 1px solid #ccc;
-    box-sizing: border-box;
-    padding-top: 5px;
-  }
+  // .el-footer {
+  //   border-top: 1px solid #ccc;
+  //   box-sizing: border-box;
+  // }
 }
 </style>

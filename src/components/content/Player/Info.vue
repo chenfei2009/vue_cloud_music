@@ -1,17 +1,29 @@
 <template>
   <!-- 歌曲信息模块 -->
   <div class="info-container">
+    <div class="info-action" :style="actionStyle">
+      <div class="left">
+        <i class="btn iconfont icon-arrow"
+          @click="onCoverClick"></i>
+      </div>
+      <div class="right">
+        <i class="btn iconfont icon-heart1"></i>
+        <i class="btn iconfont icon-add"></i>
+        <i class="btn iconfont icon-download"></i>
+        <i class="btn iconfont icon-share"></i>
+      </div>
+    </div>
     <div class="info-cover">
       <!-- 遮罩层 -->
       <el-tooltip content="展开音乐详情页" placement="bottom" effect="light" :open-delay=500>
         <div class=info-tooltip @click="onCoverClick"></div>
       </el-tooltip>
-      <img :src="audio.cover" alt="#">
+      <el-image :src="playContent.al.picUrl" alt="#" />
     </div>
     <div class="info-text">
-      <div class="info-name">{{audio.name}}</div>
+      <div class="info-name">{{playContent.name}}</div>
       <div class="info-artist">
-        <span v-for="item in audio.ar" :key="item.id">{{item.name}}</span>
+        <span v-for="item in playContent.ar" :key="item.id">{{item.name}}</span>
       </div>
     </div>
     <div class="info-zan"><i class="iconfont icon-dianzan"></i></div>
@@ -23,17 +35,22 @@ export default {
   name: 'Info',
   props: {},
   computed: {
-    audio () {
+    playContent () {
       return this.$store.state.playContent
+    },
+    actionStyle () {
+      return { top: this.isShowDetail ? '0' : '-70px' }
     }
   },
   data () {
-    return {}
+    return {
+      isShowDetail: false
+    }
   },
   mounted () {},
   methods: {
     onCoverClick () {
-      console.log('showDetailClick')
+      this.isShowDetail = !this.isShowDetail
       this.$emit('showDetailClick')
     }
   }
@@ -42,13 +59,48 @@ export default {
 
 <style lang="less" scoped>
 .info-container {
+  position: relative;
   display: flex;
   align-items: center;
-  width: 200px;
+  width: 240px;
   height: 100%;
+  overflow: hidden;
+
+  .info-action {
+    position: absolute;
+    width: 240px;
+    height: 70px;
+    background-color: #fff;
+    left: 0;
+    z-index: 9;
+    display: flex;
+    justify-content: space-between;
+    transition: 0.5s;
+    .left, .right {
+      display: flex;
+      align-items: center;
+    }
+    .left {
+      width: 50px;
+      .btn {
+        transform: rotate(90deg);
+      }
+    }
+    .right {
+      flex: 1;
+      justify-content: space-between;
+      .btn {
+        padding: 10px;
+        border-radius: 50%;
+        border: 1px solid #ccc;
+      }
+    }
+  }
+
   .info-cover {
     width: 50px;
     height: 50px;
+    margin: 10px 0;
     background-color: rgb(129, 116, 116);
     border-radius: 5px;
     overflow: hidden;

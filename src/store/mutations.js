@@ -1,6 +1,7 @@
 import {
   SET_CONTENT,
   SET_CURRENTTIME,
+  SET_PLAYLISTINFO,
   ADD_TO_PLAYLIST,
   RESET_PLAYLIST,
   RESET_THEMECOLOR
@@ -25,6 +26,9 @@ export default {
   },
   [SET_CURRENTTIME] (state, payload) {
     state.currentTime = payload
+  },
+  [SET_PLAYLISTINFO] (state, payload) {
+    state.playListInfo = payload
   },
   [ADD_TO_PLAYLIST] (state, payload) {
     setPlayList(state, payload)

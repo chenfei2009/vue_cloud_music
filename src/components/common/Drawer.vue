@@ -80,10 +80,9 @@ export default {
 </script>
 
 style <style lang="less" scoped>
-// .drawer-wrap {
-//   margin-bottom: 70px;
-//   overflow: hidden;
-// }
+.drawer-wrap {
+  position: relative;
+}
 
   /* 遮罩层 */
   .drawer-mask {

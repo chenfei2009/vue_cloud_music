@@ -29,3 +29,25 @@ export function _getLyricById (id) {
     params: { id }
   })
 }
+
+/**
+ * 获取相似歌单
+ * @param { interger } id 歌曲编号
+ */
+export function _getSimiPlaylistsById (id) {
+  return request({
+    url: '/simi/playlist',
+    params: { id }
+  })
+}
+
+/**
+ * 获取相似歌曲
+ * @param { interger } id 歌曲编号
+ */
+export function _getSimiSongsById (id) {
+  return request({
+    url: '/simi/song',
+    params: { id }
+  })
+}

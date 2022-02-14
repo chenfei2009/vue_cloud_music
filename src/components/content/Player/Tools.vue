@@ -109,11 +109,11 @@ export default {
 .tools-container {
   display: flex;
   justify-content: flex-end;
-  // align-items: center;
-  width: 200px;
-  height: 100%;
+  align-items: center;
+  width: 240px;
+  // height: 100%;
   .tools-item {
-    margin: 0 5px;
+    margin: 0 0 0 15px;
   }
   .speed {
     border: 1px solid #000;
