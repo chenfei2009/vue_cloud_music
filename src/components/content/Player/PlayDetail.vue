@@ -16,7 +16,7 @@
             <div class="album">-{{playContent.al.name}}</div>
           </div>
         </div>
-        <LyricPanel :id="playContent.id" :currentTime="currentTime" />
+        <LyricPanel :lyric="lyric" />
       </div>
       <div class="right" v-show="!isCollapsed">
         <el-tooltip :content="playListInfo.name" placement="bottom" effect="light" :open-delay=500>
@@ -47,13 +47,31 @@
 </template>
 
 <script>
-import { _getSimiPlaylistsById, _getSimiSongsById } from '@/network/song.js'
-
 import LyricPanel from './LyricPanel.vue'
 
 export default {
   name: 'PlayDetail',
   components: { LyricPanel },
+  props: {
+    lyric: {
+      type: Array,
+      default () {
+        return []
+      }
+    },
+    simiPlaylists: {
+      type: Array,
+      default () {
+        return []
+      }
+    },
+    simiSongs: {
+      type: Array,
+      default () {
+        return []
+      }
+    }
+  },
   computed: {
     playContent () {
       return this.$store.state.playContent
@@ -67,34 +85,11 @@ export default {
   },
   data () {
     return {
-      id: null,
-      simiPlaylists: [],
-      simiSongs: [],
       isCollapsed: false
     }
   },
-  created () {
-    this.getRelatedPlaylistsById()
-    this.getSimiSongsById()
-  },
-  methods: {
-    async getSimiPlaylistsById () {
-      const { data: res } = await _getSimiPlaylistsById(this.playContent.id)
-      this.simiPlaylists = res.playlists
-      console.log(this.simiPlaylists)
-    },
-    async getSimiSongsById () {
-      const { data: res } = await _getSimiSongsById(this.playContent.id)
-      this.simiSongs = res.songs
-      console.log(this.simiSongs)
-    }
-  },
-  watch: {
-    playContent () {
-      this.getSimiPlaylistsById()
-      this.getSimiSongsById()
-    }
-  }
+  created () {},
+  methods: {}
 }
 </script>
 
@@ -106,10 +101,11 @@ export default {
   min-height: 400px;
   max-height: 600px;
   padding-top: 20px;
+  margin: 10px 30px;
   .main {
     display: flex;
     height: 100%;
-    margin: 10px 30px;
+    justify-content: center;
     .left {
       flex: 2;
       display: flex;
@@ -157,7 +153,7 @@ export default {
       margin-top: 120px;
       height: 300px;
       overflow: hidden;
-      box-shadow: #fff 0px -30px 30px -15px inset;
+      // box-shadow: #fff 0px -30px 30px -15px inset;
       .play-list-info {
         white-space: nowrap;
         text-overflow: ellipsis;

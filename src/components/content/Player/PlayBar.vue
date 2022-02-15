@@ -42,7 +42,7 @@
         <div class="slider-wrap">
           <!-- <span>{{ audio.currentTime | formatSecond}}</span> -->
           <span>{{ sliderTime | formatSecond}}</span>
-          <SliderBar height="6px" width="300px" ref="sliderBar"
+          <SliderBar height="6px" width="350px" ref="sliderBar"
             :max="audio.maxTime"
             @drag="changeTimeByDrag"
             @change="changeTimeByClick"

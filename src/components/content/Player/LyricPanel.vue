@@ -22,57 +22,33 @@
 <script>
 import Scroll from '@/components/common/Scroll.vue'
 
-import { _getLyricById } from '@/network/song.js'
-
 export default {
   name: 'LyricPanel',
   components: { Scroll },
   props: {
-    id: {
-      type: [String, Number],
-      required: true
-    },
-    currentTime: {
-      type: [String, Number],
-      required: true
+    lyric: {
+      type: Array,
+      default () {
+        return []
+      }
+    }
+  },
+  computed: {
+    currentTime () {
+      return this.$store.state.currentTime
     }
   },
   data () {
     return {
-      lyric: [],
+      // lyric: [],
       currentIndex: 0
     }
   },
   created () {
     this.getLyricById()
   },
-  methods: {
-    async getLyricById () {
-      const { data: res } = await _getLyricById(this.id)
-      const lyricData = res.lrc.lyric.split('\n')
-      const lyricObj = []
-      // 正则匹配 [03:57.201]原谅我...
-      const reg = /\[\d*:\d*(\.|:)\d*]/g
-      lyricData.forEach(v => {
-        const timeRegArr = v.match(reg)
-        // if (!timeRegArr) continue
-        if (!timeRegArr) return
-        // 获取歌词
-        const content = v.replace(timeRegArr, '')
-        // 获取时间
-        const t = timeRegArr[0]
-        const min = parseInt(t.match(/\[\d*/i).toString().slice(1))
-        const sec = parseInt(t.match(/:\d*/i).toString().slice(1))
-        const time = min * 60 + sec
-        lyricObj.push({ time, content })
-      })
-      this.lyric = lyricObj
-    }
-  },
+  methods: {},
   watch: {
-    id () {
-      this.getLyricById()
-    },
     currentTime () {
       this.currentIndex = this.lyric.findIndex(v => parseInt(v.time) >= this.currentTime)
       // console.log(this.currentIndex)
