@@ -36,6 +36,13 @@ export default {
       default: false
     },
     /**
+     * 是否开启滚动条
+     */
+    scrollbar: {
+      type: Boolean,
+      default: false
+    },
+    /**
      * 是否派发滚动事件
      */
     listenScroll: {
@@ -76,6 +83,27 @@ export default {
     refreshDelay: {
       type: Number,
       default: 20
+    },
+    /**
+     * 边缘回弹动画
+     */
+    bounce: {
+      type: Boolean,
+      default: true
+    },
+    /**
+     * 监听鼠标滚轮
+     */
+    mouseWheel: {
+      type: Boolean,
+      default: false
+    },
+    /**
+     * 阻止事件冒泡 用于多层嵌套
+     */
+    stopPropagation: {
+      type: Boolean,
+      default: false
     }
   },
   mounted () {
@@ -93,8 +121,11 @@ export default {
       this.scroll = new BScroll(this.$refs.wrapper, {
         probeType: this.probeType,
         click: this.click,
-        mouseWheel: true,
-        scrollX: this.scrollX
+        mouseWheel: this.mouseWheel,
+        scrollX: this.scrollX,
+        bounce: this.bounce,
+        stopPropagation: this.stopPropagation,
+        scrollbar: this.scrollbar
       })
 
       // 是否派发滚动事件

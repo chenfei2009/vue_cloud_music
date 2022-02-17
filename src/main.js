@@ -21,7 +21,8 @@ import {
   Tabs,
   TabPane,
   Tooltip,
-  Pagination
+  Pagination,
+  Button
 } from 'element-ui'
 
 import App from './App.vue'
@@ -54,6 +55,7 @@ Vue.use(Tabs)
 Vue.use(TabPane)
 Vue.use(Tooltip)
 Vue.use(Pagination)
+Vue.use(Button)
 
 Vue.config.productionTip = false
 

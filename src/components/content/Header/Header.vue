@@ -1,7 +1,7 @@
 <template>
   <el-header :style="bgStyle">
     <div class="left-bar">
-      <div class="logo-wrap" v-if="!transparent">
+      <div class="logo-wrap" v-if="!isShowPlayDetail">
         <div class="logo-bg">
           <i class="logo iconfont icon-netease-cloud-music-line"></i>
         </div>
@@ -20,7 +20,7 @@
       </div>
     </div>
     <div class="user-bar">
-      <div class="login-wrap" v-if="!transparent">
+      <div class="login-wrap" v-if="!isShowPlayDetail">
         <i class="avatar iconfont icon-user01"></i>
         <el-dropdown>
           <span class="el-dropdown-link">
@@ -46,6 +46,10 @@ export default {
     bgColor: {
       type: String,
       default: 'var(--themeColor)'
+    },
+    isShowPlayDetail: {
+      type: Boolean,
+      default: false
     }
   },
   computed: {

@@ -7,6 +7,10 @@
         <a class="item-username" href="#">{{item.user.nickname}}: </a>
         <span class="item-content">{{item.content}}</span>
       </div>
+      <div class="replied-wrap" v-if="item.beReplied.length>0">
+        <a class="item-username" href="#">@{{item.beReplied[0].user.nickname}}: </a>
+        <span class="item-content">{{item.beReplied[0].content}}</span>
+      </div>
       <div class="item-time text-small fl">{{item.timeStr}}</div>
       <div class="right-wrap fr">
         <span class="iconfont icon-dianzan"></span>
@@ -49,11 +53,19 @@ export default {
 .item-detail-wrap {
   flex: 1;
   margin-left: 10px;
-  .content-wrap {
+  .content-wrap, .replied-wrap {
     margin-bottom: 10px;
     a, span {
       font-size: 12px;
     }
+    a {
+      color: rgb(80, 125, 175);
+    }
+  }
+  .replied-wrap {
+    background-color: #eee;
+    padding: 10px;
+    border-radius: 3px;
   }
   .right-wrap {
     span {

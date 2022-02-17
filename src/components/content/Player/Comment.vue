@@ -1,9 +1,6 @@
 <template>
   <!-- 歌曲评论模块 -->
   <section class="comment-container">
-    <div v-show="!isShowBackTop" class="add-comment-r">写评论</div>
-    <div v-show="isShowBackTop" class="add-comment-b">发表我的评论</div>
-    <div v-show="isShowBackTop" class="back-top">返回顶部</div>
     <!-- 热门评论 -->
     <div class="hot-comments-wrap">
       <div class="comment-title">全部评论({{hotComments.length}})</div>
@@ -52,10 +49,6 @@ export default {
       default () {
         return {}
       }
-    },
-    isShowBackTop: {
-      type: Boolean,
-      default: false
     }
   },
   components: { CommentItem },
@@ -73,22 +66,6 @@ export default {
   position: relative;
   margin: 150px auto;
   width: 550px;
-  .back-top {
-    position: absolute;
-    top: 0;
-    right: -100px;
-    height: 50px;
-  }
-  .add-comment-b {
-    position: fixed;
-    bottom: 0;
-    left: 50%;
-  }
-  .add-comment-r {
-    position: fixed;
-    bottom: 0;
-    right: 300px;
-  }
   .comment-title {
     font-weight: 600;
     margin-top: 50px;
@@ -108,7 +85,7 @@ export default {
     }
   }
   .block {
-    padding: 20px;
+    padding: 20px 0 80px 0;
     display: flex;
     justify-content: center;
     /deep/ .el-pager {

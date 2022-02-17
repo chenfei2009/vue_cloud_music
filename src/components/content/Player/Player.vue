@@ -8,12 +8,15 @@
       height="calc(100% - 70px)"
       :mask=false>
       <Header bgColor="#eee"
+        :isShowPlayDetail="isShowPlayDetail"
         @arrowClick="isShowPlayDetail=!isShowPlayDetail" />
       <!-- 滚动区域 -->
       <Scroll ref="scroll"
         class="scroll-wrap"
         :probeType="3"
         :listenScroll="true"
+        :bounce="false"
+        :mouseWheel="true"
         @scroll="contentScroll">
         <!-- 歌曲详情模块 -->
         <PlayDetail :lyric="lyric"
@@ -21,10 +24,19 @@
           :simiSongs="simiSongs" />
         <!-- 歌曲评论模块 -->
         <Comment :hotComments="hotComments"
-          :comments="comments"
-          :isShowBackTop="isShowBackTop"/>
+          :comments="comments" />
       </Scroll>
       <div class="scroll-bg"></div>
+      <!-- 底部悬浮按钮组 -->
+      <div :style="btnStyle" class="add-comment-b">
+        <el-button type="info" size="medium" round>发表我的音乐评论</el-button>
+        </div>
+      <div :style="btnStyle" class="back-top">
+        <el-button type="info" size="medium" round>返回顶部</el-button>
+      </div>
+      <div :style="btnStyle2" class="back-top">
+        <el-button type="info" size="medium" round>写评论</el-button>
+      </div>
     </Drawer>
     <!-- 播放列表侧边栏 -->
     <PlayList :tableData=playList
@@ -70,6 +82,18 @@ export default {
     },
     playList () {
       return this.$store.state.playList
+    },
+    btnStyle () {
+      return { // 返回顶部按钮
+        bottom: this.isShowBackTop ? '90px' : '20px',
+        opacity: this.isShowBackTop ? 1 : 0
+      }
+    },
+    btnStyle2 () { // 写评论按钮
+      return {
+        bottom: !this.isShowBackTop && this.isShowPlayDetail ? '90px' : '20px',
+        opacity: !this.isShowBackTop && this.isShowPlayDetail ? 1 : 0
+      }
     }
   },
   data () {
@@ -82,12 +106,12 @@ export default {
       activeId: 0, // 当前选中歌曲 id
       isShowPlayDetail: false, // 是否显示歌曲详情
       isShowPlayList: false, // 是否显示播放列表
-      isShowBackTop: false,
-      tabOffsetTop: 0,
-      isTabFixed: false
+      isShowBackTop: false
+      // tabOffsetTop: 0,
+      // isTabFixed: false
     }
   },
-  mounted () {
+  created () {
     this.getLyricById()
     if (this.isShowPlayDetail) {
       this.getSimiPlaylistsById()
@@ -160,7 +184,7 @@ export default {
     async getCommentById () {
       const { data: res } = await _getCommentById(this.playContent.id)
       this.comments = res.comments
-      // console.log(this.comments[0])
+      console.log(this.comments)
       this.$nextTick(() => {
         this.$refs.scroll.refresh()
       })
@@ -186,6 +210,8 @@ export default {
       // 1. 控制返回顶部图标是否显示
       // console.log('scroll', pos)
       this.isShowBackTop = (-pos.y) > 10
+      // console.log(this.isShowBackTop)
+      // console.log((-pos.y))
       // 2. 动态改变 TabControl 样式
       // console.log(this.$refs.tabControlRef.offsetTop)
       // this.isTabFixed = (-pos.y) > this.tabOffsetTop
@@ -215,13 +241,34 @@ export default {
 
 <style lang="less" scoped>
 .scroll-wrap {
-  height: 100%;
+  height: calc(~"100% - 60px");
+  width: 100%;
   overflow: hidden;
 }
 // .scroll-wrap::-webkit-scrollbar { /* 滚动条整体样式 */
 //   width: 4px; /* 高宽分别对应横竖滚动条的尺寸 */
 //   height: 20px;
 // }
+
+.back-top {
+  position: fixed;
+  // width: 200px;
+  bottom: 90px;
+  left: calc(~"50vw + 275px");
+  z-index: 99;
+  transition: 0.2s;
+}
+
+.add-comment-b {
+  position: fixed;
+  // width: 200px;
+  left: 50%;
+  transform: translateX(-50%);
+  bottom: 90px;
+  z-index: 99;
+  transition: 0.2s;
+}
+
 .scroll-bg {
   position: absolute;
   top: 60px;

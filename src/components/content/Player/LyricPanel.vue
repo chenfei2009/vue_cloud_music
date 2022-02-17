@@ -1,21 +1,26 @@
 <template>
   <div class="lyric-panel-container">
-    <ul ref="lyricArr" class="lyric-wrapper">
-      <li v-for="(item, index) in lyric"
-        :key="index"
-        class="lyric-item"
-        :class="index === currentIndex - 1 ? 'active' : ''"
-        >{{item.content}}</li>
-    </ul>
-    <Scroll />
-    <!-- <Scroll class="lyric-wrapper">
-      <ul ref="lyricArr">
+    <div class="time-line" v-if="isShowTimeLine"></div>
+    <Scroll ref="scroll"
+      class="scroll-wrapper"
+      :probeType="3"
+      :listenScroll="true"
+      :stopPropagation="true"
+      :bounce="false"
+      :mouseWheel="true"
+      :scrollbar="true"
+      @scroll="contentScroll">
+      <ul ref="lyricArrRef"
+        class="lyric-list"
+        @mouseenter="handleMouseEnter"
+        @mouseleave="handleMouseLeave">
         <li v-for="(item, index) in lyric"
           :key="index"
           class="lyric-item"
+          :class="{active: index===currentIndex, scrollFocus:index===scrollIndex}"
           >{{item.content}}</li>
       </ul>
-    </Scroll> -->
+    </Scroll>
   </div>
 </template>
 
@@ -36,36 +41,64 @@ export default {
   computed: {
     currentTime () {
       return this.$store.state.currentTime
+    },
+    currentIndex () {
+      const index = this.lyric.findIndex(v => parseInt(v.time) >= this.currentTime) - 1
+      if (!this.lyric || index < 0) return 0
+      return index
     }
   },
   data () {
     return {
-      // lyric: [],
-      currentIndex: 0
+      // currentIndex: 0,
+      // 每句歌词对应的 Y 值，与 scrollTo() 方法对应
+      lyricTopYs: [],
+      isShowTimeLine: false,
+      scrollIndex: 0
     }
   },
-  created () {
-    this.getLyricById()
+  created () {},
+  mounted () {
+    // const posY = this.lyricTopYs[this.currentIndex]
+    // this.$refs.scroll.scrollTo(0, -posY, 500)
+    this.$nextTick(() => {
+      // const posY = this.lyricTopYs[0]
+      // this.$refs.scroll.scrollTo(0, -posY, 500)
+      this.$refs.scroll.scrollTo(0, 80, 500)
+    })
   },
-  methods: {},
+  methods: {
+    contentScroll (pos) {
+      // const index = parseInt((80 + pos.y) / 40)
+      console.log('scroll')
+      // 显示定位线
+      this.isShowTimeLine = true
+      // 修改 currentIndex
+      this.scrollIndex = parseInt((80 + pos.y) / 40)
+    },
+    handleMouseEnter () {
+      console.log('mouseEnter')
+      // this.isMouseOnLyric = true
+    },
+    handleMouseLeave () {
+      console.log('mouseLeave')
+      // this.isMouseOnLyric = false
+    }
+  },
   watch: {
-    currentTime () {
-      this.currentIndex = this.lyric.findIndex(v => parseInt(v.time) >= this.currentTime)
-      // console.log(this.currentIndex)
-      if (this.currentIndex < 0) {
-        this.currentIndex = this.lyric.length
-        console.log('lyric ended')
-      }
-      this.$refs.lyricArr.style.transform = `translateY(${140 - (40 * (this.currentIndex + 1))}px)`
-      // for (let i = 0; i < this.lyric.length; i++) {
-      //   if (this.currentTime > (parseInt(this.lyric[i].time))) {
-      //     const index = this.$refs.lyricArr[i].dataset.index
-      //     if (i === parseInt(index)) {
-      //       this.currentIndex = i
-      //       this.$refs.lyricArr.style.transform = `translateY(${170 - (30 * (i + 1))}px)`
-      //     }
-      //   }
-      // }
+    lyric () {
+      this.$nextTick(() => {
+        this.$refs.scroll.refresh()
+        // console.log(this.$refs.lyricArrRef.childNodes)
+        this.$refs.lyricArrRef.childNodes.forEach(v => {
+          this.lyricTopYs.push(v.offsetTop - 100)
+        })
+        console.log(this.lyricTopYs)
+      })
+    },
+    currentIndex () {
+      const posY = this.lyricTopYs[this.currentIndex]
+      this.$refs.scroll.scrollTo(0, -posY, 500)
     }
   }
 }
@@ -73,19 +106,36 @@ export default {
 
 <style lang="less" scoped>
 .lyric-panel-container {
+  position: relative;
   height: 280px;
-  overflow: hidden;
+  // overflow: hidden;
   padding: 20px 0;
-  .lyric-wrapper {
+  .time-line {
+    position: absolute;
+    top: 140px;
+    left: 0;
+    right: 0;
+    height: 2px;
+    background-color: #000;
+  }
+  .scroll-wrapper {
     height: 70%;
-    transition: 0.5s;
-    // overflow: hidden;
+    overflow: hidden;
+  }
+  .lyric-list {
     .lyric-item {
       // padding: 10px 0;
       height: 40px;
-      line-height: 40px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      // line-height: 40px;
+    }
+    .scroll-focus {
+      font-weight: 800;
     }
     .active {
+      font-size: 16px;
       font-weight: 800;
     }
   }
