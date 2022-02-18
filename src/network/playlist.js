@@ -9,8 +9,18 @@ import request from './request'
 export function _getSongsByListId (id, limit = null, offset = null) {
   return request({
     url: '/playlist/track/all',
-    params: {
-      id, limit, offset
-    }
+    params: { id, limit, offset }
+  })
+}
+
+/**
+ * 获取歌单详情
+ * @param { interger } id 歌单编号
+ * @param { interger } s 歌单最近的 s 个收藏者, 默认为 8
+ */
+export function _getDetailByListId (id, s = 8) {
+  return request({
+    url: '/playlist/detail',
+    params: { id, s }
   })
 }
