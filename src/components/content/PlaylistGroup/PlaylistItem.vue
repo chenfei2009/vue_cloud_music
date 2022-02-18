@@ -61,7 +61,13 @@ export default {
       this.$store.commit('resetPlayList', songs)
     },
     onItemClick () {
-      console.log('跳转到歌单详情页')
+      if (!this.item.id) return
+      this.$router.push({
+        path: '/playlist',
+        query: {
+          id: this.item.id
+        }
+      })
     },
     onBtnClick () {
       console.log('播放歌单', this.item)
