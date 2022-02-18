@@ -1,6 +1,15 @@
 <template>
-  <div class="lyric-panel-container">
-    <div class="time-line" v-if="isShowTimeLine"></div>
+  <div class="lyric-panel-container"
+    @mouseenter="handleMouseEnter"
+    @mouseleave="handleMouseLeave">
+    <!-- 进度控制线 -->
+    <div class="time-line-bar" v-show="isShowTimeLine">
+      <div class="timer">{{scrollTimer}}</div>
+      <div class="btn" @click="handleTimerClick">
+        <i class="iconfont icon-caret-right" ></i>
+      </div>
+    </div>
+    <!-- 滚动区域 -->
     <Scroll ref="scroll"
       class="scroll-wrapper"
       :probeType="3"
@@ -12,12 +21,11 @@
       @scroll="contentScroll">
       <ul ref="lyricArrRef"
         class="lyric-list"
-        @mouseenter="handleMouseEnter"
-        @mouseleave="handleMouseLeave">
+        @mousewheel="handleMouseWheel">
         <li v-for="(item, index) in lyric"
           :key="index"
           class="lyric-item"
-          :class="{active: index===currentIndex, scrollFocus:index===scrollIndex}"
+          :class="{active: index===currentIndex, focus: isShowTimeLine && index===scrollIndex}"
           >{{item.content}}</li>
       </ul>
     </Scroll>
@@ -25,6 +33,8 @@
 </template>
 
 <script>
+import formatTime from '@/utils/formatTime.js'
+
 import Scroll from '@/components/common/Scroll.vue'
 
 export default {
@@ -43,18 +53,23 @@ export default {
       return this.$store.state.currentTime
     },
     currentIndex () {
-      const index = this.lyric.findIndex(v => parseInt(v.time) >= this.currentTime) - 1
+      const index = this.lyric.findIndex(v => v.time >= this.currentTime) - 1
       if (!this.lyric || index < 0) return 0
       return index
     }
+    // scrollTimer () { // scrollIndex 对应的时间
+    //   return formatTime(this.lyric[this.scrollIndex].time)
+    // }
   },
   data () {
     return {
       // currentIndex: 0,
       // 每句歌词对应的 Y 值，与 scrollTo() 方法对应
       lyricTopYs: [],
+      isAutoScroll: true,
       isShowTimeLine: false,
-      scrollIndex: 0
+      scrollIndex: 0,
+      scrollTimer: '00:00'
     }
   },
   created () {},
@@ -70,33 +85,48 @@ export default {
   methods: {
     contentScroll (pos) {
       // const index = parseInt((80 + pos.y) / 40)
-      console.log('scroll')
+      // console.log('scroll')
       // 显示定位线
-      this.isShowTimeLine = true
+      // this.isShowTimeLine = true
       // 修改 currentIndex
-      this.scrollIndex = parseInt((80 + pos.y) / 40)
+      this.scrollIndex = parseInt((-pos.y) / 40) + 3
+      const timer = this.lyric[this.scrollIndex].time
+      this.scrollTimer = formatTime(timer)
     },
     handleMouseEnter () {
-      console.log('mouseEnter')
-      // this.isMouseOnLyric = true
+      // console.log('mouseEnter')
+      // this.isShowTimeLine = true
     },
     handleMouseLeave () {
-      console.log('mouseLeave')
-      // this.isMouseOnLyric = false
+      // console.log('mouseLeave')
+      this.isShowTimeLine = false
+      this.isAutoScroll = true
+    },
+    handleMouseWheel () {
+      // console.log('mouseWheel')
+      this.isAutoScroll = false
+      if (!this.isShowTimeLine) this.isShowTimeLine = true
+    },
+    handleTimerClick () {
+      const timer = this.lyric[this.scrollIndex].time
+      console.log('setCurrentTime', this.lyric[this.scrollIndex].time)
+      this.$store.commit('setCurrentTime', timer)
     }
   },
   watch: {
     lyric () {
       this.$nextTick(() => {
         this.$refs.scroll.refresh()
+        this.$refs.scroll.scrollTo(0, 80, 500)
         // console.log(this.$refs.lyricArrRef.childNodes)
         this.$refs.lyricArrRef.childNodes.forEach(v => {
-          this.lyricTopYs.push(v.offsetTop - 100)
+          this.lyricTopYs.push(v.offsetTop - 120)
         })
-        console.log(this.lyricTopYs)
+        // console.log(this.lyricTopYs)
       })
     },
     currentIndex () {
+      if (!this.isAutoScroll) return
       const posY = this.lyricTopYs[this.currentIndex]
       this.$refs.scroll.scrollTo(0, -posY, 500)
     }
@@ -109,20 +139,41 @@ export default {
   position: relative;
   height: 280px;
   // overflow: hidden;
-  padding: 20px 0;
-  .time-line {
+  margin: 20px 0;
+  .time-line-bar {
     position: absolute;
     top: 140px;
     left: 0;
     right: 0;
-    height: 2px;
-    background-color: #000;
+    // height: 1px;
+    display: flex;
+    justify-content: space-between;
+    padding: 0 20px;
+    z-index: 30;
+    .timer {
+      font-size: 10px;
+    }
+    .timer:after, .btn:before {
+      position: absolute;
+      content: '';
+      width: 40px;
+      height: 1px;
+      background-color: #ccc;
+      top: 45%;
+    }
+    .timer:after {
+      right: 8%;
+    }
+    .btn:before {
+      left: 12%;
+    }
   }
   .scroll-wrapper {
-    height: 70%;
+    height: 100%;
     overflow: hidden;
   }
   .lyric-list {
+    padding: 0 80px;
     .lyric-item {
       // padding: 10px 0;
       height: 40px;
@@ -131,7 +182,7 @@ export default {
       align-items: center;
       // line-height: 40px;
     }
-    .scroll-focus {
+    .focus {
       font-weight: 800;
     }
     .active {

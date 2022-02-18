@@ -67,6 +67,9 @@ export default {
   name: 'AudioBar',
   components: { SliderBar, Info, Tools },
   computed: {
+    currentTime () {
+      return this.$store.state.currentTime
+    },
     playContent () {
       return this.$store.state.playContent
     },
@@ -118,7 +121,8 @@ export default {
     changeTimeByClick (...args) {
       this.sliderTime = arguments[0]
       // this.$refs.audio.currentTime = parseInt(index / 100 * this.audio.maxTime)
-      this.$refs.audio.currentTime = this.sliderTime
+      // this.$refs.audio.currentTime = this.sliderTime
+      this.$store.commit('setCurrentTime', this.sliderTime)
     },
 
     // 音量调节事件
@@ -255,7 +259,13 @@ export default {
   },
   created () {},
   watch: {
-    playContent (oldVal, newVal) {
+    currentTime () {
+      if (!this.$refs.sliderBar.isMouseDownOnBall) {
+        this.$refs.audio.currentTime = this.currentTime
+        // this.sliderTime = this.currentTime
+      }
+    },
+    playContent () {
       this.audio.url = this.playContent.url
       this.startPlay()
       this.$refs.audio.currentTime = 0

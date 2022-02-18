@@ -197,6 +197,8 @@ export default {
     handleShowPlayDetail () {
       this.isShowPlayDetail = !this.isShowPlayDetail
       if (this.isShowPlayDetail) {
+        this.getSimiPlaylistsById()
+        this.getSimiSongsById()
         this.getHotComments()
         this.getCommentById()
       }
