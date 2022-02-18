@@ -8,7 +8,7 @@
       </div>
       <div class="center">
         <div class="title">
-          <h1 class="name">{{playContent.name}}</h1>
+          <div class="name">{{playContent.name}}</div>
           <div class="ar-al-wrap">
             <div class="artist" v-for="item in playContent.ar" :key="item.id">
             -{{item.name}}
@@ -16,47 +16,106 @@
             <div class="album">-{{playContent.al.name}}</div>
           </div>
         </div>
-        <LyricPanel :id="playContent.id" :currentTime="currentTime" />
+        <LyricPanel :lyric="lyric" />
       </div>
+      <!-- 滚动区域 -->
       <div class="right" v-show="!isCollapsed">
-        <div class="title">喜欢这首歌的人也听</div>
-        <ul>
-          <li>111</li>
-          <li>222</li>
-          <li>333</li>
-          <li>444</li>
-          <li>555</li>
-        </ul>
+        <Scroll ref="scroll"
+          class="scroll-wrap"
+          :probeType="3"
+          :stopPropagation="true"
+          :bounce="false"
+          :mouseWheel="true"
+          :scrollbar="true">
+          <el-tooltip :content="playListInfo.name" placement="bottom" effect="light" :open-delay=500>
+            <div class="play-list-info">播放来源：{{playListInfo.name}}</div>
+          </el-tooltip>
+          <div class="title">包含这首歌的歌单</div>
+          <!-- 相关歌单列表 -->
+          <ul class="rec-list-wrap">
+            <li v-for="item in simiPlaylists" :key="item.id" class="rec-list-item">
+              <el-image fit :src="item.coverImgUrl" class="item-cover"></el-image>
+              <div class="item-name">{{item.name}}</div>
+            </li>
+          </ul>
+          <div class="title">喜欢这首歌的人也听</div>
+          <!-- 推荐歌曲列表 -->
+          <ul class="rec-list-wrap">
+            <li v-for="item in simiSongs" :key="item.id" class="rec-list-item">
+              <el-image fit :src="item.album.picUrl" class="item-cover"></el-image>
+              <div class="item-name">{{item.name}}</div>
+            </li>
+          </ul>
+        </Scroll>
+      </div>
+      <div class="aside-btn">
+        <i class="iconfont icon-arrow" @click="isCollapsed=!isCollapsed"></i>
       </div>
     </div>
-    <div class="aside-btn">
+    <!-- <div class="aside-btn">
       <i class="iconfont icon-arrow" @click="isCollapsed=!isCollapsed"></i>
-    </div>
+    </div> -->
   </div>
 </template>
 
 <script>
 import LyricPanel from './LyricPanel.vue'
+import Scroll from '@/components/common/Scroll.vue'
 
 export default {
   name: 'PlayDetail',
-  components: { LyricPanel },
+  components: { LyricPanel, Scroll },
+  props: {
+    lyric: {
+      type: Array,
+      default () {
+        return []
+      }
+    },
+    simiPlaylists: {
+      type: Array,
+      default () {
+        return []
+      }
+    },
+    simiSongs: {
+      type: Array,
+      default () {
+        return []
+      }
+    }
+  },
   computed: {
     playContent () {
       return this.$store.state.playContent
     },
     currentTime () {
       return this.$store.state.currentTime
+    },
+    playListInfo () {
+      return this.$store.state.playListInfo
     }
   },
   data () {
     return {
-      id: null,
       isCollapsed: false
     }
   },
   created () {},
-  methods: {}
+  mounted () {},
+  methods: {},
+  watch: {
+    simiPlaylists () {
+      this.$nextTick(() => {
+        this.$refs.scroll.refresh()
+      })
+    },
+    simiSongs () {
+      this.$nextTick(() => {
+        this.$refs.scroll.refresh()
+      })
+    }
+  }
 }
 </script>
 
@@ -64,21 +123,23 @@ export default {
 .play-detail-container {
   position: relative;
   width: 100%;
-  height: 66%;
+  height: 450px;
   min-height: 400px;
   max-height: 600px;
-  margin-top: 20px;
+  padding: 20px 30px 30px 0;
+  margin: 10px 0;
   .main {
     display: flex;
     height: 100%;
+    justify-content: center;
     .left {
       flex: 2;
       display: flex;
       justify-content: center;
       align-items: center;
       .cover-wrap {
-        width: 140px;
-        height: 140px;
+        width: 260px;
+        height: 260px;
         border-radius: 50%;
         padding: 30px;
         overflow: hidden;
@@ -99,6 +160,10 @@ export default {
       justify-content: space-around;
       padding: 0 20px;
       .title {
+        .name {
+          font-size: 24px;
+          margin-bottom: 10px;
+        }
         .ar-al-wrap {
           display: flex;
           justify-content: center;
@@ -110,17 +175,57 @@ export default {
       }
     }
     .right {
+      position: relative;
       width: 20vw;
-      margin-top: 120px;
-      height: 200px;
+      margin-top: 80px;
+      height: 300px;
+      // box-shadow: #fff 0px -30px 30px -15px inset;
+      .scroll-wrap {
+        height: 100%;
+        overflow: hidden;
+      }
+      // .scroll-wrap::-webkit-scrollbar { /* 滚动条整体样式 */
+      //   width: 4px; /* 高宽分别对应横竖滚动条的尺寸 */
+      //   height: 20px;
+      // }
+      .play-list-info {
+        white-space: nowrap;
+        text-overflow: ellipsis;
+        overflow: hidden;
+      }
+      .title {
+        margin: 10px 0;
+        font-weight: 600;
+      }
+      .rec-list-wrap {
+        .rec-list-item {
+          display: flex;
+          align-items: center;
+          .item-cover {
+            width: 30px;
+            height: 30px;
+            margin: 10px 10px 10px 0;
+            border-radius: 10%;
+            overflow: hidden;
+          }
+          .item-name {
+            flex: 1;
+            font-size: 12px;
+          }
+        }
+      }
     }
   }
 
   .aside-btn {
     position: absolute;
-    right: 0;
+    width: 30px;
+    height: 100%;
     top: 0;
-    bottom: 0;
+    right: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
   }
 }
 </style>

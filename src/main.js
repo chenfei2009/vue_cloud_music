@@ -20,7 +20,9 @@ import {
   Image,
   Tabs,
   TabPane,
-  Tooltip
+  Tooltip,
+  Pagination,
+  Button
 } from 'element-ui'
 
 import App from './App.vue'
@@ -52,6 +54,8 @@ Vue.use(Image)
 Vue.use(Tabs)
 Vue.use(TabPane)
 Vue.use(Tooltip)
+Vue.use(Pagination)
+Vue.use(Button)
 
 Vue.config.productionTip = false
 

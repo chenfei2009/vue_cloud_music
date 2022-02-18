@@ -67,6 +67,9 @@ export default {
   name: 'AudioBar',
   components: { SliderBar, Info, Tools },
   computed: {
+    currentTime () {
+      return this.$store.state.currentTime
+    },
     playContent () {
       return this.$store.state.playContent
     },
@@ -118,7 +121,8 @@ export default {
     changeTimeByClick (...args) {
       this.sliderTime = arguments[0]
       // this.$refs.audio.currentTime = parseInt(index / 100 * this.audio.maxTime)
-      this.$refs.audio.currentTime = this.sliderTime
+      // this.$refs.audio.currentTime = this.sliderTime
+      this.$store.commit('setCurrentTime', this.sliderTime)
     },
 
     // 音量调节事件
@@ -255,11 +259,14 @@ export default {
   },
   created () {},
   watch: {
-    playContent (oldVal, newVal) {
-      console.log('newVal', newVal)
+    currentTime () {
+      if (!this.$refs.sliderBar.isMouseDownOnBall) {
+        this.$refs.audio.currentTime = this.currentTime
+        // this.sliderTime = this.currentTime
+      }
+    },
+    playContent () {
       this.audio.url = this.playContent.url
-      // this.audio.currentTime = 0
-      // this.$refs.audio.currentTime = 0
       this.startPlay()
       this.$refs.audio.currentTime = 0
     }
@@ -269,20 +276,22 @@ export default {
 
 <style lang="less" scoped>
 .play-bar-container {
-  // box-sizing: border-box;
-  flex: 1;
-  // height: 70px;
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  border-top: 1px solid #ccc;
+  padding: 0 20px;
   display: flex;
-  justify-content: space-between;
-  align-items: center;
   background-color: #fff;
-  z-index: 99;
+  z-index: 11;
 }
 
 .main-wrap{
+  flex: 1;
   padding: 0 15px;
-  overflow: hidden;
-  height: 59px;
+  // overflow: hidden;
+  // height: 59px;
 }
 
 .audio-wrap {
@@ -290,7 +299,7 @@ export default {
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  height: 60px;
+  height: 70px;
 
   .action-bar {
     display: flex;

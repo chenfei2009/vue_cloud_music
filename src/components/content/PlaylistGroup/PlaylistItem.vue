@@ -53,8 +53,6 @@ export default {
   methods: {
     async getSongsByListId (id) {
       const { data: res } = await _getSongsByListId(id)
-      // console.log(res.songs[0])
-      // this.$store.commit('resetPlayList', res.songs)
       const songs = res.songs
       songs.forEach(async v => {
         const { data: res } = await _getSongUrlById(v.id)
@@ -67,6 +65,7 @@ export default {
     },
     onBtnClick () {
       console.log('播放歌单', this.item)
+      this.$store.commit('setPlayListInfo', this.item)
       this.getSongsByListId(this.item.id)
       // this.$store.commit('resetPlayList', songs)
     }

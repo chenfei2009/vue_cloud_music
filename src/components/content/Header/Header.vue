@@ -1,7 +1,7 @@
 <template>
   <el-header :style="bgStyle">
     <div class="left-bar">
-      <div class="logo-wrap" v-if="!transparent">
+      <div class="logo-wrap" v-if="!isShowPlayDetail">
         <div class="logo-bg">
           <i class="logo iconfont icon-netease-cloud-music-line"></i>
         </div>
@@ -20,7 +20,7 @@
       </div>
     </div>
     <div class="user-bar">
-      <div class="login-wrap" v-if="!transparent">
+      <div class="login-wrap" v-if="!isShowPlayDetail">
         <i class="avatar iconfont icon-user01"></i>
         <el-dropdown>
           <span class="el-dropdown-link">
@@ -43,21 +43,18 @@
 export default {
   name: 'Header',
   props: {
-    transparent: {
+    bgColor: {
+      type: String,
+      default: 'var(--themeColor)'
+    },
+    isShowPlayDetail: {
       type: Boolean,
       default: false
     }
   },
   computed: {
     bgStyle () {
-      // const themeColor = this.$store.state.themeColor
-      if (this.transparent) {
-        return {
-          color: '#000',
-          backgroundColor: 'rgba(0, 0, 0, 0)'
-        }
-      }
-      return { backgroundColor: 'var(--themeColor)' }
+      return { backgroundColor: this.bgColor }
     }
   },
   data () {
