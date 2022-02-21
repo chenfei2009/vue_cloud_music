@@ -7,7 +7,7 @@
       style="width: 100%">
       <el-table-column
         type="index"
-        width="30">
+        width="40">
       </el-table-column>
       <el-table-column
         label="操作"
@@ -72,6 +72,10 @@ export default {
       default () {
         return []
       }
+    },
+    activeId: {
+      type: Number,
+      default: null
     }
   },
   computed: {},
@@ -80,8 +84,9 @@ export default {
   },
   created () {},
   methods: {
-    onDbClick () {
-      console.log('onDbClick')
+    onDbClick (row) {
+      // console.log(row)
+      this.$emit('rowDbClick', row.id)
     },
     handleClick (row) {
       console.log(row)
@@ -98,5 +103,14 @@ export default {
 <style lang="less" scoped>
 .songs-table-container {
   width: 100%;
+}
+.active {
+  color: var(--themeColor);
+}
+.active-tag {
+  position: absolute;
+  left: 0;
+  transform: translateX(-10%);
+  color: var(--themeColor);
 }
 </style>

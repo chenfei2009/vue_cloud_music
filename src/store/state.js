@@ -1,5 +1,5 @@
 export default {
-  playListInfo: {}, // 歌单信息
+  playListIds: [], // 歌单id列表
   playList: [], // 播放列表
   playContent: {}, // 当前歌曲对象
   currentTime: 0, // 当前播放进度

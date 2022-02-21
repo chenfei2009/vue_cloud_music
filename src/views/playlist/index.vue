@@ -1,65 +1,56 @@
 <template>
   <div class="playlist-container">
-    <div class="playlist-header">
-      <div class="cover-wrap"><el-image :src="playlist.coverImgUrl"></el-image></div>
-      <div class="info-wrap">
-        <h1 class="name">{{playlist.name}}</h1>
-        <div class="user-wrap">
-          <div class="avatar-wrap"><el-image :src="playlist.creator.avatarUrl"></el-image></div>
-          <span class="user-name">{{playlist.creator.nickname}}</span>
-          <span class="create-time">{{playlist.createTime | dateFilter}}创建</span>
-        </div>
-        <div class="btn-wrap">
-          <el-button type="primary" size="medium" round>播放全部</el-button>
-          <el-button size="medium" round>收藏({{playlist.subscribedCount | numFilter}})</el-button>
-          <el-button size="medium" round>分享({{playlist.shareCount | numFilter}})</el-button>
-          <el-button size="medium" round>下载全部</el-button>
-        </div>
-        <div class="info-item">
-          <span>标签：</span>
-          <ul class="tags-wrap">
-            <li v-for="(item, index) in playlist.tags" :key="index">{{item}}</li>
-          </ul>
-        </div>
-        <div class="info-item">
-          <span>歌曲：</span>
-          <span>{{songs.length}}</span>
-          <span>播放：</span>
-          <span>{{playlist.playCount  | numFilter}}</span>
-        </div>
-        <div class="info-item">
-          <span>简介：</span>
-          <span>{{playlist.description}}</span>
-        </div>
-      </div>
-    </div>
+    <PlaylistInfo v-if="playlist.coverImgUrl"
+      :playlist="playlist"
+      :songs="songs"
+      @playAll="handlePlayAll"
+      @addToPlaylist="handleAddToPlaylist"/>
     <el-tabs v-model="activeName" @tab-click="handleClick">
       <el-tab-pane label="歌曲列表" name="0">
-        <SongsTable :songs="songs" />
+        <SongsTable :songs="songs"
+          :activeId="activeId"
+          @rowDbClick="handleRowDbClick"/>
       </el-tab-pane>
       <el-tab-pane label="评论" name="1">评论</el-tab-pane>
       <el-tab-pane label="收藏者" name="2">收藏者</el-tab-pane>
     </el-tabs>
+    <!-- 对话框 -->
+    <el-dialog
+      title="替换播放列表"
+      :visible.sync="dialogVisible"
+      width="500px"
+      center
+      :before-close="handleClose">
+      <span>播放全部将会替换当前的播放列表，是否继续？</span>
+      <span slot="footer" class="dialog-footer">
+        <el-button type="primary" @click="handleConfirm">继 续</el-button>
+        <el-button @click="dialogVisible = false">取 消</el-button>
+      </span>
+    </el-dialog>
   </div>
 </template>
 
 <script>
 import SongsTable from '@/components/content/SongsTable/SongsTable.vue'
+import PlaylistInfo from './childComps/PlaylistInfo.vue'
 
 import { _getSongsByListId, _getDetailByListId } from '@/network/playlist.js'
 import { _getSongUrlById } from '@/network/song.js'
-import formatDate from '@/utils/formatDate.js'
 
 export default {
   name: 'PlaylistIndex',
   computed: {},
-  components: { SongsTable },
+  components: { SongsTable, PlaylistInfo },
   data () {
     return {
-      id: 0,
+      id: 0, // 播放列表 id
       playlist: {},
       songs: [],
-      activeName: '0'
+      activeId: null,
+      rowId: null,
+      activeName: '0',
+      dialogVisible: false,
+      dialogContent: ''
     }
   },
   created () {
@@ -69,6 +60,11 @@ export default {
   },
   mounted () {},
   methods: {
+    // 网络请求相关方法
+    /**
+     * 请求播放列表歌曲数据
+     * @param { integer } id 播放列表编号
+     */
     async getSongsByListId (id) {
       const { data: res } = await _getSongsByListId(id)
       // console.log(res)
@@ -79,20 +75,65 @@ export default {
       })
       this.songs = songs
     },
+
+    /**
+     * 请求播放列表详情数据
+     * @param { integer } id 播放列表编号
+     */
     async getDetailByListId (id) {
       const { data: res } = await _getDetailByListId(id)
       this.playlist = res.playlist
     },
+
+    // 事件监听相关方法
     handleClick (tab, event) {
       console.log(tab, event)
-    }
-  },
-  filters: {
-    numFilter (num) {
-      return num > 10000 ? `${parseInt(num / 10000)}万` : num
     },
-    dateFilter (date) {
-      return formatDate(new Date(date), 'yyyy-MM-dd')
+
+    /**
+     * 播放全部按钮点击事件
+     */
+    handlePlayAll () {
+      this.dialogContent = '"播放全部"将会替换当前的播放列表，是否继续?'
+      this.dialogVisible = true
+    },
+
+    /**
+     * 对话框确认按钮点击事件
+     */
+    handleConfirm () {
+      if (!this.rowId) {
+        this.$store.commit('resetPlayList', { songs: this.songs })
+      } else {
+        this.$store.commit('resetPlayList', { songs: this.songs, id: this.rowId })
+        this.activeId = this.rowId
+        this.rowId = null
+      }
+      this.dialogVisible = false
+    },
+
+    /**
+     * 对话框关闭按钮点击事件
+     */
+    handleClose (done) {
+      this.dialogVisible = false
+    },
+
+    /**
+     * 对话框关闭按钮点击事件
+     */
+    handleAddToPlaylist () {
+      // 判断是否为同一个播放列表
+      this.$store.commit('addToPlayList', this.songs)
+    },
+
+    /**
+     * 歌曲行双击事件
+     */
+    handleRowDbClick (id) {
+      this.rowId = id
+      this.dialogContent = '"双击播放"会用当前列表的音乐替换播放列表，是否继续?'
+      this.dialogVisible = true
     }
   }
 }
@@ -111,42 +152,6 @@ export default {
     color: #000;
     font-size: 18px;
     font-weight: 800;
-  }
-}
-
-.playlist-header {
-  display: flex;
-  margin-bottom: 20px;
-}
-.cover-wrap {
-  width: 200px;
-  height: 200px;
-  border-radius: 5px;
-  overflow: hidden;
-}
-.info-wrap {
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  margin-left: 20px;
-  .name {
-    font-size: 20px;
-  }
-  .user-wrap  {
-    display: flex;
-    align-items: center;
-    .avatar-wrap {
-      width: 24px;
-      height: 24px;
-      border-radius: 50%;
-      overflow: hidden;
-    }
-  }
-  .info-item {
-    display: flex;
-    .tags-wrap {
-      display: flex;
-    }
   }
 }
 </style>

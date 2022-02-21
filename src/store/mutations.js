@@ -10,11 +10,16 @@ import {
 function setPlayList (state, payload) {
   // const currentIndex = state.playList.indexOf(state.playContent)
   const currentIndex = state.playList.findIndex(item => item.id === state.playContent.id)
-  // console.log('currentIndex', currentIndex)
+  // payload 为播放列表
+  if (Array.isArray(payload)) {
+    // 判断是否为同一个播放列表
+    return payload.reverse().forEach(v => setPlayList(state, v))
+  }
   // 更新播放列表
-  return state.playList.findIndex(item => item.id === payload.id) >= 0 ? '' : state.playList.splice(currentIndex + 1, 0, payload)
-  // if (state.playList.findIndex(item => item.id === payload.id) >= 0) return console.log('已存在')
-  // state.playList.splice(currentIndex + 1, 0, payload)
+  // return state.playList.findIndex(item => item.id === payload.id) >= 0 ? '' : state.playList.splice(currentIndex + 1, 0, payload)
+  if (state.playList.findIndex(item => item.id === payload.id) >= 0) return console.log('已存在')
+  // if (Array.isArray(payload)) return state.playList.splice(currentIndex + 1, 0, ...payload)
+  return state.playList.splice(currentIndex + 1, 0, payload)
 }
 
 export default {
@@ -24,19 +29,30 @@ export default {
     setPlayList(state, payload)
     state.playContent = payload
   },
+
   [SET_CURRENTTIME] (state, payload) {
     state.currentTime = payload
   },
+
   [SET_PLAYLISTINFO] (state, payload) {
     state.playListInfo = payload
   },
+
   [ADD_TO_PLAYLIST] (state, payload) {
     setPlayList(state, payload)
   },
+
   [RESET_PLAYLIST] (state, payload) {
-    state.playList = payload
-    state.playContent = payload[0]
+    const { songs, id } = payload
+    state.playList = songs
+    if (!id) {
+      state.playContent = songs[0]
+      return
+    }
+    const item = songs.find(v => v.id === payload.id)
+    state.playContent = item
   },
+
   [RESET_THEMECOLOR] (state, payload) {
     const themeItem = state.themeList.find(item => item.name === payload)
     state.themeColor = themeItem.color
