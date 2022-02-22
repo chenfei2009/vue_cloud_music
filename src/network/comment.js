@@ -24,3 +24,14 @@ export function _getHotComments (id, type, limit = 20) {
     params: { id, type, limit }
   })
 }
+
+/**
+ * 获取歌单评论
+ * @param { interger } id 歌曲编号
+ */
+export function _getCommentByListId (id, limit = 20) {
+  return request({
+    url: '/comment/playlist',
+    params: { id, limit }
+  })
+}

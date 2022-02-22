@@ -48,3 +48,27 @@ a {
 .fr {
   float: right;
 }
+
+textarea {
+  display: block;
+  resize: none;
+  outline: none;
+  border: 1px solid #ccc;
+}
+
+textarea:hover {
+  outline: none;
+}
+
+button {
+  border: 1px solid #ccc;
+  height: 30px;
+  padding: 0 15px;
+  background-color: #fff;
+  margin-right: 10px;
+  font-size: 13px;
+}
+
+.btn-round {
+  border-radius: 15px;
+}
