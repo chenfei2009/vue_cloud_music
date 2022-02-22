@@ -8,16 +8,15 @@
         <span class="count-text">{{playCount}}</span>
         </div>
       <!-- 播放按钮 -->
-      <div class="item-btn" @click.stop="onBtnClick"><i class="iconfont icon-caret-right"></i></div>
+      <div class="item-btn" @click.stop="onBtnClick" :style="btnStyle">
+        <i class="iconfont icon-caret-right"></i>
+      </div>
     </div>
     <span class="item-name" @click="onItemClick">{{item.name}}</span>
   </div>
 </template>
 
 <script>
-import { _getSongsByListId } from '@/network/playlist.js'
-import { _getSongUrlById } from '@/network/song.js'
-
 export default {
   name: 'PlaylistItem',
   props: {
@@ -30,6 +29,10 @@ export default {
     column: {
       type: Number,
       default: 5
+    },
+    showBtn: {
+      type: String, // hidden hover fixed
+      default: 'hidden'
     }
   },
   computed: {
@@ -43,6 +46,16 @@ export default {
         width: `calc((100% - ${dividsion}) / ${this.column})`
       }
     },
+    btnStyle () {
+      switch (this.showBtn) {
+        case 'hidden':
+          return { display: 'none' }
+        case 'fixed':
+          return { opacity: 1 }
+        default:
+          return false
+      }
+    },
     playCount () {
       return this.item.playCount > 10000 ? parseInt(this.item.playCount / 10000) + '万' : this.item.playCount
     }
@@ -50,24 +63,14 @@ export default {
   data () {
     return {}
   },
+  created () {},
   methods: {
-    async getSongsByListId (id) {
-      const { data: res } = await _getSongsByListId(id)
-      const songs = res.songs
-      songs.forEach(async v => {
-        const { data: res } = await _getSongUrlById(v.id)
-        v.url = res.data[0].url
-      })
-      this.$store.commit('resetPlayList', songs)
-    },
     onItemClick () {
       console.log('跳转到歌单详情页')
+      this.$emit('itemClick', this.item.id)
     },
     onBtnClick () {
-      console.log('播放歌单', this.item)
-      this.$store.commit('setPlayListInfo', this.item)
-      this.getSongsByListId(this.item.id)
-      // this.$store.commit('resetPlayList', songs)
+      this.$emit('btnClick', this.item)
     }
   }
 }
