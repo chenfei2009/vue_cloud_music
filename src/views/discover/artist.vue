@@ -2,13 +2,48 @@
   <div class="artist-container">
     <!-- 表单模块 -->
     <form action="#">
-      <div class="radio-group">
-        <label class="radio-item" v-for="item in areaRadio" :key="item.value" for="item.value" @change="handleRadioClick">
-          <input type="radio" v-model="area" :id="item.value" :value="item.value" name="area">
-          {{item.value + item.label}}
-        </label>
-        <div>{{area}}</div>
-      </div>
+      <RadioGroup>
+        <div slot="label" class="label">语种：</div>
+        <RadioItem v-for="(item, index) in areaRadio"
+          :key="item.value"
+          :value="item.value"
+          :active="area===item.value"
+          :class="{'bd-r': index !== areaRadio.length-1}"
+          @change="handleAreaChange">
+          <div slot="item-text"
+            class="btn btn-round"
+            :class="{'btn-primary': area===item.value}"
+            >{{item.label}}</div>
+        </RadioItem>
+      </RadioGroup>
+      <RadioGroup>
+        <div slot="label" class="label">分类：</div>
+        <RadioItem v-for="(item, index) in typeRadio"
+          :key="item.value"
+          :value="item.value"
+          :active="type===item.value"
+          :class="{'bd-r': index !== typeRadio.length-1}"
+          @change="handleTypeChange">
+          <div slot="item-text"
+            class="btn btn-round"
+            :class="{'btn-primary': type===item.value}"
+            >{{item.label}}</div>
+        </RadioItem>
+      </RadioGroup>
+      <RadioGroup>
+        <div slot="label" class="label">筛选：</div>
+        <RadioItem v-for="(item, index) in initialRadio"
+          :key="item.value"
+          :value="item.value"
+          :active="initial==item.value"
+          :class="{'bd-r': index !== initialRadio.length-1}"
+          @change="handleInitialChange">
+          <div slot="item-text"
+            class="btn btn-round"
+            :class="{'btn-primary': initial==item.value}"
+            >{{item.label}}</div>
+        </RadioItem>
+      </RadioGroup>
     </form>
     <!-- 歌手列表模块 -->
     <ul class="list-wrap" v-if="artists.length > 0">
@@ -24,22 +59,24 @@
 
 <script>
 import CoverItem from '@/components/content/Cover/CoverItem.vue'
+import RadioItem from '@/components/common/RadioItem.vue'
+import RadioGroup from '@/components/common/RadioGroup.vue'
 
 import { _getArtistList } from '@/network/artist.js'
 
 export default {
   name: 'Artist',
-  components: { CoverItem },
+  components: { CoverItem, RadioGroup, RadioItem },
   data () {
     return {
       artists: [],
       areaRadio: [
-        { value: -1, label: '全部', isChecked: true },
-        { value: 7, label: '华语', isChecked: false },
-        { value: 96, label: '欧美', isChecked: false },
-        { value: 8, label: '日本', isChecked: false },
-        { value: 10, label: '韩国', isChecked: false },
-        { value: 0, label: '其他', isChecked: false }
+        { value: -1, label: '全部' },
+        { value: 7, label: '华语' },
+        { value: 96, label: '欧美' },
+        { value: 8, label: '日本' },
+        { value: 10, label: '韩国' },
+        { value: 0, label: '其他' }
       ],
       typeRadio: [
         { value: -1, label: '全部' },
@@ -47,14 +84,16 @@ export default {
         { value: 2, label: '女歌手' },
         { value: 3, label: '乐队' }
       ],
-      initialRadio: [],
-      area: 8,
+      initialRadio: [
+        { value: -1, label: '全部' }
+      ],
+      area: -1,
       type: -1,
-      initial: null
+      initial: -1
     }
   },
   created () {
-    // this.getArtistList()
+    this.getArtistList()
     this.getinitialRadio()
   },
   methods: {
@@ -62,7 +101,7 @@ export default {
      * 获取歌手列表数据
      */
     async getArtistList () {
-      const { data: res } = await _getArtistList(this.type, this.area, this.intial)
+      const { data: res } = await _getArtistList(this.type, this.area, this.initial)
       this.artists = res.artists
     },
 
@@ -77,20 +116,33 @@ export default {
       // })
     },
 
-    handleRadioClick () {
-      this.$nextTick(() => {
-        console.log(this.area)
-      })
+    handleAreaChange (value) {
+      this.area = value
+      this.getArtistList()
+    },
+
+    handleTypeChange (value) {
+      this.type = value
+      this.getArtistList()
+    },
+
+    handleInitialChange (value) {
+      this.initial = value
+      this.getArtistList()
     },
 
     // 初始化筛选列表
     getinitialRadio () {
-      const arr = []
+      const arr = [{ value: -1, label: '全部' }, { value: 0, label: '#' }]
       for (let i = 65; i < 91; i++) {
-        arr.push(String.fromCharCode(i))
+        const item = {
+          value: String.fromCharCode(i).toLowerCase(),
+          label: String.fromCharCode(i)
+        }
+        arr.splice(1, 0, item)
       }
       this.initialRadio = arr
-      console.log(this.initialRadio)
+      // console.log(this.initialRadio)
     }
   }
 }
@@ -101,5 +153,36 @@ export default {
   display: flex;
   flex-wrap: wrap;
   justify-content: space-between;
+}
+
+.label {
+  width: 40px;
+  font-size: 12px;
+}
+
+.btn {
+  font-size: 12px;
+  // box-sizing: content-box;
+  min-width: 50px;
+  text-align: center;
+  height: 20px;
+  line-height: 20px;
+  margin: 0 10px;
+  padding: 0 10px;
+  // border: 1px solid #ccc;
+}
+
+.btn-round {
+  border-radius: 10px;
+}
+
+.btn-primary {
+  color: #fff;
+  background-color: var(--themeColor);
+  border: 1px solid var(--themeColor);
+}
+
+.bd-r {
+  border-right: 1px solid #ccc;
 }
 </style>
