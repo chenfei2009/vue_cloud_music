@@ -36,9 +36,9 @@ const routes = [
             component: () => import(/* webpackChunkName: "home" */ '@/views/discover/toplist.vue')
           },
           { // 歌手
-            path: 'artist',
-            name: 'Artist',
-            component: () => import(/* webpackChunkName: "home" */ '@/views/discover/artist.vue')
+            path: 'artists',
+            name: 'Artists',
+            component: () => import(/* webpackChunkName: "home" */ '@/views/discover/artists.vue')
           },
           { // 新歌
             path: 'newest',
@@ -56,6 +56,11 @@ const routes = [
         path: '/playlist',
         name: 'Playlist',
         component: () => import(/* webpackChunkName: "home" */ '@/views/playlist/index.vue')
+      },
+      {
+        path: '/artist',
+        name: 'Artist',
+        component: () => import(/* webpackChunkName: "home" */ '@/views/artist/index.vue')
       }
     ]
   }

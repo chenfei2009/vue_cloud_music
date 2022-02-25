@@ -140,14 +140,11 @@ export default {
   height: 100%;
   .main-container {
     height: calc(~"100vh - 130px");
+    padding-bottom: 0;
     .el-main::-webkit-scrollbar { /* 滚动条整体样式 */
       width: 4px; /* 高宽分别对应横竖滚动条的尺寸 */
       height: 4px;
     }
   }
-  // .el-footer {
-  //   border-top: 1px solid #ccc;
-  //   box-sizing: border-box;
-  // }
 }
 </style>

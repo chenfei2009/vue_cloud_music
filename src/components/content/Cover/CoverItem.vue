@@ -1,63 +1,74 @@
 <template>
-  <div class="playlist-item-container" :style="itemStyle">
-    <div class="item-cover-wrap" @click="onItemClick">
-      <el-image :src="item.picUrl" fit="cover" class="item-img"></el-image>
-      <!-- 播放量 -->
-      <div class="item-play-count" v-if="item.playCount">
-        <i class="iconfont icon-play"></i>
-        <span class="count-text">{{playCount}}</span>
-        </div>
-      <!-- 播放按钮 -->
-      <div class="item-btn" @click.stop="onBtnClick" :style="btnStyle">
-        <i class="iconfont icon-caret-right"></i>
-      </div>
+  <div class="cover-item-container" @click="onItemClick" :style="itemStyle">
+    <div class="item-cover-wrap" :style="coverStyle">
+      <el-image lazy :src="picUrl" fit="cover" class="item-img"></el-image>
+      <slot></slot>
     </div>
-    <span class="item-name" @click="onItemClick">{{item.name}}</span>
+    <div class="text-wrap"><slot name="text"></slot></div>
   </div>
 </template>
 
 <script>
 export default {
-  name: 'PlaylistItem',
+  name: 'CoverItem',
   props: {
-    item: {
-      type: Object,
-      default () {
-        return {}
-      }
-    },
-    column: {
+    picUrl: String,
+    column: { // 图片列数
       type: Number,
       default: 5
     },
-    showBtn: {
-      type: String, // hidden hover fixed
-      default: 'hidden'
-    }
+    dividsion: { // 图片间距
+      type: Number,
+      default: 15
+    },
+    ratio: { // 图片宽高比
+      type: Number,
+      default: 1
+    },
+    fixWidth: Number
   },
   computed: {
-    itemStyle () {
-      const dividsion = 15 * (this.column - 1) + 'px'
+    totalDivision () {
+      return this.dividsion * (this.column - 1) + 240
+    },
+    width () {
+      if (this.fixWidth) return (this.fixWidth + 'px')
+      return `calc((100vw - ${this.totalDivision + 'px'}) / ${this.column})`
+    },
+    height () {
+      if (this.fixWidth) return (this.fixWidth / this.ratio + 'px')
+      return `calc((100vw - ${this.totalDivision + 'px'}) / (${this.column * this.ratio}))`
+    },
+    maxWidth () {
+      if (this.fixWidth) return false
+      return (1100 - this.totalDivision + 240) / this.column + 'px'
+    },
+    minWidth () {
+      if (this.fixWidth) return false
+      return (930 - this.totalDivision) / this.column + 'px'
+    },
+    maxHeight () {
+      if (this.fixWidth) return false
+      return (1100 - this.totalDivision + 240) / (this.column * this.ratio) + 'px'
+    },
+    minHeight () {
+      if (this.fixWidth) return false
+      return (930 - this.totalDivision) / (this.column * this.ratio) + 'px'
+    },
+    coverStyle () {
       return {
-        // max-width: 200px;
-        // width: calc(~"(100% - 60px) / 5") // 错误写法
-        // width: 'calc((100% - 60px) / 5)'
-        // width: `calc((100% - 60px) / ${this.column})`
-        width: `calc((100% - ${dividsion}) / ${this.column})`
+        width: '100%',
+        height: this.height,
+        minHeight: this.minHeight,
+        maxHeight: this.maxHeight
       }
     },
-    btnStyle () {
-      switch (this.showBtn) {
-        case 'hidden':
-          return { display: 'none' }
-        case 'fixed':
-          return { opacity: 1 }
-        default:
-          return false
+    itemStyle () {
+      return {
+        width: this.width,
+        minWidth: this.minWidth,
+        maxWidth: this.maxWidth
       }
-    },
-    playCount () {
-      return this.item.playCount > 10000 ? parseInt(this.item.playCount / 10000) + '万' : this.item.playCount
     }
   },
   data () {
@@ -66,13 +77,7 @@ export default {
   created () {},
   methods: {
     onItemClick () {
-      if (!this.item.id) return
-      this.$router.push({
-        path: '/playlist',
-        query: {
-          id: this.item.id
-        }
-      })
+      this.$emit('itemClick', this.item)
     },
     onBtnClick () {
       this.$emit('btnClick', this.item)
@@ -82,18 +87,21 @@ export default {
 </script>
 
 <style lang="less" scoped>
-.playlist-item-container {
+.cover-item-container {
   margin: 10px 0;
-  // max-width: 200px;
+  // margin: 10px 15px 10px 0;
   // width: calc(~"(100% - 60px) / 5");
   .item-cover-wrap {
     position: relative;
     cursor: pointer;
+    width: '100%';
     .item-img {
       width: 100%;
+      height: 100%;
       border-radius: 5px;
       overflow: hidden;
     }
+
     /* 播放量 */
     .item-play-count {
       position: absolute;
@@ -132,8 +140,8 @@ export default {
       }
     }
   }
-  .item-name {
-    margin-top: 15px;
+  .text-wrap {
+    margin-top: 10px;
     cursor: pointer;
     font-size: 12px;
   }

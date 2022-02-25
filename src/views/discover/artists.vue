@@ -1,5 +1,5 @@
 <template>
-  <div class="artist-container">
+  <div class="artist-container container">
     <!-- 表单模块 -->
     <form action="#">
       <RadioGroup>
@@ -49,9 +49,10 @@
     <ul class="list-wrap" v-if="artists.length > 0">
       <CoverItem v-for="item in artists"
         :key="item.id"
-        :item="item"
+        :picUrl="item.picUrl"
         :column="6"
-        @itemClick="handleCoverClick"/>
+        @itemClick="handleCoverClick(item.id)">
+        <span slot="text">{{item.name}}</span></CoverItem>
     </ul>
     <!-- 歌手列表模块/ -->
   </div>
@@ -65,7 +66,7 @@ import RadioGroup from '@/components/common/RadioGroup.vue'
 import { _getArtistList } from '@/network/artist.js'
 
 export default {
-  name: 'Artist',
+  name: 'Artists',
   components: { CoverItem, RadioGroup, RadioItem },
   data () {
     return {
@@ -110,10 +111,10 @@ export default {
      */
     handleCoverClick (id) {
       console.log('跳转到歌手详情页', id)
-      // this.$router.push({
-      //   path: '/artist',
-      //   params: { id }
-      // })
+      this.$router.push({
+        path: '/artist',
+        query: { id }
+      })
     },
 
     handleAreaChange (value) {
@@ -139,7 +140,7 @@ export default {
           value: String.fromCharCode(i).toLowerCase(),
           label: String.fromCharCode(i)
         }
-        arr.splice(1, 0, item)
+        arr.splice(i - 64, 0, item)
       }
       this.initialRadio = arr
       // console.log(this.initialRadio)

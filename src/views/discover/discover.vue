@@ -10,13 +10,26 @@
     <!-- 推荐歌单模块 -->
     <Title title="推荐歌单" path="/playlist" />
     <ul class="list-wrap" v-if="personalizedList.length > 1">
+      <!-- 每日歌曲推荐 -->
+      <CoverItem :item="recItem">
+        <div class="hover-wrap">
+          <PlayButton :isPlay="false" @btnClick="handleBtnClick()"/>
+        </div>
+        <i class="center rec-icon iconfont icon-calendar1"></i>
+        <span class="center rec-date">{{day}}</span>
+        <span slot="text">{{recItem.name}}</span></CoverItem>
+      <!-- 每日歌曲推荐/ -->
+      <!-- 推荐歌单 -->
       <CoverItem v-for="item in personalizedList"
         :key="item.id"
-        :item="item"
-        :column="5"
-        showBtn="hover"
-        @btnClick="handleBtnClick"
-        @itemClick="handleCoverClick"/>
+        :picUrl="item.picUrl"
+        @itemClick="handleCoverClick(item.id)">
+        <div class="hover-wrap">
+          <PlayButton :isPlay="false" @btnClick="handleBtnClick(item)"/>
+        </div>
+        <div class="play-count">{{item.playCount | countFilter}}</div>
+        <span slot="text">{{item.name}}</span></CoverItem>
+      <!-- 推荐歌单/ -->
     </ul>
     <!-- 推荐歌单模块/ -->
     <!-- 热门播客单模块 -->
@@ -27,11 +40,14 @@
     <ul class="list-wrap" v-if="privateContent.length > 0">
       <CoverItem v-for="item in privateContent"
         :key="item.id"
-        :item="item"
+        :picUrl="item.picUrl"
         :column="3"
-        showBtn="fixed"
-        @btnClick="handleBtnClick"
-        @itemClick="handleCoverClick"/>
+        :ratio="1080/399"
+        @itemClick="handleCoverClick">
+        <div class="fix-btn-wrap">
+          <PlayButton :isPlay="false" @btnClick.stop="handleBtnClick(item)"/>
+        </div>
+        <span slot="text">{{item.name}}</span></CoverItem>
     </ul>
     <!-- 独家放送模块/ -->
     <!-- 最新音乐模块 -->
@@ -40,9 +56,15 @@
     <ul class="list-wrap" v-if="personalizedMv.length > 0">
       <CoverItem v-for="item in personalizedMv"
         :key="item.id"
-        :item="item"
+        :picUrl="item.picUrl"
         :column="4"
-        @itemClick="handleCoverClick"/>
+        :ratio="1280/719"
+        @itemClick="handleCoverClick">
+        <div slot="text">
+          <div class="video-name">{{item.name}}</div>
+          <div class="artists">{{item.artists[0].name}}</div>
+        </div>
+      </CoverItem>
     </ul>
     <!-- 最新音乐模块/ -->
     <Title title="听听" />
@@ -51,6 +73,7 @@
 </template>
 
 <script>
+import PlayButton from '@/components/common/PlayButton.vue'
 import Title from '@/components/content/Title/Title.vue'
 import CoverItem from '@/components/content/Cover/CoverItem.vue'
 import SongGroup from '@/components/content/SongGroup/SongGroup.vue'
@@ -73,17 +96,15 @@ import {
 
 export default {
   name: 'Discover',
-  components: { Title, CoverItem, SongGroup },
+  components: { PlayButton, Title, CoverItem, SongGroup },
   data () {
     return {
       banners: [], // 轮播图数据
-      personalizedList: [
-        {
-          name: '每日歌曲推荐',
-          id: 123,
-          picUrl: '/image/default.png'
-        }
-      ], // 推荐歌单
+      recItem: {
+        name: '每日歌曲推荐',
+        picUrl: '/image/default.png'
+      },
+      personalizedList: [], // 推荐歌单
       privateContent: [],
       newSongs: [], // 推荐最新音乐
       // personalizedDj: [] // 推荐播客
@@ -92,7 +113,11 @@ export default {
       personalizedMv: []
     }
   },
-  computed: {},
+  computed: {
+    day () {
+      return new Date().getDate()
+    }
+  },
   created () {
     this.getBanner()
     this.getPersonalized('')
@@ -144,7 +169,7 @@ export default {
         const { data: res } = await _getSongUrlById(v.id)
         v.url = res.data[0].url
       })
-      this.$store.commit('resetPlayList', songs)
+      this.$store.commit('resetPlayList', { songs })
     },
 
     async getDaySongs () {
@@ -186,7 +211,7 @@ export default {
      * 歌单播放按钮点击事件
      */
     handleBtnClick (item) {
-      // console.log('播放歌单',item)
+      console.log('播放歌单', item)
       this.$store.commit('setPlayListInfo', item)
       this.getSongsByListId(item.id)
     },
@@ -195,11 +220,16 @@ export default {
      * 歌单封面点击事件
      */
     handleCoverClick (id) {
-      console.log('跳转到歌单详情页')
+      console.log('跳转到歌单详情页', id)
       this.$router.push({
         path: '/playlist',
-        params: { id }
+        query: { id }
       })
+    }
+  },
+  filters: {
+    countFilter (playCount) {
+      return playCount > 10000 ? parseInt(playCount / 10000) + '万' : playCount
     }
   }
 }
@@ -218,8 +248,70 @@ export default {
 }
 
 .list-wrap {
+  width: 100%;
   display: flex;
   flex-wrap: wrap;
   justify-content: space-between;
+}
+
+.center {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  color: #fff;
+  transform: translate(-50%, -55%);
+}
+
+.rec-icon {
+  font-size: 50px;
+}
+
+.rec-date {
+  font-size: 24px;
+  transform: translate(-50%, -45%);
+
+}
+
+/* 播放按钮 */
+.hover-wrap {
+  // display: none;
+  // display: flex;
+  opacity: 0;
+  // justify-content: center;
+  // align-items: center;
+  position: absolute;
+  bottom: 10px;
+  right: 10px;
+  width: 30px;
+  height: 30px;
+}
+
+.item-cover-wrap:hover {
+  .hover-wrap {
+    opacity: 1;
+    transition: opacity 1s;
+  }
+}
+
+.fix-btn-wrap {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  width: 30px;
+  height: 30px;
+}
+
+.play-count {
+  position: absolute;
+  top: 2px;
+  right: 5px;
+  color: #fff;
+  font-size: 12px;
+}
+
+.video-name {
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow: hidden;
 }
 </style>

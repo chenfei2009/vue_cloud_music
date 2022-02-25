@@ -13,3 +13,14 @@ export function _getArtistList (type, area, initial = null, limit = 30) {
     params: { type, area, initial, limit }
   })
 }
+
+/**
+ * 获取歌手单曲
+ * @param { interger } id
+ */
+export function _getArtistInfo (id) {
+  return request({
+    url: '/artists',
+    params: { id }
+  })
+}
