@@ -21,7 +21,8 @@ export default {
 .header-container {
   display: flex;
   justify-content: space-between;
-  align-items: center;
+  // align-items: center;
+  align-items: flex-start;
   .center-wrap {
     flex: 1;
   }

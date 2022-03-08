@@ -24,3 +24,26 @@ export function _getArtistInfo (id) {
     params: { id }
   })
 }
+
+/**
+ * 获取歌手MV
+ * @param { interger } id
+ */
+export function _getArtistMV (id) {
+  return request({
+    url: '/artist/mv',
+    params: { id }
+  })
+}
+
+/**
+ * 获取歌手专辑
+ * @param { interger } id
+ * @param { interger } limit 返回数量, 默认为 50
+ */
+export function _getArtistAlbum (id, limit = 50) {
+  return request({
+    url: '/artist/album',
+    params: { id, limit }
+  })
+}

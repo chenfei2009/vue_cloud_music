@@ -1,7 +1,7 @@
 <template>
   <div class="artist-container">
     <Header>
-      <CoverItem slot="left" :picUrl="artist.picUrl" :width="200"/>
+      <CoverItem slot="left" :picUrl="artist.picUrl" :fixWidth="200"/>
       <div class="info-wrap" slot="center">
         <h1 class="name">{{artist.name}}</h1>
         <div class="alias" v-if="artist.alias">{{artist.alias[0]}}</div>
@@ -24,14 +24,42 @@
     <!-- tab选项卡 -->
     <el-tabs v-model="activeName">
       <el-tab-pane label="歌曲列表" name="0">
-        <!-- 歌单列表模块 -->
-        <SongsTable :songs="hotSongs"
-          :activeId="activeId"
-          @rowDbClick="handleRowDbClick"/>
-        <!-- 歌单列表模块/ -->
+        <!-- 热门50首 -->
+        <Header>
+          <CoverItem slot="left" picUrl="/image/default.png" :fixWidth="150">
+            <span class="center">TOP50</span></CoverItem>
+          <div class="info-wrap" slot="center">
+            <SongsTable :songs="songs"
+              :activeId="activeId"
+              :title="true"
+              name="热门50首"
+              @rowDbClick="handleRowDbClick"/>
+          </div>
+        </Header>
+        <!-- 热门50首/ -->
+        <!-- 专辑列表 -->
+        <ul class="album-list">
+          <li class="album-item" v-for="item in hotAlbums" :key="item.id">
+            <CoverItem slot="left" :picUrl="item.picUrl" :fixWidth="150">
+              <div class="date" slot="text">{{item.publishTime | dateFilter}}</div>
+            </CoverItem>
+            <div class="info-wrap" slot="center">
+              <!-- {{item.songs[0]}} -->
+              <SongsTable :songs="item.songs"
+                :activeId="activeId"
+                :title="true"
+                :name="item.name"
+                @rowDbClick="handleRowDbClick"/>
+            </div>
+          </li>
+        </ul>
       </el-tab-pane>
       <el-tab-pane label="MV" name="1">
-        <div>MV列表</div>
+        <div class="mvs-wrap">
+          <CoverItem v-for="item in mvs" :key="item.id" :picUrl="item.imgurl" :ratio="16/9" :columns="4">
+            <span slot="text" class="mv-name">{{item.name}}</span>
+          </CoverItem>
+        </div>
       </el-tab-pane>
       <el-tab-pane label="歌手详情" name="2">
         <div>{{artist.briefDesc}}</div>
@@ -47,9 +75,12 @@
 <script>
 import Header from '@/components/common/Header.vue'
 import SongsTable from '@/components/content/SongsTable/SongsTable.vue'
-import CoverItem from '@/components/content/Cover/CoverItem.vue'
+import CoverItem from '@/components/content/Cover.vue'
 
-import { _getArtistInfo } from '@/network/artist.js'
+import { _getArtistInfo, _getArtistMV, _getArtistAlbum } from '@/network/artist.js'
+import { _getSongsByAlbumId } from '@/network/song.js'
+
+import formatDate from '@/utils/formatDate.js'
 
 export default {
   name: 'ArtistIndex',
@@ -58,13 +89,23 @@ export default {
     return {
       artist: {},
       hotSongs: [],
+      hotAlbums: [],
+      mvs: [],
+      isShowAll: false,
       activeId: 0,
       activeName: '0' // 当前tab选项卡
+    }
+  },
+  computed: {
+    songs () {
+      return this.isShowAll ? this.hotSongs : this.hotSongs.slice(0, 10)
     }
   },
   created () {
     const { id } = this.$route.query
     this.getArtistInfo(id)
+    this.getArtistMV(id)
+    this.getArtistAlbum(id)
   },
   methods: {
     async getArtistInfo (id) {
@@ -72,13 +113,74 @@ export default {
       this.artist = res.artist
       this.hotSongs = res.hotSongs
     },
+    async getArtistMV (id) {
+      const { data: res } = await _getArtistMV(id)
+      this.mvs = res.mvs
+    },
+    async getArtistAlbum (id) {
+      const { data: res } = await _getArtistAlbum(id)
+      this.hotAlbums = res.hotAlbums
+      this.hotAlbums.forEach(async v => {
+        const id = v.id
+        const { data: res } = await _getSongsByAlbumId(id)
+        v.songs = res.songs
+      })
+    },
+    // async getSongsByAlbumId (id) {
+    //   const { data: res } = await _getSongsByAlbumId(id)
+    //   // console.log(res)
+    //   this.hotAlbums.forEach(v => {
+    //     v.songs = res.songs
+    //   })
+    // },
+
     handleRowDbClick () {
       console.log('rowDbClick')
+    }
+  },
+  filters: {
+    dateFilter (date) {
+      return formatDate(new Date(date), 'yyyy-MM-dd')
     }
   }
 }
 </script>
 
 <style lang="less">
+.mvs-wrap {
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+}
+
+.mv-name {
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
+}
+
+.info-wrap {
+  margin-top: 10px;
+  display: flex;
+  flex-direction: column;
+  justify-content: right;
+  margin-left: 20px;
+  .name {
+    font-size: 20px;
+  }
+}
+
+.album-item {
+  display: flex;
+  margin-top: 30px;
+  width: 100%;
+  // flex-direction: column;
+  // justify-content: right;
+  // margin-left: 20px;
+  .info-wrap {
+    margin-left: 50px;
+    flex: 1;
+  }
+}
 
 </style>

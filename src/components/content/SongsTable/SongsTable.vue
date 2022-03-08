@@ -1,9 +1,15 @@
 <template>
   <div class="songs-table-container">
+    <div class="title-bar" v-if="title">
+      {{name}}
+      <i class="iconfont icon-play"></i>
+      <i class="iconfont icon-add"></i>
+    </div>
     <el-table
-      :data="songs"
+      :data="songsData"
       @row-dblclick="onDbClick"
       stripe
+      :show-header="showHeader"
       style="width: 100%">
       <el-table-column
         type="index"
@@ -58,6 +64,10 @@
         </template>
       </el-table-column>
     </el-table>
+    <div class="show-all"
+      v-if="this.songs.length > 10 && !isShowAll"
+      @click="isShowAll=true"
+      >显示全部歌曲</div>
   </div>
 </template>
 
@@ -76,9 +86,30 @@ export default {
     activeId: {
       type: Number,
       default: null
+    },
+    title: {
+      type: Boolean,
+      default: false
+    },
+    name: {
+      type: String,
+      default: ''
+    },
+    showHeader: {
+      type: Boolean,
+      default: false
+    },
+    isShowAll: {
+      type: Boolean,
+      default: false
     }
   },
-  computed: {},
+  computed: {
+    songsData () {
+      if (this.songs.length <= 10 || this.isShowAll) return this.songs
+      return this.songs.slice(0, 10)
+    }
+  },
   data () {
     return {}
   },
