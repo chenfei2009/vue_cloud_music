@@ -24,34 +24,41 @@
     <!-- tab选项卡 -->
     <el-tabs v-model="activeName">
       <el-tab-pane label="歌曲列表" name="0">
-        <!-- 热门50首 -->
-        <Header>
-          <CoverItem slot="left" picUrl="/image/default.png" :fixWidth="150">
-            <span class="center">TOP50</span></CoverItem>
-          <div class="info-wrap" slot="center">
-            <SongsTable :songs="songs"
-              :activeId="activeId"
-              :title="true"
-              name="热门50首"
-              @rowDbClick="handleRowDbClick"/>
-          </div>
-        </Header>
-        <!-- 热门50首/ -->
-        <!-- 专辑列表 -->
         <ul class="album-list">
+          <!-- 热门50首 -->
+          <li class="album-item">
+            <div class="cover-wrap">
+              <CoverItem slot="left" picUrl="/image/default.png" :fixWidth="150">
+                <span class="center">TOP50</span>
+              </CoverItem>
+            </div>
+            <div class="info-wrap" slot="center">
+              <SongsTable :songs="songs"
+                :activeId="activeId"
+                :title="true"
+                name="热门50首"
+                @rowDbClick="handleRowDbClick"/>
+            </div>
+          </li>
+          <!-- 热门50首/ -->
+          <!-- 专辑列表 -->
           <li class="album-item" v-for="item in hotAlbums" :key="item.id">
-            <CoverItem slot="left" :picUrl="item.picUrl" :fixWidth="150">
-              <div class="date" slot="text">{{item.publishTime | dateFilter}}</div>
-            </CoverItem>
+            <div class="cover-wrap">
+              <CoverItem slot="left" :picUrl="item.picUrl" :fixWidth="150">
+                <div class="date" slot="text">{{item.publishTime | dateFilter}}</div>
+              </CoverItem>
+            </div>
             <div class="info-wrap" slot="center">
               <!-- {{item.songs[0]}} -->
               <SongsTable :songs="item.songs"
                 :activeId="activeId"
                 :title="true"
                 :name="item.name"
+                :showAll="false"
                 @rowDbClick="handleRowDbClick"/>
             </div>
           </li>
+          <!-- 专辑列表/ -->
         </ul>
       </el-tab-pane>
       <el-tab-pane label="MV" name="1">
@@ -69,22 +76,38 @@
       </el-tab-pane>
     </el-tabs>
     <!-- tab选项卡/ -->
+    <!-- 对话框 -->
+    <el-dialog
+      title="替换播放列表"
+      :visible.sync="dialogVisible"
+      width="500px"
+      center
+      :before-close="handleClose">
+      <span>{{dialogContent}}</span>
+      <span slot="footer" class="dialog-footer">
+        <el-button type="primary" @click="handleConfirm">继 续</el-button>
+        <el-button @click="dialogVisible = false">取 消</el-button>
+      </span>
+    </el-dialog>
+    <!-- 对话框/ -->
   </div>
 </template>
 
 <script>
 import Header from '@/components/common/Header.vue'
-import SongsTable from '@/components/content/SongsTable/SongsTable.vue'
+import SongsTable from '@/components/content/SongsTable.vue'
 import CoverItem from '@/components/content/Cover.vue'
 
 import { _getArtistInfo, _getArtistMV, _getArtistAlbum } from '@/network/artist.js'
 import { _getSongsByAlbumId } from '@/network/song.js'
 
 import formatDate from '@/utils/formatDate.js'
+import { SongsDbClickMixin } from '@/utils/mixin.js'
 
 export default {
   name: 'ArtistIndex',
   components: { Header, CoverItem, SongsTable },
+  mixins: [SongsDbClickMixin],
   data () {
     return {
       artist: {},
@@ -92,7 +115,6 @@ export default {
       hotAlbums: [],
       mvs: [],
       isShowAll: false,
-      activeId: 0,
       activeName: '0' // 当前tab选项卡
     }
   },
@@ -125,17 +147,6 @@ export default {
         const { data: res } = await _getSongsByAlbumId(id)
         v.songs = res.songs
       })
-    },
-    // async getSongsByAlbumId (id) {
-    //   const { data: res } = await _getSongsByAlbumId(id)
-    //   // console.log(res)
-    //   this.hotAlbums.forEach(v => {
-    //     v.songs = res.songs
-    //   })
-    // },
-
-    handleRowDbClick () {
-      console.log('rowDbClick')
     }
   },
   filters: {
@@ -177,8 +188,11 @@ export default {
   // flex-direction: column;
   // justify-content: right;
   // margin-left: 20px;
+  .cover-wrap {
+    width: 200px;
+  }
   .info-wrap {
-    margin-left: 50px;
+    margin-left: 20px;
     flex: 1;
   }
 }

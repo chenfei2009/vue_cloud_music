@@ -13,6 +13,7 @@
         <!-- 歌单列表模块 -->
         <SongsTable :songs="songs"
           :activeId="activeId"
+          :showHeader="true"
           @rowDbClick="handleRowDbClick"/>
         <!-- 歌单列表模块/ -->
       </el-tab-pane>
@@ -68,13 +69,15 @@
 </template>
 
 <script>
-import SongsTable from '@/components/content/SongsTable/SongsTable.vue'
+import SongsTable from '@/components/content/SongsTable.vue'
 import Comment from '@/components/content/Comment/Comment.vue'
 import PlaylistInfo from './childComps/PlaylistInfo.vue'
 
 import { _getSongsByListId, _getDetailByListId } from '@/network/playlist.js'
 import { _getSongUrlById } from '@/network/song.js'
 import { _getCommentByListId } from '@/network/comment.js'
+
+import { SongsDbClickMixin } from '@/utils/mixin.js'
 
 export default {
   name: 'PlaylistIndex',
@@ -84,16 +87,13 @@ export default {
     }
   },
   components: { SongsTable, PlaylistInfo, Comment },
+  mixins: [SongsDbClickMixin],
   data () {
     return {
       id: 0, // 歌单id
       playlist: {}, // 歌单详情
       songs: [], // 歌单对应的歌曲列表
-      activeId: null, // 当前播放的歌曲id
-      rowId: null, // 当前双击的歌曲id
       activeName: '0', // 当前tab选项卡
-      dialogVisible: false,
-      dialogContent: '',
       inputText: '',
       hotComments: [],
       comments: []
@@ -152,41 +152,11 @@ export default {
     },
 
     /**
-     * 对话框确认按钮点击事件
-     */
-    handleConfirm () {
-      if (!this.rowId) { // 替换歌单并从头开始播放
-        this.$store.commit('resetPlayList', { songs: this.songs })
-      } else { // 替换歌单并播放选中歌曲
-        this.$store.commit('resetPlayList', { songs: this.songs, id: this.rowId })
-        this.activeId = this.rowId
-        this.rowId = null
-      }
-      this.dialogVisible = false
-    },
-
-    /**
-     * 对话框关闭按钮点击事件
-     */
-    handleClose (done) {
-      this.dialogVisible = false
-    },
-
-    /**
      * 对话框关闭按钮点击事件
      */
     handleAddToPlaylist () {
       // 判断是否为同一个播放列表
       this.$store.commit('addToPlayList', this.songs)
-    },
-
-    /**
-     * 歌曲行双击事件
-     */
-    handleRowDbClick (id) {
-      this.rowId = id
-      this.dialogContent = '"双击播放"会用当前列表的音乐替换播放列表，是否继续?'
-      this.dialogVisible = true
     },
 
     /**

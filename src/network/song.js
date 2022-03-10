@@ -56,7 +56,7 @@ export function _getSimiSongsById (id) {
  * 获取专辑歌曲
  * @param { interger } id 专辑编号
  */
- export function _getSongsByAlbumId (id) {
+export function _getSongsByAlbumId (id) {
   return request({
     url: '/album',
     params: { id }
