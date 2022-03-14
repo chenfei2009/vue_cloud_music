@@ -11,7 +11,7 @@
       stripe
       :show-header="showHeader"
       style="width: 100%">
-      <el-table-column
+      <el-table-column v-if="showIndex"
         type="index"
         width="40">
       </el-table-column>
@@ -25,38 +25,43 @@
       </el-table-column>
       <el-table-column
         prop="name"
-        label="标题">
+        label="标题"
+        sortable>
         <template slot-scope="scope">
           <i class="active-tag iconfont icon-caret-right" v-show="scope.row.id === activeId"></i>
           <span :class="scope.row.id === activeId ? 'active' : ''"
             class="cell-text">{{scope.row.name}}</span>
         </template>
       </el-table-column>
-      <el-table-column
+      <el-table-column v-if="showArtist"
         prop="singer"
         label="歌手"
+        sortable
         width="200">
         <template slot-scope="scope">
-          <span :class="scope.row.id === activeId ? 'active' : ''"
-            class="cell-text">{{scope.row.ar[0].name}}</span>
+          <!-- <span :class="scope.row.id === activeId ? 'active' : ''"
+            class="cell-text">{{scope.row.ar[0].name}}</span> -->
+          <Artists :artists="scope.row.ar"/>
         </template>
       </el-table-column>
-      <el-table-column
+      <el-table-column v-if="showAlbum"
         prop="album"
-        label="专辑">
+        label="专辑"
+        sortable>
         <template slot-scope="scope">
           <span :class="scope.row.id === activeId ? 'active' : ''"
             class="cell-text">{{scope.row.al.name}}</span>
         </template>
       </el-table-column>
-      <!-- <el-table-column
+      <el-table-column v-if="showOrigin"
         prop="link"
-        label="链接"
+        label="来源"
         width="30">
-      </el-table-column> -->
+      </el-table-column>
       <el-table-column
         prop="dt"
         label="时长"
+        sortable
         width="100">
         <template slot-scope="scope">
           <span :class="scope.row.id === activeId ? 'active' : ''"
@@ -72,10 +77,13 @@
 </template>
 
 <script>
+import Artists from '@/components/content/Artists.vue'
+
 import formatTime from '@/utils/formatTime.js'
 
 export default {
   name: 'SongsTable',
+  components: { Artists },
   props: {
     songs: {
       type: Array,
@@ -96,6 +104,22 @@ export default {
       default: ''
     },
     showHeader: { // 是否显示表头
+      type: Boolean,
+      default: false
+    },
+    showIndex: { // 是否显示索引
+      type: Boolean,
+      default: false
+    },
+    showArtist: { // 是否显示歌手
+      type: Boolean,
+      default: true
+    },
+    showAlbum: { // 是否显示专辑
+      type: Boolean,
+      default: false
+    },
+    showOrigin: { // 是否显示来源
       type: Boolean,
       default: false
     },

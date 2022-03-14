@@ -32,11 +32,12 @@
       <!-- 推荐歌单/ -->
     </ul>
     <!-- 推荐歌单模块/ -->
-    <!-- 热门播客单模块 -->
-    <SongGroup title="热门播客" :list="newSongs" :column="2" />
+    <!-- 热门播客模块 -->
+    <Title title="热门播客" path="/vlog" />
+    <SongGroup :list="newSongs" :column="2" />
     <!-- 热门播客单模块/ -->
     <!-- 独家放送模块 -->
-    <Title title="独家放送" />
+    <Title title="独家放送" path="/dujiafangsong" />
     <ul class="list-wrap" v-if="privateContent.length > 0">
       <CoverItem v-for="item in privateContent"
         :key="item.id"
@@ -51,8 +52,9 @@
     </ul>
     <!-- 独家放送模块/ -->
     <!-- 最新音乐模块 -->
-    <SongGroup title="最新音乐" :list="newSongs" :column="3" />
-    <Title title="推荐MV" />
+    <Title title="最新音乐" path="/discover/newest" />
+    <SongGroup :list="newSongs" :column="3" />
+    <Title title="推荐MV" path="/video" />
     <ul class="list-wrap" v-if="personalizedMv.length > 0">
       <CoverItem v-for="item in personalizedMv"
         :key="item.id"
@@ -62,7 +64,7 @@
         @itemClick="handleCoverClick">
         <div slot="text">
           <div class="video-name">{{item.name}}</div>
-          <div class="artists">{{item.artists[0].name}}</div>
+          <Artists :artists="item.artists"/>
         </div>
       </CoverItem>
     </ul>
@@ -74,9 +76,10 @@
 
 <script>
 import PlayButton from '@/components/common/PlayButton.vue'
-import Title from '@/components/content/Title/Title.vue'
-import CoverItem from '@/components/content/Cover/CoverItem.vue'
+import Title from '@/components/content/Title.vue'
+import CoverItem from '@/components/content/Cover.vue'
 import SongGroup from '@/components/content/SongGroup/SongGroup.vue'
+import Artists from '@/components/content/Artists.vue'
 
 import {
   _getBanner,
@@ -96,7 +99,7 @@ import {
 
 export default {
   name: 'Discover',
-  components: { PlayButton, Title, CoverItem, SongGroup },
+  components: { PlayButton, Title, CoverItem, SongGroup, Artists },
   data () {
     return {
       banners: [], // 轮播图数据

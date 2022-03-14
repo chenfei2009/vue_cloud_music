@@ -39,6 +39,11 @@ a {
   /* padding: 0 20px; */
 }
 
+.text-title {
+  font-size: 20px;
+  font-weight: 700;
+}
+
 .text-small {
   font-size: 12px;
   color: #ccc;

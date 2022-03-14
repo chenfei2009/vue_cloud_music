@@ -14,6 +14,8 @@
         <SongsTable :songs="songs"
           :activeId="activeId"
           :showHeader="true"
+          :showIndex="true"
+          :showAlbum="true"
           @rowDbClick="handleRowDbClick"/>
         <!-- 歌单列表模块/ -->
       </el-tab-pane>

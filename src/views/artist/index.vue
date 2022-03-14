@@ -37,6 +37,7 @@
                 :activeId="activeId"
                 :title="true"
                 name="热门50首"
+                :showArtist="false"
                 @rowDbClick="handleRowDbClick"/>
             </div>
           </li>
@@ -49,12 +50,12 @@
               </CoverItem>
             </div>
             <div class="info-wrap" slot="center">
-              <!-- {{item.songs[0]}} -->
               <SongsTable :songs="item.songs"
                 :activeId="activeId"
                 :title="true"
                 :name="item.name"
                 :showAll="false"
+                :showArtist="false"
                 @rowDbClick="handleRowDbClick"/>
             </div>
           </li>

@@ -13,9 +13,10 @@
         <span class="item-tag text-small">{{item.tag}}</span>
       </div>
       <div class="item-info text-small">
-        <div class="item-artists-wrap">
+        <Artists :artists="item.song.artists"/>
+        <!-- <div class="item-artists-wrap">
           <span v-for="item in item.song.artists" :key="item.id">{{item.name}}</span>
-        </div>
+        </div> -->
         <div class="item-hit-wrap" v-if="item.hit">
           <i class="iconfont icon-caret-right"></i>
           <div class="item-hit">{{item.hit}}</div>
@@ -30,8 +31,10 @@
 </template>
 
 <script>
+import Artists from '@/components/content/Artists.vue'
+
 export default {
-  name: 'VlogItem',
+  name: 'SongItem',
   props: {
     item: {
       type: Object,
@@ -44,6 +47,7 @@ export default {
       default: 2
     }
   },
+  components: { Artists },
   data () {
     return {
       isShowBtn: true

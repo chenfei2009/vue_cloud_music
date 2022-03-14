@@ -1,13 +1,13 @@
 <template>
   <div class="discover-container">
-    <el-menu default-active="/discover" class="el-menu" mode="horizontal" @select="handleSelect" router>
-      <el-menu-item index="/discover">个性推荐</el-menu-item>
-      <el-menu-item index="/discover/djradio">专属定制</el-menu-item>
-      <el-menu-item index="/discover/playlist">歌单</el-menu-item>
-      <el-menu-item index="/discover/toplist">排行榜</el-menu-item>
-      <el-menu-item index="/discover/artists">歌手</el-menu-item>
-      <el-menu-item index="/discover/newest">最新音乐</el-menu-item>
-    </el-menu>
+    <TabBar>
+      <TabBarItem path="/discover"><div slot="item-text">个性推荐</div></TabBarItem>
+      <TabBarItem path="/discover/djradio"><div slot="item-text">专属定制</div></TabBarItem>
+      <TabBarItem path="/discover/playlist"><div slot="item-text">歌单</div></TabBarItem>
+      <TabBarItem path="/discover/toplist"><div slot="item-text">排行榜</div></TabBarItem>
+      <TabBarItem path="/discover/artists"><div slot="item-text">歌手</div></TabBarItem>
+      <TabBarItem path="/discover/newest"><div slot="item-text">最新音乐</div></TabBarItem>
+    </TabBar>
     <keep-alive>
       <router-view></router-view>
     </keep-alive>
@@ -15,9 +15,12 @@
 </template>
 
 <script>
+import TabBar from '@/components/common/TabBar.vue'
+import TabBarItem from '@/components/common/TabBarItem.vue'
+
 export default {
   name: 'DiscoverIndex',
-  components: {},
+  components: { TabBar, TabBarItem },
   data () {
     return {}
   },
@@ -40,29 +43,5 @@ export default {
 .discover-container::-webkit-scrollbar { /* 滚动条整体样式 */
   width: 4px; /* 高宽分别对应横竖滚动条的尺寸 */
   height: 4px;
-}
-
-.el-menu {
-  position: fixed;
-  top: 80px;
-  left: 220px;
-  width: 100%;
-  background-color: #fff;
-  z-index: 9;
-}
-
-/deep/ .el-menu--horizontal {
-  border-bottom: 0;
-  .el-menu-item {
-    height: 30px;
-    line-height: 30px;
-    padding: 0;
-    margin: 0 10px 10px 10px;
-  }
-  .is-active {
-    border-bottom: 2px solid var(--themeColor);
-    font-size: 18px;
-    font-weight: 800;
-  }
 }
 </style>
