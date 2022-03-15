@@ -17,7 +17,6 @@
 <script>
 import TabBar from '@/components/common/TabBar.vue'
 import TabBarItem from '@/components/common/TabBarItem.vue'
-
 export default {
   name: 'DiscoverIndex',
   components: { TabBar, TabBarItem },
@@ -39,7 +38,6 @@ export default {
   overflow: scroll;
   padding-top: 40px;
 }
-
 .discover-container::-webkit-scrollbar { /* 滚动条整体样式 */
   width: 4px; /* 高宽分别对应横竖滚动条的尺寸 */
   height: 4px;

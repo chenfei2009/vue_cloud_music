@@ -1,7 +1,7 @@
 <template>
   <div class="artist-container">
     <Header>
-      <CoverItem slot="left" :picUrl="artist.picUrl" :fixWidth="200"/>
+      <Cover slot="left" :picUrl="artist.picUrl" :fixWidth="200"/>
       <div class="info-wrap" slot="center">
         <h1 class="name">{{artist.name}}</h1>
         <div class="alias" v-if="artist.alias">{{artist.alias[0]}}</div>
@@ -20,7 +20,6 @@
         </div>
       </div>
     </Header>
-    <!-- <div>{{artist}}</div> -->
     <!-- tab选项卡 -->
     <el-tabs v-model="activeName">
       <el-tab-pane label="歌曲列表" name="0">
@@ -28,9 +27,9 @@
           <!-- 热门50首 -->
           <li class="album-item">
             <div class="cover-wrap">
-              <CoverItem slot="left" picUrl="/image/default.png" :fixWidth="150">
+              <Cover slot="left" picUrl="/image/default.png" :fixWidth="150">
                 <span class="center">TOP50</span>
-              </CoverItem>
+              </Cover>
             </div>
             <div class="info-wrap" slot="center">
               <SongsTable :songs="songs"
@@ -45,9 +44,9 @@
           <!-- 专辑列表 -->
           <li class="album-item" v-for="item in hotAlbums" :key="item.id">
             <div class="cover-wrap">
-              <CoverItem slot="left" :picUrl="item.picUrl" :fixWidth="150">
+              <Cover slot="left" :picUrl="item.picUrl" :fixWidth="150">
                 <div class="date" slot="text">{{item.publishTime | dateFilter}}</div>
-              </CoverItem>
+              </Cover>
             </div>
             <div class="info-wrap" slot="center">
               <SongsTable :songs="item.songs"
@@ -64,9 +63,9 @@
       </el-tab-pane>
       <el-tab-pane label="MV" name="1">
         <div class="mvs-wrap">
-          <CoverItem v-for="item in mvs" :key="item.id" :picUrl="item.imgurl" :ratio="16/9" :columns="4">
+          <Cover v-for="item in mvs" :key="item.id" :picUrl="item.imgurl" :ratio="16/9" :columns="4">
             <span slot="text" class="mv-name">{{item.name}}</span>
-          </CoverItem>
+          </Cover>
         </div>
       </el-tab-pane>
       <el-tab-pane label="歌手详情" name="2">
@@ -97,7 +96,7 @@
 <script>
 import Header from '@/components/common/Header.vue'
 import SongsTable from '@/components/content/SongsTable.vue'
-import CoverItem from '@/components/content/Cover.vue'
+import Cover from '@/components/content/Cover.vue'
 
 import { _getArtistInfo, _getArtistMV, _getArtistAlbum } from '@/network/artist.js'
 import { _getSongsByAlbumId } from '@/network/song.js'
@@ -107,7 +106,7 @@ import { SongsDbClickMixin } from '@/utils/mixin.js'
 
 export default {
   name: 'ArtistIndex',
-  components: { Header, CoverItem, SongsTable },
+  components: { Header, Cover, SongsTable },
   mixins: [SongsDbClickMixin],
   data () {
     return {
@@ -125,21 +124,46 @@ export default {
     }
   },
   created () {
-    const { id } = this.$route.query
-    this.getArtistInfo(id)
-    this.getArtistMV(id)
-    this.getArtistAlbum(id)
+    this.getDatas()
+  },
+  activated () {
+    this.getDatas()
   },
   methods: {
+    // 网络请求相关方法
+    /**
+     * 请求本页所有数据
+     */
+    getDatas () {
+      const { id } = this.$route.query
+      this.getArtistInfo(id)
+      this.getArtistMV(id)
+      this.getArtistAlbum(id)
+    },
+
+    /**
+     * 请求歌手信息和热门歌曲数据
+     * @param { integer } id 歌手编号
+     */
     async getArtistInfo (id) {
       const { data: res } = await _getArtistInfo(id)
       this.artist = res.artist
       this.hotSongs = res.hotSongs
     },
+
+    /**
+     * 请求MV数据
+     * @param { integer } id 歌手编号
+     */
     async getArtistMV (id) {
       const { data: res } = await _getArtistMV(id)
       this.mvs = res.mvs
     },
+
+    /**
+     * 请求歌手对应的专辑数据
+     * @param { integer } id 歌手编号
+     */
     async getArtistAlbum (id) {
       const { data: res } = await _getArtistAlbum(id)
       this.hotAlbums = res.hotAlbums

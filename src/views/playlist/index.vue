@@ -102,14 +102,24 @@ export default {
     }
   },
   created () {
-    this.id = this.$route.query.id
-    this.getDetailByListId(this.id)
-    this.getSongsByListId(this.id)
-    this.getCommentByListId(this.id)
+    this.getDatas()
+  },
+  activated () {
+    this.getDatas()
   },
   mounted () {},
   methods: {
     // 网络请求相关方法
+    /**
+     * 请求本页所有数据
+     */
+    getDatas () {
+      this.id = this.$route.query.id
+      this.getDetailByListId(this.id)
+      this.getSongsByListId(this.id)
+      this.getCommentByListId(this.id)
+    },
+
     /**
      * 请求歌单对应的歌曲数据
      * @param { integer } id 歌单编号

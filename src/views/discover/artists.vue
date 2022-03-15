@@ -47,19 +47,19 @@
     </form>
     <!-- 歌手列表模块 -->
     <ul class="list-wrap" v-if="artists.length > 0">
-      <CoverItem v-for="item in artists"
+      <Cover v-for="item in artists"
         :key="item.id"
         :picUrl="item.picUrl"
         :column="6"
         @itemClick="handleCoverClick(item.id)">
-        <span slot="text">{{item.name}}</span></CoverItem>
+        <span slot="text">{{item.name}}</span></Cover>
     </ul>
     <!-- 歌手列表模块/ -->
   </div>
 </template>
 
 <script>
-import CoverItem from '@/components/content/Cover/CoverItem.vue'
+import Cover from '@/components/content/Cover.vue'
 import RadioItem from '@/components/common/RadioItem.vue'
 import RadioGroup from '@/components/common/RadioGroup.vue'
 
@@ -67,7 +67,7 @@ import { _getArtistList } from '@/network/artist.js'
 
 export default {
   name: 'Artists',
-  components: { CoverItem, RadioGroup, RadioItem },
+  components: { Cover, RadioGroup, RadioItem },
   data () {
     return {
       artists: [],

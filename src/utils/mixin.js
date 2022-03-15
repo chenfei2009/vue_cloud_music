@@ -15,8 +15,9 @@ export const SongsDbClickMixin = {
     /**
      * 双击歌曲表行事件
      */
-    handleRowDbClick () {
+    handleRowDbClick (id) {
       console.log('rowDbClick')
+      this.rowId = id
       this.dialogContent = '"双击播放"将会替换当前的播放列表，是否继续?'
       this.dialogVisible = true
     },
@@ -40,6 +41,7 @@ export const SongsDbClickMixin = {
      */
     handleClose (done) {
       this.dialogVisible = false
+      this.rowId = null
     }
   }
 }

@@ -11,16 +11,16 @@
     <Title title="推荐歌单" path="/playlist" />
     <ul class="list-wrap" v-if="personalizedList.length > 1">
       <!-- 每日歌曲推荐 -->
-      <CoverItem :item="recItem">
+      <Cover :item="recItem">
         <div class="hover-wrap">
           <PlayButton :isPlay="false" @btnClick="handleBtnClick()"/>
         </div>
         <i class="center rec-icon iconfont icon-calendar1"></i>
         <span class="center rec-date">{{day}}</span>
-        <span slot="text">{{recItem.name}}</span></CoverItem>
+        <span slot="text">{{recItem.name}}</span></Cover>
       <!-- 每日歌曲推荐/ -->
       <!-- 推荐歌单 -->
-      <CoverItem v-for="item in personalizedList"
+      <Cover v-for="item in personalizedList"
         :key="item.id"
         :picUrl="item.picUrl"
         @itemClick="handleCoverClick(item.id)">
@@ -28,7 +28,7 @@
           <PlayButton :isPlay="false" @btnClick="handleBtnClick(item)"/>
         </div>
         <div class="play-count">{{item.playCount | countFilter}}</div>
-        <span slot="text">{{item.name}}</span></CoverItem>
+        <span slot="text">{{item.name}}</span></Cover>
       <!-- 推荐歌单/ -->
     </ul>
     <!-- 推荐歌单模块/ -->
@@ -39,7 +39,7 @@
     <!-- 独家放送模块 -->
     <Title title="独家放送" path="/dujiafangsong" />
     <ul class="list-wrap" v-if="privateContent.length > 0">
-      <CoverItem v-for="item in privateContent"
+      <Cover v-for="item in privateContent"
         :key="item.id"
         :picUrl="item.picUrl"
         :column="3"
@@ -48,7 +48,7 @@
         <div class="fix-btn-wrap">
           <PlayButton :isPlay="false" @btnClick.stop="handleBtnClick(item)"/>
         </div>
-        <span slot="text">{{item.name}}</span></CoverItem>
+        <span slot="text">{{item.name}}</span></Cover>
     </ul>
     <!-- 独家放送模块/ -->
     <!-- 最新音乐模块 -->
@@ -56,7 +56,7 @@
     <SongGroup :list="newSongs" :column="3" />
     <Title title="推荐MV" path="/video" />
     <ul class="list-wrap" v-if="personalizedMv.length > 0">
-      <CoverItem v-for="item in personalizedMv"
+      <Cover v-for="item in personalizedMv"
         :key="item.id"
         :picUrl="item.picUrl"
         :column="4"
@@ -66,7 +66,7 @@
           <div class="video-name">{{item.name}}</div>
           <Artists :artists="item.artists"/>
         </div>
-      </CoverItem>
+      </Cover>
     </ul>
     <!-- 最新音乐模块/ -->
     <Title title="听听" />
@@ -77,7 +77,7 @@
 <script>
 import PlayButton from '@/components/common/PlayButton.vue'
 import Title from '@/components/content/Title.vue'
-import CoverItem from '@/components/content/Cover.vue'
+import Cover from '@/components/content/Cover.vue'
 import SongGroup from '@/components/content/SongGroup/SongGroup.vue'
 import Artists from '@/components/content/Artists.vue'
 
@@ -89,9 +89,7 @@ import {
   _getDaySongs,
   _getPersonalizedMv
 } from '@/network/discover.js'
-
 import { _getSongsByListId } from '@/network/playlist.js'
-
 import {
   _getSongsByIds,
   _getSongUrlById
@@ -99,7 +97,7 @@ import {
 
 export default {
   name: 'Discover',
-  components: { PlayButton, Title, CoverItem, SongGroup, Artists },
+  components: { PlayButton, Title, Cover, SongGroup, Artists },
   data () {
     return {
       banners: [], // 轮播图数据
@@ -139,7 +137,6 @@ export default {
       const { data: res } = await _getBanner()
       this.banners = res.banners
     },
-
     /**
      * 获取推荐歌单数据
      */
@@ -147,7 +144,6 @@ export default {
       const { data: res } = await _getPersonalized(config)
       this.personalizedList.push(...res.result.slice(0, 9))
     },
-
     /**
      * 获取独家放送数据
      */
@@ -155,7 +151,6 @@ export default {
       const { data: res } = await _getPrivateContent()
       this.privateContent = res.result
     },
-
     /**
      * 获取推荐新音乐
      */
@@ -164,7 +159,6 @@ export default {
       // console.log(res)
       this.newSongs = res.result
     },
-
     async getSongsByListId (id) {
       const { data: res } = await _getSongsByListId(id)
       const songs = res.songs
@@ -174,23 +168,19 @@ export default {
       })
       this.$store.commit('resetPlayList', { songs })
     },
-
     async getDaySongs () {
       const { data: res } = await _getDaySongs()
       // console.log(res)
       this.daySongs = res.result
     },
-
     async getPersonalizedMv () {
       const { data: res } = await _getPersonalizedMv()
       // console.log(res)
       this.personalizedMv = res.result
     },
-
     onBtnClick () {
       console.log('BtnClick')
     },
-
     /** 点击轮播图 */
     async handleItemClick (item) {
       console.log(item)
@@ -209,7 +199,6 @@ export default {
         return console.log('跳转页面', item.targetType, item.url)
       }
     },
-
     /**
      * 歌单播放按钮点击事件
      */
@@ -218,7 +207,6 @@ export default {
       this.$store.commit('setPlayListInfo', item)
       this.getSongsByListId(item.id)
     },
-
     /**
      * 歌单封面点击事件
      */
@@ -243,20 +231,17 @@ export default {
   border-radius: 5px;
   overflow: hidden;
 }
-
 /deep/ .el-carousel__button {
   width: 6px;
   height: 6px;
   border-radius: 3px;
 }
-
 .list-wrap {
   width: 100%;
   display: flex;
   flex-wrap: wrap;
   justify-content: space-between;
 }
-
 .center {
   position: absolute;
   top: 50%;
@@ -264,17 +249,13 @@ export default {
   color: #fff;
   transform: translate(-50%, -55%);
 }
-
 .rec-icon {
   font-size: 50px;
 }
-
 .rec-date {
   font-size: 24px;
   transform: translate(-50%, -45%);
-
 }
-
 /* 播放按钮 */
 .hover-wrap {
   // display: none;
@@ -288,14 +269,12 @@ export default {
   width: 30px;
   height: 30px;
 }
-
 .item-cover-wrap:hover {
   .hover-wrap {
     opacity: 1;
     transition: opacity 1s;
   }
 }
-
 .fix-btn-wrap {
   position: absolute;
   top: 10px;
@@ -303,7 +282,6 @@ export default {
   width: 30px;
   height: 30px;
 }
-
 .play-count {
   position: absolute;
   top: 2px;
@@ -311,7 +289,6 @@ export default {
   color: #fff;
   font-size: 12px;
 }
-
 .video-name {
   white-space: nowrap;
   text-overflow: ellipsis;

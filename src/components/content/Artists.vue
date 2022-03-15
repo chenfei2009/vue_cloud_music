@@ -1,8 +1,8 @@
 <template>
   <div class="artists-container">
-    <div class="content" ref="content">
-      <ul class="artist-list">
-        <li class="artist-item" v-for="(item, index) in artists" :key="item.id">
+    <div class="content">
+      <ul class="artist-list" ref="content">
+        <li class="artist-item" v-for="(item, index) in artists" :key="index">
           <!-- <a :href="path" class="text-small">{{item.name}}</a> -->
           <span class="item-text" @click="onItemClick(item.id)">{{item.name}}</span>
           <span class="division" v-if="index<artists.length-1">/</span>
@@ -24,16 +24,7 @@ export default {
       }
     }
   },
-  computed: {
-    // content () {
-    //   console.log(this.$refs.content)
-    //   return this.$refs.content
-    // },
-    // hidden () {
-    //   const content = this.$refs.content
-    //   return content.clientWidth > 200
-    // }
-  },
+  computed: {},
   data () {
     return {
       hidden: false
@@ -58,14 +49,15 @@ export default {
 .artists-container {
   position: relative;
   width: 100%;
+  padding-left: 0;
   .content {
-    padding-right: 10px;
+    margin-right: 10px;
     overflow: hidden;
     .artist-list {
       // padding-right: 10px;
       display: inline-block;
       white-space: nowrap;
-      // overflow: hidden;
+      padding-left: 0;
       // text-overflow: ellipsis;
     }
     .artist-item {

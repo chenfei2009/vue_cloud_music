@@ -1,5 +1,5 @@
 <template>
-  <div class="home-container">
+  <div class="vlog-container">
     Vlog
   </div>
 </template>

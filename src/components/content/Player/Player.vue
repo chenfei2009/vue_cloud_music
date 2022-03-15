@@ -39,9 +39,16 @@
       </div>
     </Drawer>
     <!-- 播放列表侧边栏 -->
-    <PlayList :tableData=playList
-      :activeId="activeId"
-      v-if="isShowPlayList"/>
+    <SideBar v-show="isShowPlayList">
+      <SongsTable slot="table"
+        :songs="playList"
+        :activeId="activeId"
+        :artistsWidth="100"
+        :dtWidth="80"
+        :showPlayTag="true"
+        :showOrigin="true"
+        @rowDbClick="handleRowDbClick"/>
+    </SideBar>
   </div>
 </template>
 
@@ -49,10 +56,11 @@
 import Drawer from '@/components/common/Drawer.vue'
 import Scroll from '@/components/common/Scroll.vue'
 import Header from '@/components/content/Header/Header.vue'
+import SongsTable from '@/components/content/SongsTable.vue'
 
 import PlayBar from './PlayBar.vue'
+import SideBar from './SideBar.vue'
 import PlayDetail from './PlayDetail.vue'
-import PlayList from './PlayList.vue'
 import Comment from './Comment.vue'
 
 import {
@@ -70,7 +78,8 @@ export default {
   components: {
     PlayBar,
     PlayDetail,
-    PlayList,
+    SideBar,
+    SongsTable,
     Drawer,
     Header,
     Scroll,
@@ -184,7 +193,7 @@ export default {
     async getCommentById () {
       const { data: res } = await _getCommentById(this.playContent.id)
       this.comments = res.comments
-      console.log(this.comments)
+      // console.log(this.comments)
       this.$nextTick(() => {
         this.$refs.scroll.refresh()
       })
@@ -202,6 +211,15 @@ export default {
         this.getHotComments()
         this.getCommentById()
       }
+    },
+
+    /**
+     * 双击侧边栏歌曲
+     */
+    handleRowDbClick (id) {
+      // console.log(id)
+      const content = this.playList.find(v => v.id === id)
+      this.$store.commit('setContent', content)
     },
 
     /**
@@ -279,5 +297,9 @@ export default {
   height: 60%;
   background-image: linear-gradient(#eee, #fff);
   z-index: -1;
+}
+
+.songs-table-wrap {
+
 }
 </style>

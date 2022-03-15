@@ -53,8 +53,9 @@ export default {
       return this.$store.state.currentTime
     },
     currentIndex () {
+      if (!this.lyric || this.lyric.length === 1) return 0
       const index = this.lyric.findIndex(v => v.time >= this.currentTime) - 1
-      if (!this.lyric || index < 0) return 0
+      if (index < 0) return 0
       return index
     }
     // scrollTimer () { // scrollIndex 对应的时间
@@ -90,6 +91,7 @@ export default {
       // this.isShowTimeLine = true
       // 修改 currentIndex
       this.scrollIndex = parseInt((-pos.y) / 40) + 3
+      if (this.scrollIndex > this.lyric.length - 1) return false
       const timer = this.lyric[this.scrollIndex].time
       this.scrollTimer = formatTime(timer)
     },

@@ -4,7 +4,9 @@
     <el-container class="main-container">
       <Aside></Aside>
       <el-main>
-        <router-view />
+        <keep-alive>
+          <router-view />
+        </keep-alive>
       </el-main>
     </el-container>
     <el-footer class="footer-container" height="70px">
@@ -16,7 +18,7 @@
 
 <script>
 import Aside from './childComps/Aside.vue'
-import Header from '@/components/content/Header/Header.vue'
+import Header from '@/components/content/Header.vue'
 import Player from '@/components/content/Player/Player.vue'
 
 import request from '@/utils/request.js'
@@ -60,7 +62,7 @@ export default {
           password: 'chenfei2013'
         }
       })
-      console.log(res)
+      console.log('登录测试', res)
     },
     handleShowList () {
       this.isShowPlayList = !this.isShowPlayList
