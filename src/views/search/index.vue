@@ -13,7 +13,10 @@ export default {
     }
   },
   created () {
-    this.searchWord = this.$router.query.searchWord
+    this.searchWord = this.$route.query.s
+  },
+  activated () {
+    this.searchWord = this.$route.query.s
   }
 }
 </script>
