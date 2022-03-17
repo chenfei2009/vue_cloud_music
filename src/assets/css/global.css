@@ -49,6 +49,10 @@ a {
   color: #ccc;
 }
 
+.text-highlight {
+  color: #065299;
+}
+
 .fl {
   float: left;
 }

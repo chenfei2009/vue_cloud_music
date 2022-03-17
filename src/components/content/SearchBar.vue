@@ -20,6 +20,7 @@
         :bounce="false"
         :mouseWheel="true"
         :scrollbar="true">
+        <!-- 搜索历史 -->
         <div class="scroll-title">搜索历史
           <i class="iconfont icon-delete"
             v-if="history.length>0"
@@ -34,6 +35,8 @@
             <span class="btn-delete" @click.stop="handleDeleteItem(index)">x</span>
           </li>
         </ul>
+        <!-- 搜索历史/ -->
+        <!-- 热搜榜 -->
         <div class="scroll-title">热搜榜</div>
         <ul class="hot-list">
           <li class="list-item" v-for="(item, index) in hotData" :key="index">
@@ -55,48 +58,56 @@
             </div>
           </li>
         </ul>
+        <!-- 热搜榜/ -->
       </Scroll>
       <div class="result-wrap" v-else>
-        <div class="title">单曲
-          <i class="iconfont title-icon icon-music"></i>
+        <div class="songs-wrap" v-if="songs.length>0">
+          <div class="title">单曲
+            <i class="iconfont title-icon icon-music"></i>
+          </div>
+          <ul class="song-list">
+            <li class="list-item" v-for="item in songs" :key="item.id">
+              <div v-html="formatData(item)"></div>
+              <!-- {{formatSong(item)}} -->
+            </li>
+          </ul>
         </div>
-        <ul class="song-list">
-          <li class="list-item" v-for="item in songs" :key="item.id">
-            <div v-html="formatData(item)"></div>
-            <!-- {{formatSong(item)}} -->
-          </li>
-        </ul>
-        <div class="title">歌手
-          <i class="iconfont title-icon icon-person"></i>
+        <div class="artists-wrap" v-if="artists.length>0">
+          <div class="title">歌手
+            <i class="iconfont title-icon icon-person"></i>
+          </div>
+          <ul class="artist-list">
+            <li class="list-item" v-for="item in artists" :key="item.id">
+              <div v-html="formatData(item)"></div>
+            </li>
+          </ul>
         </div>
-        <ul class="artist-list">
-          <li class="list-item" v-for="item in artists" :key="item.id">
-            <div v-html="formatData(item)"></div>
-          </li>
-        </ul>
-        <div class="title">专辑
-          <i class="iconfont title-icon icon-disc"></i>
+        <div class="albums-wrap" v-if="albums.length>0">
+          <div class="title">专辑
+            <i class="iconfont title-icon icon-disc"></i>
+          </div>
+          <ul class="album-list">
+            <li class="list-item" v-for="item in albums" :key="item.id">
+              <div v-html="formatData(item)"></div>
+            </li>
+          </ul>
         </div>
-        <ul class="album-list">
-          <li class="list-item" v-for="item in albums" :key="item.id">
-            <div v-html="formatData(item)"></div>
-          </li>
-        </ul>
-        <div class="title">歌单
-          <i class="iconfont title-icon icon-list"></i>
+        <div class="playlists-wrap" v-if="playlists.length>0">
+          <div class="title">歌单
+            <i class="iconfont title-icon icon-list"></i>
+          </div>
+          <ul class="play-list">
+            <li class="list-item" v-for="item in playlists" :key="item.id">
+              <div v-html="formatData(item)"></div>
+            </li>
+          </ul>
         </div>
-        <ul class="play-list">
-          <li class="list-item" v-for="item in playlists" :key="item.id">
-            <div v-html="formatData(item)"></div>
-          </li>
-        </ul>
       </div>
     </div>
     <!-- 对话框 -->
     <el-dialog :visible.sync="dialogVisible"
       width="500px"
-      center
-      :before-close="handleClose">
+      center>
       <span>是否删除全部？</span>
       <span slot="footer" class="dialog-footer">
         <el-button type="primary" @click="handleConfirm">确定</el-button>
@@ -109,7 +120,8 @@
 <script>
 import Scroll from '@/components/common/Scroll.vue'
 
-import { _getDefaultKey, _getHotKeys, _getSearch } from '@/network/search.js'
+import { _getDefaultKey, _getHotKeys, _getSuggest } from '@/network/search.js'
+import highlight from '@/utils/highlight.js'
 
 export default {
   name: 'SearchBar',
@@ -134,7 +146,7 @@ export default {
             str = str + v.name + ' '
           })
         }
-        return this.highlights(str)
+        return highlight(str, this.inputVal)
       }
     }
   },
@@ -145,10 +157,11 @@ export default {
       showKeyword: '搜索',
       hotData: [],
       isShowPanel: false,
-      songs: [],
-      artists: [],
-      albums: [],
-      playlists: [],
+      order: [], // 搜索建议的排序
+      songs: [], // 搜索建议返回的歌曲
+      artists: [], // 搜索建议返回的歌手
+      albums: [], // 搜索建议返回的专辑
+      playlists: [], // 搜索建议返回的歌单
       history: [], // 搜索历史
       dialogVisible: false
     }
@@ -184,17 +197,15 @@ export default {
     },
 
     /**
-     * 关键词搜索
+     * 搜索建议
      */
-    async getSearch (keywords) {
-      const { data: res1 } = await _getSearch(keywords, 1, 4)
-      this.songs = res1.result.songs
-      const { data: res2 } = await _getSearch(keywords, 100, 1)
-      this.artists = res2.result.artists
-      const { data: res3 } = await _getSearch(keywords, 10, 2)
-      this.albums = res3.result.albums
-      const { data: res4 } = await _getSearch(keywords, 1000, 2)
-      this.playlists = res4.result.playlists
+    async getSuggest (keywords) {
+      const { data: res } = await _getSuggest(keywords)
+      this.order = res.result.order
+      this.songs = res.result.songs || []
+      this.artists = res.result.artists || []
+      this.albums = res.result.albums || []
+      this.playlists = res.result.playlists || []
     },
 
     // 事件监听相关方法
@@ -209,7 +220,7 @@ export default {
     handleWordClick (s) {
       this.inputVal = s
       this.history.unshift(s)
-      this.getSearch(this.inputVal)
+      this.getSuggest(this.inputVal)
       this.isShowPanel = false
       this.$router.push({
         path: '/search',
@@ -233,7 +244,7 @@ export default {
      */
     handleInput () {
       const inputVal = this.inputVal.replace(/\s+$/, '')
-      if (inputVal) return this.getSearch(inputVal)
+      if (inputVal) return this.getSuggest(inputVal)
       // console.log('没有输入')
       this.songs = []
       // this.artists = []
@@ -278,17 +289,6 @@ export default {
       this.history = []
       window.localStorage.removeItem('history')
       this.dialogVisible = false
-    },
-
-    /**
-     * 关键字高亮处理
-     */
-    highlights (str) {
-      const search = this.inputVal
-      const replaceReg = new RegExp(search, 'g')// 匹配关键字正则
-      const replaceString = '<span class="active">' + search + '</span>' // 高亮替换v-html值
-      str = str.replace(replaceReg, replaceString) // 开始替换
-      return str
     }
   },
 
@@ -416,8 +416,19 @@ export default {
     // height: 30px;
     align-items: center;
     .index {
-      width: 30px;
+      width: 40px;
       font-size: 18px;
+    }
+    .right-wrap {
+      flex: 1;
+      overflow: hidden;
+      .content {
+        width: 100%;
+        color: #ccc;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
     }
     .active {
       color: red;
@@ -425,9 +436,6 @@ export default {
     .search-word {
       padding: 0 5px 5px 0;
       cursor: pointer;
-    }
-    .content {
-      color: #ccc;
     }
   }
 

@@ -66,7 +66,27 @@ const routes = [
         path: '/search',
         name: 'Search',
         component: () => import(/* webpackChunkName: "home" */ '@/views/search/index.vue')
+      },
+      {
+        path: '/user/home',
+        name: 'UserIndex',
+        component: () => import(/* webpackChunkName: "home" */ '@/views/user/index.vue')
       }
+      // {
+      //   path: '/user/events', // 动态
+      //   name: 'UserEvents',
+      //   component: () => import(/* webpackChunkName: "home" */ '@/views/user/event.vue')
+      // }
+      // {
+      //   path: '/user/follows', // 关注
+      //   name: 'UserFollows',
+      //   component: () => import(/* webpackChunkName: "home" */ '@/views/user/event.vue')
+      // }
+      // {
+      //   path: '/user/fans', // 粉丝
+      //   name: 'UserFans',
+      //   component: () => import(/* webpackChunkName: "home" */ '@/views/user/event.vue')
+      // }
     ]
   }
 ]

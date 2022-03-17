@@ -9,11 +9,17 @@
 export default {
   name: 'TabBarItem',
   props: {
+    currentIndex: Number,
+    id: Number,
     path: String,
     activeColor: {
       type: String,
       default: 'red'
     }
+    // router: { // 是否开启路由模式
+    //   type: Boolean,
+    //   default: false
+    // }
   },
   data () {
     return {
@@ -24,7 +30,8 @@ export default {
     isActive: {
       get () {
         // return this.$route.path.indexOf(this.path) !== -1
-        return this.$route.path === this.path
+        if (this.path) return this.$route.path === this.path
+        return this.currentIndex === this.id
       },
       set (v) {
         // 这里不知道写什么
@@ -38,8 +45,9 @@ export default {
     changeItem () {
       // console.log('click')
       this.isActive = !this.isActive
-      this.$router.push(this.path)
+      if (this.path) return this.$router.push(this.path)
       // this.$router.replace(this.path)
+      this.$emit('tabClick', this.id)
     }
   }
 }

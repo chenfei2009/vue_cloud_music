@@ -27,30 +27,34 @@
         prop="name"
         label="标题"
         :width="nameWidth"
-        sortable>
+        :sortable="sortable">
         <template slot-scope="scope">
           <i class="active-tag iconfont icon-caret-right" v-show="showPlayTag && scope.row.id === activeId"></i>
+          <div v-if="search && scope.row.id !== activeId" v-html="formatData(scope.row.name)"></div>
           <span :class="scope.row.id === activeId ? 'active' : ''"
-            class="cell-text">{{scope.row.name}}</span>
+            class="cell-text"
+            v-else>{{scope.row.name}}</span>
         </template>
       </el-table-column>
       <el-table-column v-if="showArtist"
         prop="artists"
         label="歌手"
         :width="artistsWidth"
-        sortable>
+        :sortable="sortable">
         <template slot-scope="scope">
           <!-- <span :class="scope.row.id === activeId ? 'active' : ''"
             class="cell-text">{{scope.row.ar[0].name}}</span> -->
-          <Artists :artists="scope.row.ar"/>
+          <Artists :artists="scope.row.ar"
+            :search="search"/>
         </template>
       </el-table-column>
       <el-table-column v-if="showAlbum"
         prop="album"
         label="专辑"
-        sortable>
+        :sortable="sortable">
         <template slot-scope="scope">
-          <span class="cell-text">{{scope.row.al.name}}</span>
+          <div v-if="search && scope.row.id !== activeId" v-html="formatData(scope.row.al.name)"></div>
+          <span v-else class="cell-text">{{scope.row.al.name}}</span>
         </template>
       </el-table-column>
       <el-table-column v-if="showOrigin"
@@ -63,9 +67,18 @@
         prop="dt"
         label="时长"
         :width="dtWidth"
-        sortable>
+        :sortable="sortable">
         <template slot-scope="scope">
           <span class="cell-text">{{scope.row.dt | formatSecond}}</span>
+        </template>
+      </el-table-column>
+      <el-table-column v-if="showPop"
+        prop="pop"
+        label="热度"
+        :width="popWidth">
+        <template slot-scope="scope">
+          <Slider :value="scope.row.pop" />
+          <!-- <span class="cell-text">{{scope.row.pop}}</span> -->
         </template>
       </el-table-column>
     </el-table>
@@ -77,13 +90,16 @@
 </template>
 
 <script>
+import Slider from '@/components/common/Slider.vue'
 import Artists from '@/components/content/Artists.vue'
 
 import formatTime from '@/utils/formatTime.js'
+import highlight from '@/utils/highlight.js'
 
 export default {
   name: 'SongsTable',
-  components: { Artists },
+  components: { Slider, Artists },
+
   props: {
     songs: {
       type: Array,
@@ -114,6 +130,10 @@ export default {
       type: Number,
       default: 100
     },
+    popWidth: {
+      type: Number,
+      default: 120
+    },
     showHeader: { // 是否显示表头
       type: Boolean,
       default: false
@@ -142,11 +162,21 @@ export default {
       type: Boolean,
       default: false
     },
+    showPop: { // 是否显示热度
+      type: Boolean,
+      default: false
+    },
     showAll: {
       type: Boolean,
       default: true
-    }
+    },
+    sortable: {
+      type: Boolean,
+      default: false
+    },
+    search: String // 搜索关键字
   },
+
   computed: {
     songsData () {
       if (this.showAll || this.songs.length <= 10 || this.isShowAll) return this.songs
@@ -161,14 +191,22 @@ export default {
     activeId () {
       const index = this.playList.findIndex(v => v.id === this.playContent.id)
       return this.playList[index].id
+    },
+    formatData () {
+      return function (str) {
+        return highlight(str, this.search)
+      }
     }
   },
+
   data () {
     return {
       isShowAll: false
     }
   },
+
   created () {},
+
   methods: {
     onDbClick (row) {
       console.log(row.id)
@@ -178,6 +216,7 @@ export default {
       console.log(row)
     }
   },
+
   filters: {
     formatSecond (second = 0) {
       return formatTime(second / 1000)

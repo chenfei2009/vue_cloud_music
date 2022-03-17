@@ -11,7 +11,7 @@
     <Title title="推荐歌单" path="/playlist" />
     <ul class="list-wrap" v-if="personalizedList.length > 1">
       <!-- 每日歌曲推荐 -->
-      <Cover :item="recItem">
+      <Cover :picUrl="recItem.picUrl">
         <div class="hover-wrap">
           <PlayButton :isPlay="false" @btnClick="handleBtnClick()"/>
         </div>

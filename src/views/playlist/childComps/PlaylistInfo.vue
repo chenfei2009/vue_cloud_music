@@ -5,7 +5,7 @@
       <h1 class="name">{{playlist.name}}</h1>
       <div class="user-wrap">
         <div class="avatar-wrap"><el-image :src="playlist.creator.avatarUrl"></el-image></div>
-        <span class="user-name">{{playlist.creator.nickname}}</span>
+        <span class="user-name" @click="handleCreatorClick">{{playlist.creator.nickname}}</span>
         <span class="create-time">{{playlist.createTime | dateFilter}}创建</span>
       </div>
       <div class="btn-wrap">
@@ -66,6 +66,12 @@ export default {
     },
     onAddToPlaylist () {
       this.$emit('addToPlaylist')
+    },
+    handleCreatorClick () {
+      this.$router.push({
+        path: '/user/home',
+        query: { id: this.playlist.creator.userId }
+      })
     }
   },
   filters: {

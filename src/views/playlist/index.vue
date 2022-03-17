@@ -8,51 +8,57 @@
       @addToPlaylist="handleAddToPlaylist"/>
     <!-- 歌单详情模块/ -->
     <!-- tab选项卡 -->
-    <el-tabs v-model="activeName">
-      <el-tab-pane label="歌曲列表" name="0">
-        <!-- 歌单列表模块 -->
-        <SongsTable :songs="songs"
-          :activeId="activeId"
-          :showHeader="true"
-          :showIndex="true"
-          :showAlbum="true"
-          @rowDbClick="handleRowDbClick"/>
-        <!-- 歌单列表模块/ -->
-      </el-tab-pane>
-      <el-tab-pane :label="commentLabel" name="1">
-        <!-- 评论表单模块 -->
-        <form action="#">
-          <textarea v-model="inputText" rows="5" style="width: 100%"></textarea>
-          <div class="action-wrap">
-            <div class="left-wrap">
-              <i class="iconfont icon-at" @click="handleShare"></i>
-              <i class="iconfont icon-jinghao" @click="handleAddTopic"></i>
-            </div>
-            <!-- <input type="button" value="评论"> -->
-            <button class="btn-round" @click="handleSubmit">评论</button>
-          </div>
-        </form>
-        <!-- 评论表单模块/ -->
-        <!-- 精彩评论模块 -->
-        <Comment title="精彩评论" :comments="hotComments" />
-        <!-- 精彩评论模块/ -->
-        <!-- 全部评论模块 -->
-        <Comment title="全部评论"
-          :comments="comments"
-          :isShowCount="true"
-          :pagination="true"/>
-        <!-- 全部评论模块/ -->
-      </el-tab-pane>
-      <el-tab-pane label="收藏者" name="2">
-        <ul class="user-wrap">
-          <li v-for="item in playlist.subscribers" :key="item.userId" class="user-item">
-            <div class="avatar-wrap"><el-image :src="item.avatarUrl"></el-image></div>
-            <span class="user-name">{{item.nickname}}</span>
-          </li>
-        </ul>
-      </el-tab-pane>
-    </el-tabs>
+    <TabBar>
+      <TabBarItem v-for="item in tabs"
+        :key="item.id"
+        :id="item.id"
+        :currentIndex="currentIndex"
+        @tabClick="handleTabClick"
+        ><div slot="item-text">{{item.text}}</div></TabBarItem>
+    </TabBar>
     <!-- tab选项卡/ -->
+    <section v-if="currentIndex===1">
+      <!-- 歌单列表模块 -->
+      <SongsTable :songs="songs"
+        :activeId="activeId"
+        :showHeader="true"
+        :showIndex="true"
+        :showAlbum="true"
+        @rowDbClick="handleRowDbClick"/>
+      <!-- 歌单列表模块/ -->
+    </section>
+    <section v-else-if="currentIndex===2">
+      <!-- 评论表单模块 -->
+      <form action="#">
+        <textarea v-model="inputText" rows="5" style="width: 100%"></textarea>
+        <div class="action-wrap">
+          <div class="left-wrap">
+            <i class="iconfont icon-at" @click="handleShare"></i>
+            <i class="iconfont icon-jinghao" @click="handleAddTopic"></i>
+          </div>
+          <!-- <input type="button" value="评论"> -->
+          <button class="btn-round" @click="handleSubmit">评论</button>
+        </div>
+      </form>
+      <!-- 评论表单模块/ -->
+      <!-- 精彩评论模块 -->
+      <Comment title="精彩评论" :comments="hotComments" />
+      <!-- 精彩评论模块/ -->
+      <!-- 全部评论模块 -->
+      <Comment title="全部评论"
+        :comments="comments"
+        :isShowCount="true"
+        :pagination="true"/>
+      <!-- 全部评论模块/ -->
+    </section>
+    <section v-else>
+      <ul class="user-wrap">
+        <li v-for="item in playlist.subscribers" :key="item.userId" class="user-item">
+          <div class="avatar-wrap"><el-image :src="item.avatarUrl"></el-image></div>
+          <span class="user-name">{{item.nickname}}</span>
+        </li>
+      </ul>
+    </section>
     <!-- 对话框 -->
     <el-dialog
       title="替换播放列表"
@@ -74,6 +80,8 @@
 import SongsTable from '@/components/content/SongsTable.vue'
 import Comment from '@/components/content/Comment/Comment.vue'
 import PlaylistInfo from './childComps/PlaylistInfo.vue'
+import TabBar from '@/components/common/TabBar.vue'
+import TabBarItem from '@/components/common/TabBarItem.vue'
 
 import { _getSongsByListId, _getDetailByListId } from '@/network/playlist.js'
 import { _getSongUrlById } from '@/network/song.js'
@@ -84,21 +92,34 @@ import { SongsDbClickMixin } from '@/utils/mixin.js'
 export default {
   name: 'PlaylistIndex',
   computed: {
-    commentLabel () {
-      return `评论(${this.comments.length})`
+    tabs () {
+      return [
+        { id: 1, text: '歌曲列表' },
+        { id: 2, text: `评论(${this.comments.length})` },
+        { id: 3, text: '收藏者' }
+      ]
     }
+    // commentLabel () {
+    //   return `评论(${this.comments.length})`
+    // }
   },
-  components: { SongsTable, PlaylistInfo, Comment },
+  components: { SongsTable, PlaylistInfo, Comment, TabBar, TabBarItem },
   mixins: [SongsDbClickMixin],
+
   data () {
     return {
       id: 0, // 歌单id
       playlist: {}, // 歌单详情
       songs: [], // 歌单对应的歌曲列表
-      activeName: '0', // 当前tab选项卡
       inputText: '',
       hotComments: [],
-      comments: []
+      comments: [],
+      currentIndex: 1 // 当前tab选项卡
+      // tabs: [
+      //   { id: 1, text: '歌曲列表' },
+      //   { id: 2, text: this.commentLabel },
+      //   { id: 3, text: '收藏者' }
+      // ]
     }
   },
   created () {
@@ -187,6 +208,10 @@ export default {
 
     handleAddTopic () {
       console.log('handleAddTopic')
+    },
+
+    handleTabClick (id) {
+      this.currentIndex = id
     }
   }
 }

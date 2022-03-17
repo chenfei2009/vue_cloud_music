@@ -1,5 +1,5 @@
 <template>
-  <div class="search-container">
+  <div class="user-container">
     <div class="title">搜索 {{searchWord}}</div>
     <div class="rec">
       <div>你可能感兴趣</div>
@@ -16,23 +16,8 @@
     </TabBar>
     <!-- tab选项卡/ -->
     <section v-if="currentIndex===1">
-      <SongsTable :songs="songs"
-        :activeId="activeId"
-        name="热门50首"
-        :showHeader="true"
-        :showIndex="true"
-        :showAction="true"
-        :showArtist="true"
-        :showAlbum="true"
-        :showPop="true"
-        :search="searchWord"
-        @rowDbClick="handleRowDbClick"/>
-    </section>
-    <section v-else-if="currentIndex===2">
-      <!-- 歌手列表
-      {{this.artists}} -->
       <ul>
-        <li v-for="item in artists" :key="item.id" class="list-item">
+        <li v-for="item in createdPlaylists" :key="item.id" class="list-item">
           <Cover :picUrl="item.picUrl" :fixWidth="80" />
           <!-- <el-image :src="item.picUrl"></el-image> -->
           <div class="name">{{item.name}}</div>
@@ -40,39 +25,42 @@
         </li>
       </ul>
     </section>
+    <section v-else-if="currentIndex===2">
+      歌单
+    </section>
+    <section v-else-if="currentIndex===3">
+      播客
+    </section>
+    <section v-else>
+      专栏
+    </section>
   </div>
 </template>
 
 <script>
 import TabBar from '@/components/common/TabBar.vue'
 import TabBarItem from '@/components/common/TabBarItem.vue'
-import SongsTable from '@/components/content/SongsTable.vue'
 import Cover from '@/components/content/Cover.vue'
 
 import { _getCloudSearch, _getSearch, _getMultiMatch } from '@/network/search.js'
 import { _getSongUrlById } from '@/network/song.js'
 
 export default {
-  name: 'SearchIndex',
-  components: { TabBar, TabBarItem, SongsTable, Cover },
+  name: 'UserIndex',
+  components: { TabBar, TabBarItem, Cover },
   data () {
     return {
-      searchWord: '',
       activeName: 0,
-      songs: [],
-      artists: [],
-      activeId: 0,
+      createdPlaylists: [],
+      collectedPlaylists: [],
+      createdVlogs: [],
+      collectedVlogs: [],
       currentIndex: 1,
       tabs: [
-        { id: 1, text: '单曲' },
-        { id: 2, text: '歌手' },
-        { id: 3, text: '专辑' },
-        { id: 4, text: '视频' },
-        { id: 5, text: '歌单' },
-        { id: 6, text: '歌词' },
-        { id: 7, text: '播客' },
-        { id: 8, text: '声音' },
-        { id: 9, text: '用户' }
+        { id: 1, text: '创建的歌单' },
+        { id: 2, text: '收藏的歌单' },
+        { id: 3, text: '创建的播客' },
+        { id: 4, text: '创建的音乐专栏' }
       ]
     }
   },
