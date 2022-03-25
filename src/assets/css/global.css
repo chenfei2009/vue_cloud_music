@@ -1,86 +1,210 @@
-/* 全局样式表 */
-* {
-  margin: 0;
-  padding: 0;
-  font-size: 14px;
-  box-sizing: border-box;
+@font-face {
+  font-family: "iconfont"; /* Project id 3131786 */
+  src: url('//at.alicdn.com/t/font_3131786_o6mpb5d2h2a.woff2?t=1648200951175') format('woff2'),
+       url('//at.alicdn.com/t/font_3131786_o6mpb5d2h2a.woff?t=1648200951175') format('woff'),
+       url('//at.alicdn.com/t/font_3131786_o6mpb5d2h2a.ttf?t=1648200951175') format('truetype');
 }
 
-body {
-  min-width: 930px;
+.iconfont {
+  font-family: "iconfont" !important;
+  font-size: 16px;
+  font-style: normal;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
-#app {
-  height: 100%;
+.icon-x:before {
+  content: "\e630";
 }
 
-ul {
-  padding-inline-start: 0;
+.icon-lock:before {
+  content: "\e7c9";
 }
 
-li {
-  list-style-type: none;
+.icon-mobile-check:before {
+  content: "\e799";
 }
 
-a {
-  text-decoration: none;
-  color: #333;
+.icon-email:before {
+  content: "\e607";
 }
 
-#app {
-  --themeColor: #ec4141;
+.icon-phone:before {
+  content: "\e618";
 }
 
-.container {
-  max-width: 1100px;
-  /* height: calc(100vw - 170px);
-  overflow: scroll; */
-  margin: 10px auto;
-  /* padding: 0 20px; */
+.icon-tree:before {
+  content: "\e7f6";
 }
 
-.text-title {
-  font-size: 20px;
-  font-weight: 700;
+.icon-delete:before {
+  content: "\e6b4";
 }
 
-.text-small {
-  font-size: 12px;
-  color: #ccc;
+.icon-person:before {
+  content: "\e64e";
 }
 
-.text-highlight {
-  color: #065299;
+.icon-disc:before {
+  content: "\e693";
 }
 
-.fl {
-  float: left;
+.icon-music:before {
+  content: "\e612";
 }
 
-.fr {
-  float: right;
+.icon-list:before {
+  content: "\e62a";
 }
 
-textarea {
-  display: block;
-  resize: none;
-  outline: none;
-  border: 1px solid #ccc;
+.icon-link:before {
+  content: "\e94c";
 }
 
-textarea:hover {
-  outline: none;
+.icon-calendar1:before {
+  content: "\e632";
 }
 
-button {
-  border: 1px solid #ccc;
-  height: 30px;
-  padding: 0 15px;
-  background-color: #fff;
-  margin-right: 10px;
-  font-size: 13px;
+.icon-aui-icon-calendar:before {
+  content: "\e603";
 }
 
-.btn-round {
-  border-radius: 15px;
+.icon-jinghao:before {
+  content: "\e746";
+}
+
+.icon-at:before {
+  content: "\e623";
+}
+
+.icon-comment:before {
+  content: "\e671";
+}
+
+.icon-heart1:before {
+  content: "\e602";
+}
+
+.icon-share:before {
+  content: "\e72d";
+}
+
+.icon-netease-cloud-music-line:before {
+  content: "\e694";
+}
+
+.icon-play:before {
+  content: "\e6cf";
+}
+
+.icon-single:before {
+  content: "\e7da";
+}
+
+.icon-random:before {
+  content: "\e6fe";
+}
+
+.icon-loop:before {
+  content: "\e69d";
+}
+
+.icon-shunxubofang:before {
+  content: "\e62f";
+}
+
+.icon-add:before {
+  content: "\e7d6";
+}
+
+.icon-friends:before {
+  content: "\e629";
+}
+
+.icon-24gl-volumeDisable:before {
+  content: "\ea0c";
+}
+
+.icon-24gl-volumeMiddle:before {
+  content: "\ea0d";
+}
+
+.icon-play_list:before {
+  content: "\e61b";
+}
+
+.icon-pause:before {
+  content: "\e7fe";
+}
+
+.icon-caret-right:before {
+  content: "\e8ec";
+}
+
+.icon-step-backward:before {
+  content: "\e8ef";
+}
+
+.icon-step-forward:before {
+  content: "\e8f0";
+}
+
+.icon-collect:before {
+  content: "\e681";
+}
+
+.icon-xunhuan:before {
+  content: "\e636";
+}
+
+.icon-user01:before {
+  content: "\e6fd";
+}
+
+.icon-arrow:before {
+  content: "\e664";
+}
+
+.icon-search:before {
+  content: "\e644";
+}
+
+.icon-plus:before {
+  content: "\e66c";
+}
+
+.icon-yifu:before {
+  content: "\e613";
+}
+
+.icon-setting:before {
+  content: "\e670";
+}
+
+.icon-Email:before {
+  content: "\ea9c";
+}
+
+.icon-recentsicon:before {
+  content: "\e63e";
+}
+
+.icon-download:before {
+  content: "\e651";
+}
+
+.icon-huatong:before {
+  content: "\e67e";
+}
+
+.icon-heart:before {
+  content: "\e637";
+}
+
+.icon-tubiaozhizuomoban-:before {
+  content: "\e60a";
+}
+
+.icon-dianzan:before {
+  content: "\e601";
 }

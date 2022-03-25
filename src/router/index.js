@@ -88,6 +88,11 @@ const routes = [
       //   component: () => import(/* webpackChunkName: "home" */ '@/views/user/event.vue')
       // }
     ]
+  },
+  {
+    path: '/login',
+    name: 'Login',
+    component: () => import(/* webpackChunkName: "home" */ '@/views/login/index.vue')
   }
 ]
 

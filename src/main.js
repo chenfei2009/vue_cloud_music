@@ -23,7 +23,13 @@ import {
   Tooltip,
   Pagination,
   Button,
-  Dialog
+  Dialog,
+  Form,
+  FormItem,
+  Input,
+  Select,
+  Option,
+  Checkbox
 } from 'element-ui'
 
 import App from './App.vue'
@@ -58,6 +64,12 @@ Vue.use(Tooltip)
 Vue.use(Pagination)
 Vue.use(Button)
 Vue.use(Dialog)
+Vue.use(Form)
+Vue.use(FormItem)
+Vue.use(Input)
+Vue.use(Select)
+Vue.use(Option)
+Vue.use(Checkbox)
 
 Vue.config.productionTip = false
 
