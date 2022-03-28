@@ -1,5 +1,5 @@
 <template>
-  <el-header :style="bgStyle">
+  <section :style="bgStyle" class="header-container">
     <div class="left-bar">
       <div class="logo-wrap" v-if="!isShowPlayDetail">
         <div class="logo-bg">
@@ -14,15 +14,27 @@
     <SearchBar />
     <!-- <div class="search-bar"></div> -->
     <div class="user-bar">
-      <div class="login-wrap" v-if="!isShowPlayDetail">
-        <i class="avatar iconfont icon-user01"></i>
+      <div class="login-wrap" v-if="!isShowPlayDetail" @click="handleLogin">
+        <!-- <el-image :scr="profile.avatarUrl"
+          v-if="profile"></el-image>
+        <i class="avatar iconfont icon-user01"></i> -->
+        <el-avatar :size="30">
+          <img :scr="profile.avatarUrl" v-if="profile.avatarUrl"/>
+          <i class="avatar iconfont icon-user01" v-else></i>
+        </el-avatar>
         <el-dropdown>
           <span class="el-dropdown-link">
-            未登录<i class="el-icon-arrow-down el-icon--right"></i>
+            {{nickname}}<i class="el-icon-arrow-down el-icon--right"></i>
           </span>
           <el-dropdown-menu slot="dropdown">
-            <el-dropdown-item>选项一</el-dropdown-item>
-            <el-dropdown-item>选项二</el-dropdown-item>
+            <div>12345678</div>
+            <el-dropdown-item>会员中心</el-dropdown-item>
+            <el-dropdown-item>等级</el-dropdown-item>
+            <el-dropdown-item>商城</el-dropdown-item>
+            <el-dropdown-item>个人信息设置</el-dropdown-item>
+            <el-dropdown-item>绑定社交账号</el-dropdown-item>
+            <el-dropdown-item>我的客服</el-dropdown-item>
+            <el-dropdown-item>退出登录</el-dropdown-item>
           </el-dropdown-menu>
         </el-dropdown>
       </div>
@@ -30,7 +42,7 @@
       <div class="bar-item"><i class="iconfont icon-setting"></i></div>
       <div class="bar-item"><i class="iconfont icon-Email"></i></div>
     </div>
-  </el-header>
+  </section>
 </template>
 
 <script>
@@ -53,20 +65,35 @@ export default {
   computed: {
     bgStyle () {
       return { backgroundColor: this.bgColor }
+    },
+    nickname () {
+      return this.profile.nickname || '未登录'
     }
   },
   data () {
-    return {}
+    return {
+      profile: {}
+    }
   },
-  created () {},
-  methods: {}
+  created () {
+    const profile = JSON.parse(window.localStorage.getItem('profile')) || null
+    this.profile = profile
+  },
+  methods: {
+    handleLogin () {
+      // 切换到登录页面
+      this.$router.push('./login')
+    }
+  }
 }
 </script>
 
 <style lang="less" scoped>
-.el-header {
+.header-container {
   display: flex;
   justify-content: space-between;
+  height: 60px;
+  padding: 0 20px;
 
   .left-bar {
     display: flex;

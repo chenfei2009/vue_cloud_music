@@ -7,9 +7,13 @@
     <Drawer :drawer="isShowPlayDetail"
       height="calc(100% - 70px)"
       :mask=false>
-      <Header bgColor="#eee"
-        :isShowPlayDetail="isShowPlayDetail"
-        @arrowClick="isShowPlayDetail=!isShowPlayDetail" />
+      <Header bgColor="#eee">
+        <div class="left-wrap" slot="left">
+          <i class="btn iconfont icon-arrow"
+            @click="isShowPlayDetail=false"></i>
+        </div>
+        <SearchBar slot="center"/>
+      </Header>
       <!-- 滚动区域 -->
       <Scroll ref="scroll"
         class="scroll-wrap"
@@ -55,7 +59,8 @@
 <script>
 import Drawer from '@/components/common/Drawer.vue'
 import Scroll from '@/components/common/Scroll.vue'
-import Header from '@/components/content/Header/Header.vue'
+import Header from '@/components/common/Header.vue'
+import SearchBar from '@/components/content/SearchBar.vue'
 import SongsTable from '@/components/content/SongsTable.vue'
 
 import PlayBar from './PlayBar.vue'
@@ -82,6 +87,7 @@ export default {
     SongsTable,
     Drawer,
     Header,
+    SearchBar,
     Scroll,
     Comment
   },
@@ -247,14 +253,6 @@ export default {
         this.getCommentById()
       }
     }
-    // hotComments () {
-    //   console.log('hotComments changed')
-    //   this.$refs.scroll.refresh()
-    // },
-    // comments () {
-    //   console.log('comments changed')
-    //   this.$refs.scroll.refresh()
-    // }
   }
 }
 </script>
@@ -299,7 +297,12 @@ export default {
   z-index: -1;
 }
 
-.songs-table-wrap {
-
+.left-wrap {
+  width: 200px;
+  .btn {
+    transform: rotate(90deg);
+    font-size: 20px;
+    padding-bottom: 20px;
+  }
 }
 </style>

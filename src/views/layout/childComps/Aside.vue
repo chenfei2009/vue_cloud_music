@@ -1,5 +1,5 @@
 <template>
-  <el-aside width="200px">
+  <aside class="aside">
     <el-menu
       default-active="/discover"
       class="el-menu-vertical-demo"
@@ -44,7 +44,7 @@
         </el-menu-item>
       </el-submenu>
     </el-menu>
-  </el-aside>
+  </aside>
 </template>
 
 <script>
@@ -58,6 +58,10 @@ export default {
 </script>
 
 <style lang="less" scoped>
+.aside {
+  width: 200px;
+}
+
 .el-menu {
   padding: 10px 2px 10px 10px;
   box-sizing: border-box;

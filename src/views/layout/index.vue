@@ -1,31 +1,43 @@
 <template>
-  <el-container class="layout-container">
-    <Header></Header>
-    <el-container class="main-container">
+  <div class="layout-container">
+    <Header>
+      <div class="left-wrap" slot="left">
+        <div class="logo-bg">
+          <i class="logo iconfont icon-netease-cloud-music-line"></i>
+        </div>
+        <span>网易云音乐</span>
+      </div>
+      <SearchBar slot="center"/>
+      <UserBar slot="right"/>
+    </Header>
+    <section class="main-container">
       <Aside></Aside>
-      <el-main>
+      <main class="main">
         <keep-alive>
           <router-view />
         </keep-alive>
-      </el-main>
-    </el-container>
-    <el-footer class="footer-container" height="70px">
+      </main>
+    </section>
+    <section class="footer-container" height="70px">
       <!-- 播放器模块 -->
       <Player />
-    </el-footer>
-  </el-container>
+    </section>
+  </div>
 </template>
 
 <script>
 import Aside from './childComps/Aside.vue'
-import Header from '@/components/content/Header.vue'
+import Header from '@/components/common/Header.vue'
+import SearchBar from '@/components/content/SearchBar.vue'
+import UserBar from '@/components/content/UserBar.vue'
+// import Header from '@/components/content/Header.vue'
 import Player from '@/components/content/Player/Player.vue'
 
 import request from '@/utils/request.js'
 
 export default {
   name: 'LayoutIndex',
-  components: { Header, Aside, Player },
+  components: { Header, Aside, Player, SearchBar, UserBar },
   data () {
     return {
       name: 'Butterfly',
@@ -140,10 +152,38 @@ export default {
 .layout-container {
   width: 100vw;
   height: 100%;
+  .left-wrap {
+    width: 200px;
+    display: flex;
+    align-items: center;
+    .logo-bg {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      width: 30px;
+      height: 30px;
+      border-radius: 50%;
+      background-color: #fff;
+      .logo {
+        font-size: 20px;
+        color: var(--themeColor);
+      }
+    }
+    span {
+      margin-left: 5px;
+      font-size: 18px;
+      color: #fff;
+    }
+  }
   .main-container {
     height: calc(~"100vh - 130px");
     padding-bottom: 0;
-    .el-main::-webkit-scrollbar { /* 滚动条整体样式 */
+    display: flex;
+    .main {
+      padding: 20px;
+      width: calc(~"100% - 200px");
+    }
+    .main::-webkit-scrollbar { /* 滚动条整体样式 */
       width: 4px; /* 高宽分别对应横竖滚动条的尺寸 */
       height: 4px;
     }

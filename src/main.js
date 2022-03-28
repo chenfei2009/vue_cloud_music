@@ -1,11 +1,6 @@
 import Vue from 'vue'
 
 import {
-  Container,
-  Header,
-  Aside,
-  Main,
-  Footer,
   Menu,
   Submenu,
   MenuItem,
@@ -29,7 +24,8 @@ import {
   Input,
   Select,
   Option,
-  Checkbox
+  Checkbox,
+  Avatar
 } from 'element-ui'
 
 import App from './App.vue'
@@ -41,11 +37,6 @@ import '@/assets/css/font.css'
 // 引入vuex-store
 import store from '@/store/index.js'
 
-Vue.use(Container)
-Vue.use(Header)
-Vue.use(Aside)
-Vue.use(Main)
-Vue.use(Footer)
 Vue.use(Menu)
 Vue.use(Submenu)
 Vue.use(MenuItem)
@@ -70,6 +61,7 @@ Vue.use(Input)
 Vue.use(Select)
 Vue.use(Option)
 Vue.use(Checkbox)
+Vue.use(Avatar)
 
 Vue.config.productionTip = false
 

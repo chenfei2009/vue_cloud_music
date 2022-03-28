@@ -1,5 +1,5 @@
 <template>
-  <div class="header-container">
+  <div class="header-container" :style=bgStyle>
     <slot name="left"></slot>
     <!-- <div class="left-wrap"><slot name="left"></slot></div> -->
     <div class="center-wrap"><slot name="center"></slot></div>
@@ -11,8 +11,24 @@
 <script>
 export default {
   name: 'Header',
-  props: {},
-  computed: {},
+  props: {
+    bgColor: {
+      type: String,
+      default: 'var(--themeColor)'
+    },
+    height: {
+      type: [Number, String],
+      default: 60
+    }
+  },
+  computed: {
+    bgStyle () {
+      return {
+        height: this.height + 'px',
+        backgroundColor: this.bgColor
+      }
+    }
+  },
   methods: {}
 }
 </script>
@@ -21,8 +37,8 @@ export default {
 .header-container {
   display: flex;
   justify-content: space-between;
-  // align-items: center;
-  align-items: flex-start;
+  align-items: center;
+  padding: 0 20px;
   .center-wrap {
     flex: 1;
   }

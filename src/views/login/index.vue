@@ -230,17 +230,17 @@ export default {
       // this.loginLoading = true
       // // 验证通过，提交登录
       _loginByCellphone(this.user.mobile, this.user.code).then(res => {
-        console.log(res)
         // // 登录成功
         // this.$message({ message: '登录成功', type: 'success' })
         // // 关闭 loading
         // this.loginLoading = false
 
-        // // 本地存储token数据
-        // // window.localStorage.setItem('user', res.data.data)
-        // window.localStorage.setItem('user', JSON.stringify(res.data.data))
-
-        // // 跳转到首页
+        // 本地存储 token 数据
+        console.log(res.data.token)
+        window.localStorage.setItem('token', res.data.token)
+        window.localStorage.setItem('profile', JSON.stringify(res.data.profile))
+        // 跳转到首页
+        this.$router.push('/')
       }).catch(err => {
         // 登录失败
         console.log('登录失败', err)
