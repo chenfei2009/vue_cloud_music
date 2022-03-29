@@ -34,3 +34,12 @@ export function _loginByCellphone (phone, password) {
     params: { phone, password }
   })
 }
+
+/**
+ * 检查登录状态
+ */
+export function _getLoginStatus () {
+  return request({
+    url: '/login/status'
+  })
+}

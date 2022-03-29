@@ -14,7 +14,7 @@
         @tabClick="handleTabClick"
         ><div slot="item-text">{{item.text}}</div></TabBarItem>
     </TabBar>
-    <!-- tab选项卡/ -->
+    <!-- /tab选项卡 -->
     <section v-if="currentIndex===1">
       <ul>
         <li v-for="item in createdPlaylists" :key="item.id" class="list-item">

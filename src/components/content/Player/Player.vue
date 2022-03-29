@@ -69,6 +69,9 @@ import PlayDetail from './PlayDetail.vue'
 import Comment from './Comment.vue'
 
 import {
+  _getRecentPlaylist
+} from '@/network/record.js'
+import {
   _getLyricById,
   _getSimiPlaylistsById,
   _getSimiSongsById
@@ -127,7 +130,8 @@ export default {
     }
   },
   created () {
-    this.getLyricById()
+    this.getRecentPlaylist()
+    // this.getLyricById()
     if (this.isShowPlayDetail) {
       this.getSimiPlaylistsById()
       this.getSimiSongsById()
@@ -163,6 +167,15 @@ export default {
         lyricObj.push({ time, content })
       })
       this.lyric = lyricObj
+    },
+
+    /**
+     * 获取最近播放歌单
+     */
+    async getRecentPlaylist () {
+      const { data: res } = await _getRecentPlaylist()
+      console.log(res)
+      // this.simiPlaylists = res.playlists
     },
 
     /**

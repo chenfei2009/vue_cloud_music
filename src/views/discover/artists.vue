@@ -1,5 +1,5 @@
 <template>
-  <div class="artist-container container">
+  <div class="artists-container tab-container">
     <!-- 表单模块 -->
     <form action="#">
       <RadioGroup>

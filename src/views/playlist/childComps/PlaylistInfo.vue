@@ -88,7 +88,6 @@ export default {
 <style lang="less" scoped>
 .playlist-info-container {
   display: flex;
-  margin-bottom: 20px;
 }
 .cover-wrap {
   width: 200px;

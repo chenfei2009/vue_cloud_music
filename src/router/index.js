@@ -21,19 +21,19 @@ const routes = [
             component: () => import(/* webpackChunkName: "home" */ '@/views/discover/discover.vue')
           },
           { // 专属定制
-            path: 'djradio',
-            name: 'DjRadio',
-            component: () => import(/* webpackChunkName: "home" */ '@/views/discover/djradio.vue')
+            path: 'djradios',
+            name: 'DjRadios',
+            component: () => import(/* webpackChunkName: "home" */ '@/views/discover/djradios.vue')
           },
           { // 歌单
-            path: 'playlist',
-            name: 'Playlist',
-            component: () => import(/* webpackChunkName: "home" */ '@/views/discover/playlist.vue')
+            path: 'playlists',
+            name: 'Playlists',
+            component: () => import(/* webpackChunkName: "home" */ '@/views/discover/playlists.vue')
           },
           { // 排行榜
-            path: 'toplist',
-            name: 'Toplist',
-            component: () => import(/* webpackChunkName: "home" */ '@/views/discover/toplist.vue')
+            path: 'toplists',
+            name: 'Toplists',
+            component: () => import(/* webpackChunkName: "home" */ '@/views/discover/toplists.vue')
           },
           { // 歌手
             path: 'artists',
@@ -41,9 +41,9 @@ const routes = [
             component: () => import(/* webpackChunkName: "home" */ '@/views/discover/artists.vue')
           },
           { // 新歌
-            path: 'newest',
-            name: 'Newest',
-            component: () => import(/* webpackChunkName: "home" */ '@/views/discover/newest.vue')
+            path: 'newests',
+            name: 'Newests',
+            component: () => import(/* webpackChunkName: "home" */ '@/views/discover/newests.vue')
           }
         ]
       },
@@ -51,6 +51,24 @@ const routes = [
         path: '/vlog',
         name: 'Vlog',
         component: () => import(/* webpackChunkName: "home" */ '@/views/vlog/index.vue')
+      },
+      {
+        path: '/video',
+        name: 'Video',
+        component: () => import(/* webpackChunkName: "home" */ '@/views/video/index.vue'),
+        // redirect: 'list',
+        children: [
+          {
+            path: '/',
+            name: 'VideoList',
+            component: () => import(/* webpackChunkName: "home" */ '@/views/video/VideoList.vue')
+          },
+          {
+            path: 'mv',
+            name: 'MVList',
+            component: () => import(/* webpackChunkName: "home" */ '@/views/video/MVList.vue')
+          }
+        ]
       },
       {
         path: '/playlist',
@@ -71,6 +89,11 @@ const routes = [
         path: '/user/home',
         name: 'UserIndex',
         component: () => import(/* webpackChunkName: "home" */ '@/views/user/index.vue')
+      },
+      {
+        path: '/dujia',
+        name: 'DujiaIndex',
+        component: () => import(/* webpackChunkName: "home" */ '@/views/dujia/index.vue')
       }
       // {
       //   path: '/user/events', // 动态

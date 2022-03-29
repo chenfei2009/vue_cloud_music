@@ -1,8 +1,8 @@
 <template>
   <div class="artist-container">
-    <Header>
-      <Cover slot="left" :picUrl="artist.picUrl" :fixWidth="200"/>
-      <div class="info-wrap" slot="center">
+    <div class="info-wrap">
+      <Cover :picUrl="artist.picUrl" :fixWidth="200"/>
+      <div class="info-content" slot="center">
         <h1 class="name">{{artist.name}}</h1>
         <div class="alias" v-if="artist.alias">{{artist.alias[0]}}</div>
         <div class="btn-wrap">
@@ -19,63 +19,69 @@
           <span>{{artist.mvSize}}</span>
         </div>
       </div>
-    </Header>
+    </div>
     <!-- tab选项卡 -->
-    <el-tabs v-model="activeName">
-      <el-tab-pane label="歌曲列表" name="0">
-        <ul class="album-list">
-          <!-- 热门50首 -->
-          <li class="album-item">
-            <div class="cover-wrap">
-              <Cover slot="left" picUrl="/image/default.png" :fixWidth="150">
-                <span class="center">TOP50</span>
-              </Cover>
-            </div>
-            <div class="info-wrap" slot="center">
-              <SongsTable :songs="songs"
-                :activeId="activeId"
-                :title="true"
-                name="热门50首"
-                :showArtist="false"
-                @rowDbClick="handleRowDbClick"/>
-            </div>
-          </li>
-          <!-- 热门50首/ -->
-          <!-- 专辑列表 -->
-          <li class="album-item" v-for="item in hotAlbums" :key="item.id">
-            <div class="cover-wrap">
-              <Cover slot="left" :picUrl="item.picUrl" :fixWidth="150">
-                <div class="date" slot="text">{{item.publishTime | dateFilter}}</div>
-              </Cover>
-            </div>
-            <div class="info-wrap" slot="center">
-              <SongsTable :songs="item.songs"
-                :activeId="activeId"
-                :title="true"
-                :name="item.name"
-                :showAll="false"
-                :showArtist="false"
-                @rowDbClick="handleRowDbClick"/>
-            </div>
-          </li>
-          <!-- 专辑列表/ -->
-        </ul>
-      </el-tab-pane>
-      <el-tab-pane label="MV" name="1">
-        <div class="mvs-wrap">
-          <Cover v-for="item in mvs" :key="item.id" :picUrl="item.imgurl" :ratio="16/9" :columns="4">
-            <span slot="text" class="mv-name">{{item.name}}</span>
-          </Cover>
-        </div>
-      </el-tab-pane>
-      <el-tab-pane label="歌手详情" name="2">
-        <div>{{artist.briefDesc}}</div>
-      </el-tab-pane>
-      <el-tab-pane label="相似歌手" name="3">
-        <div>相似歌手</div>
-      </el-tab-pane>
-    </el-tabs>
-    <!-- tab选项卡/ -->
+    <TabBar>
+      <TabBarItem v-for="item in tabs"
+        :key="item.id"
+        :id="item.id"
+        :currentIndex="currentIndex"
+        @tabClick="handleTabClick"
+        ><div slot="item-text">{{item.text}}</div></TabBarItem>
+    </TabBar>
+    <!-- /tab选项卡 -->
+    <section v-if="currentIndex===1">
+      <ul class="album-list">
+        <!-- 热门50首 -->
+        <li class="album-item">
+          <div class="cover-wrap">
+            <Cover slot="left" picUrl="/image/default.png" :fixWidth="150">
+              <span class="center">TOP50</span>
+            </Cover>
+          </div>
+          <div class="info-wrap" slot="center">
+            <SongsTable :songs="songs"
+              :activeId="activeId"
+              :title="true"
+              name="热门50首"
+              :showArtist="false"
+              @rowDbClick="handleRowDbClick"/>
+          </div>
+        </li>
+        <!-- 热门50首/ -->
+        <!-- 专辑列表 -->
+        <li class="album-item" v-for="item in hotAlbums" :key="item.id">
+          <div class="cover-wrap">
+            <Cover slot="left" :picUrl="item.picUrl" :fixWidth="150">
+              <div class="date" slot="text">{{item.publishTime | dateFilter}}</div>
+            </Cover>
+          </div>
+          <div class="info-wrap" slot="center">
+            <SongsTable :songs="item.songs"
+              :activeId="activeId"
+              :title="true"
+              :name="item.name"
+              :showAll="false"
+              :showArtist="false"
+              @rowDbClick="handleRowDbClick"/>
+          </div>
+        </li>
+        <!-- 专辑列表/ -->
+      </ul>
+    </section>
+    <section v-else-if="currentIndex===2">
+      <div class="mvs-wrap">
+        <Cover v-for="item in mvs" :key="item.id" :picUrl="item.imgurl" :ratio="16/9" :columns="4">
+          <span slot="text" class="mv-name">{{item.name}}</span>
+        </Cover>
+      </div>
+    </section>
+    <section v-else-if="currentIndex===3">
+      <div>{{artist.briefDesc}}</div>
+    </section>
+    <section v-else>
+      <div>相似歌手</div>
+    </section>
     <!-- 对话框 -->
     <el-dialog
       title="替换播放列表"
@@ -89,12 +95,13 @@
         <el-button @click="dialogVisible = false">取 消</el-button>
       </span>
     </el-dialog>
-    <!-- 对话框/ -->
+    <!-- /对话框 -->
   </div>
 </template>
 
 <script>
-import Header from '@/components/common/Header.vue'
+import TabBar from '@/components/common/TabBar.vue'
+import TabBarItem from '@/components/common/TabBarItem.vue'
 import SongsTable from '@/components/content/SongsTable.vue'
 import Cover from '@/components/content/Cover.vue'
 
@@ -106,7 +113,7 @@ import { SongsDbClickMixin } from '@/utils/mixin.js'
 
 export default {
   name: 'ArtistIndex',
-  components: { Header, Cover, SongsTable },
+  components: { TabBar, TabBarItem, Cover, SongsTable },
   mixins: [SongsDbClickMixin],
   data () {
     return {
@@ -115,7 +122,14 @@ export default {
       hotAlbums: [],
       mvs: [],
       isShowAll: false,
-      activeName: '0' // 当前tab选项卡
+      activeName: '0', // 当前tab选项卡
+      currentIndex: 1,
+      tabs: [
+        { id: 1, text: '专辑' },
+        { id: 2, text: 'MV' },
+        { id: 3, text: '歌手详情' },
+        { id: 4, text: '相似歌手' }
+      ]
     }
   },
   computed: {
@@ -172,6 +186,10 @@ export default {
         const { data: res } = await _getSongsByAlbumId(id)
         v.songs = res.songs
       })
+    },
+
+    handleTabClick (id) {
+      this.currentIndex = id
     }
   },
   filters: {
@@ -196,6 +214,11 @@ export default {
 }
 
 .info-wrap {
+  display: flex;
+}
+
+.info-content {
+  flex: 1;
   margin-top: 10px;
   display: flex;
   flex-direction: column;

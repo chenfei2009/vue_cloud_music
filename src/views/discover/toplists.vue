@@ -1,10 +1,10 @@
 <template>
-  <div class="newest-container">最新音乐</div>
+  <div class="toplist-container tab-container">排行榜</div>
 </template>
 
 <script>
 export default {
-  name: 'Newest'
+  name: 'Toplist'
 }
 </script>
 

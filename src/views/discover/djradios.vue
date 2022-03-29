@@ -1,10 +1,10 @@
 <template>
-  <div class="playlist-container">歌单</div>
+  <div class="djradio-container tab-container">专属定制</div>
 </template>
 
 <script>
 export default {
-  name: 'Playlist'
+  name: 'DjRadio'
 }
 </script>
 

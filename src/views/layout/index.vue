@@ -30,10 +30,7 @@ import Aside from './childComps/Aside.vue'
 import Header from '@/components/common/Header.vue'
 import SearchBar from '@/components/content/SearchBar.vue'
 import UserBar from '@/components/content/UserBar.vue'
-// import Header from '@/components/content/Header.vue'
 import Player from '@/components/content/Player/Player.vue'
-
-import request from '@/utils/request.js'
 
 export default {
   name: 'LayoutIndex',
@@ -62,20 +59,8 @@ export default {
     // 加载播放列表数据
     this.setPlayListData()
     this.setAudio()
-    this.loginTest()
   },
   methods: {
-    async loginTest () {
-      const res = await request({
-        method: 'GET',
-        url: '/login/cellphone',
-        params: {
-          phone: '15811121817',
-          password: 'chenfei2013'
-        }
-      })
-      console.log('登录测试', res)
-    },
     handleShowList () {
       this.isShowPlayList = !this.isShowPlayList
     },
@@ -180,8 +165,9 @@ export default {
     padding-bottom: 0;
     display: flex;
     .main {
-      padding: 20px;
       width: calc(~"100% - 200px");
+      height: 100%;
+      overflow: scroll;
     }
     .main::-webkit-scrollbar { /* 滚动条整体样式 */
       width: 4px; /* 高宽分别对应横竖滚动条的尺寸 */

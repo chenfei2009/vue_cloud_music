@@ -1,5 +1,5 @@
 <template>
-  <div class="rec-container container">
+  <div class="discover-container tab-container">
     <!-- 轮播图模块 -->
     <el-carousel :interval="5000" type="card" height="175px">
       <el-carousel-item v-for="(item, index) in banners" :key="index">
@@ -8,7 +8,7 @@
     </el-carousel>
     <!-- 轮播图模块/ -->
     <!-- 推荐歌单模块 -->
-    <Title title="推荐歌单" path="/playlist" />
+    <Title title="推荐歌单" path="/discover/playlists" />
     <ul class="list-wrap" v-if="personalizedList.length > 1">
       <!-- 每日歌曲推荐 -->
       <Cover :picUrl="recItem.picUrl">
@@ -31,13 +31,13 @@
         <span slot="text">{{item.name}}</span></Cover>
       <!-- 推荐歌单/ -->
     </ul>
-    <!-- 推荐歌单模块/ -->
+    <!-- /推荐歌单模块 -->
     <!-- 热门播客模块 -->
     <Title title="热门播客" path="/vlog" />
     <SongGroup :list="newSongs" :column="2" />
-    <!-- 热门播客单模块/ -->
+    <!-- /热门播客单模块 -->
     <!-- 独家放送模块 -->
-    <Title title="独家放送" path="/dujiafangsong" />
+    <Title title="独家放送" path="/dujia" />
     <ul class="list-wrap" v-if="privateContent.length > 0">
       <Cover v-for="item in privateContent"
         :key="item.id"
@@ -50,11 +50,11 @@
         </div>
         <span slot="text">{{item.name}}</span></Cover>
     </ul>
-    <!-- 独家放送模块/ -->
+    <!-- /独家放送模块 -->
     <!-- 最新音乐模块 -->
-    <Title title="最新音乐" path="/discover/newest" />
+    <Title title="最新音乐" path="/discover/newests" />
     <SongGroup :list="newSongs" :column="3" />
-    <Title title="推荐MV" path="/video" />
+    <Title title="推荐MV" path="/video/mv" />
     <ul class="list-wrap" v-if="personalizedMv.length > 0">
       <Cover v-for="item in personalizedMv"
         :key="item.id"
@@ -68,7 +68,7 @@
         </div>
       </Cover>
     </ul>
-    <!-- 最新音乐模块/ -->
+    <!-- /最新音乐模块 -->
     <Title title="听听" />
     <Title title="看看" />
   </div>

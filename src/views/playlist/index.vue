@@ -8,7 +8,7 @@
       @addToPlaylist="handleAddToPlaylist"/>
     <!-- 歌单详情模块/ -->
     <!-- tab选项卡 -->
-    <TabBar>
+    <TabBar class="tab-bar">
       <TabBarItem v-for="item in tabs"
         :key="item.id"
         :id="item.id"
@@ -17,10 +17,11 @@
         ><div slot="item-text">{{item.text}}</div></TabBarItem>
     </TabBar>
     <!-- tab选项卡/ -->
-    <section v-if="currentIndex===1">
+    <section v-if="currentIndex===1" class="section-songs">
       <!-- 歌单列表模块 -->
       <SongsTable :songs="songs"
         :activeId="activeId"
+        :showAction="true"
         :showHeader="true"
         :showIndex="true"
         :showAlbum="true"
@@ -108,18 +109,13 @@ export default {
 
   data () {
     return {
-      id: 0, // 歌单id
+      // id: 0, // 歌单id
       playlist: {}, // 歌单详情
       songs: [], // 歌单对应的歌曲列表
       inputText: '',
       hotComments: [],
       comments: [],
       currentIndex: 1 // 当前tab选项卡
-      // tabs: [
-      //   { id: 1, text: '歌曲列表' },
-      //   { id: 2, text: this.commentLabel },
-      //   { id: 3, text: '收藏者' }
-      // ]
     }
   },
   created () {
@@ -135,10 +131,10 @@ export default {
      * 请求本页所有数据
      */
     getDatas () {
-      this.id = this.$route.query.id
-      this.getDetailByListId(this.id)
-      this.getSongsByListId(this.id)
-      this.getCommentByListId(this.id)
+      const id = this.$route.query.id
+      this.getDetailByListId(id)
+      this.getSongsByListId(id)
+      this.getCommentByListId(id)
     },
 
     /**
@@ -218,19 +214,8 @@ export default {
 </script>
 
 <style lang="less" scoped>
-.playlist-container /deep/ .el-tabs {
-  .el-tabs__nav-wrap::after {
-    height: 0;
-  }
-  .el-tabs__active-bar {
-    background-color: var(--themeColor);
-  }
-  .is-active {
-    // border-bottom: 2px solid var(--themeColor);
-    color: #000;
-    font-size: 18px;
-    font-weight: 800;
-  }
+.playlist-container {
+  padding: 20px 20px 0 20px;
 }
 
 .action-wrap {
@@ -262,5 +247,13 @@ export default {
       overflow: hidden;
     }
   }
+}
+
+// .tab-bar {
+//   padding-left: 20px;
+// }
+
+.section-songs {
+  margin: 0 -20px;
 }
 </style>
