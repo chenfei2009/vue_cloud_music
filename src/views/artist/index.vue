@@ -1,25 +1,6 @@
 <template>
-  <div class="artist-container">
-    <div class="info-wrap">
-      <Cover :picUrl="artist.picUrl" :fixWidth="200"/>
-      <div class="info-content" slot="center">
-        <h1 class="name">{{artist.name}}</h1>
-        <div class="alias" v-if="artist.alias">{{artist.alias[0]}}</div>
-        <div class="btn-wrap">
-          <button class="btn btn-round">
-            <i class="iconfont icon-add"></i>收藏
-          </button>
-        </div>
-        <div class="info-item">
-          <span>歌曲数：</span>
-          <span>{{artist.musicSize}}</span>
-          <span>专辑数：</span>
-          <span>{{artist.albumSize}}</span>
-          <span>MV数：</span>
-          <span>{{artist.mvSize}}</span>
-        </div>
-      </div>
-    </div>
+  <div class="artist-container container">
+    <ArtistInfo :artist="artist"/>
     <!-- tab选项卡 -->
     <TabBar>
       <TabBarItem v-for="item in tabs"
@@ -104,6 +85,7 @@ import TabBar from '@/components/common/TabBar.vue'
 import TabBarItem from '@/components/common/TabBarItem.vue'
 import SongsTable from '@/components/content/SongsTable.vue'
 import Cover from '@/components/content/Cover.vue'
+import ArtistInfo from './childComps/ArtistInfo.vue'
 
 import { _getArtistInfo, _getArtistMV, _getArtistAlbum } from '@/network/artist.js'
 import { _getSongsByAlbumId } from '@/network/song.js'
@@ -113,7 +95,7 @@ import { SongsDbClickMixin } from '@/utils/mixin.js'
 
 export default {
   name: 'ArtistIndex',
-  components: { TabBar, TabBarItem, Cover, SongsTable },
+  components: { TabBar, TabBarItem, Cover, SongsTable, ArtistInfo },
   mixins: [SongsDbClickMixin],
   data () {
     return {
@@ -211,22 +193,6 @@ export default {
   text-overflow: ellipsis;
   white-space: nowrap;
   overflow: hidden;
-}
-
-.info-wrap {
-  display: flex;
-}
-
-.info-content {
-  flex: 1;
-  margin-top: 10px;
-  display: flex;
-  flex-direction: column;
-  justify-content: right;
-  margin-left: 20px;
-  .name {
-    font-size: 20px;
-  }
 }
 
 .album-item {

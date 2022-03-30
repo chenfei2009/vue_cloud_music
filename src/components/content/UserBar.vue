@@ -1,6 +1,6 @@
 <template>
   <div class="user-bar">
-    <div class="login-wrap" @click="handleLogin">
+    <div class="login-wrap" @click="$store.commit('showLogin')">
       <!-- <el-image :scr="profile.avatarUrl"
         v-if="profile"></el-image>
       <i class="avatar iconfont icon-user01"></i> -->
@@ -43,22 +43,27 @@
     <div class="bar-item"><i class="iconfont icon-yifu"></i></div>
     <div class="bar-item"><i class="iconfont icon-setting"></i></div>
     <div class="bar-item"><i class="iconfont icon-Email"></i></div>
+    <Login v-show="isShowLogin"/>
   </div>
 </template>
 
 <script>
 import DropDown from '@/components/common/DropDown.vue'
 import DropDownItem from '@/components/common/DropDownItem.vue'
+import Login from '@/components/content/Login.vue'
 
 import { _getLoginStatus } from '@/network/login.js'
 
 export default {
   name: 'UserBar',
   props: {},
-  components: { DropDown, DropDownItem },
+  components: { DropDown, DropDownItem, Login },
   computed: {
     nickname () {
       return this.profile.nickname || '未登录'
+    },
+    isShowLogin () {
+      return this.$store.state.isShowLogin
     }
   },
   data () {
@@ -86,11 +91,6 @@ export default {
       }
       // 当前登录状态已过期
       console.log('登录超时')
-    },
-    handleLogin () {
-      if (this.profile.userId) return
-      // 切换到登录页面
-      this.$router.push('./login')
     }
   }
 }

@@ -26,9 +26,9 @@ const routes = [
             component: () => import(/* webpackChunkName: "home" */ '@/views/discover/djradios.vue')
           },
           { // 歌单
-            path: 'playlists',
-            name: 'Playlists',
-            component: () => import(/* webpackChunkName: "home" */ '@/views/discover/playlists.vue')
+            path: 'playlist',
+            name: 'Playlist',
+            component: () => import(/* webpackChunkName: "home" */ '@/views/discover/playlist.vue')
           },
           { // 排行榜
             path: 'toplists',
@@ -111,11 +111,6 @@ const routes = [
       //   component: () => import(/* webpackChunkName: "home" */ '@/views/user/event.vue')
       // }
     ]
-  },
-  {
-    path: '/login',
-    name: 'Login',
-    component: () => import(/* webpackChunkName: "home" */ '@/views/login/index.vue')
   }
 ]
 

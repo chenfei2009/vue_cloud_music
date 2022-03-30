@@ -1,5 +1,6 @@
 <template>
   <div class="login-container">
+    <div class="login-bg"></div>
     <div class="login-form-wrap">
       <div class="login-header">
         <div class="left">
@@ -7,7 +8,7 @@
           <span v-show="loginType === (1 || 3)" @click="loginType=2">切换邮箱登录</span>
           <span v-show="loginType === 2" @click="loginType=1">返回其他登录</span>
         </div>
-        <i class="iconfont icon-x"></i>
+        <i class="iconfont icon-x" @click="hiddenLogin"></i>
       </div>
       <!-- 二维码登录 -->
       <section v-if="loginType === 0">
@@ -129,7 +130,7 @@ import {
 } from '@/network/login'
 
 export default {
-  name: 'LoginIndex',
+  name: 'Login',
   components: {},
   props: {},
   data () {
@@ -154,11 +155,12 @@ export default {
         password: ''
       },
       // checked: false,
+      // errMsg: '', // 错误提示信息
       loginLoading: false,
       loginRules: {
         mobile: [
           { required: true, message: '请输入手机号', trigger: 'change' },
-          { pattern: /^1[3|5|7|8|9]\d{9}$/, message: '请输入正确的号码格式', trigger: 'change' }
+          { pattern: /^1[3|5|7|8|9]\d{9}$/, message: '请输入正确的号码格式', trigger: 'blur' }
         ],
         code: [
           { required: true, message: '验证码不能为空', trigger: 'change' }
@@ -230,17 +232,21 @@ export default {
       // this.loginLoading = true
       // // 验证通过，提交登录
       _loginByCellphone(this.user.mobile, this.user.code).then(res => {
+        if (res.data.code !== 200) return console.error(res.data.msg)
         // // 登录成功
         // this.$message({ message: '登录成功', type: 'success' })
         // // 关闭 loading
         // this.loginLoading = false
-
-        // 本地存储 token 数据
-        console.log(res.data.token)
-        window.localStorage.setItem('token', res.data.token)
-        window.localStorage.setItem('profile', JSON.stringify(res.data.profile))
-        // 跳转到首页
-        this.$router.push('/')
+        // 保存用户信息
+        // this.$store.commit('addUser', res.data)
+        this.$store.commit('addUser', res.data.profile)
+        // window.localStorage.setItem('token', res.data.token)
+        window.localStorage.setItem('cookie', res.data.cookie)
+        window.localStorage.setItem('avatar', res.data.profile.avatarUrl)
+        window.localStorage.setItem('nickname', res.data.profile.nickname)
+        window.localStorage.setItem('uid', res.data.profile.userId)
+        // 关闭弹窗
+        this.$store.commit('hiddleLogin')
       }).catch(err => {
         // 登录失败
         console.log('登录失败', err)
@@ -248,6 +254,10 @@ export default {
         // // 关闭 loading
         // this.loginLoading = false
       })
+    },
+
+    hiddenLogin () {
+      this.$store.commit('hiddleLogin')
     }
   }
 }
@@ -255,22 +265,32 @@ export default {
 
 <style scoped lang="less">
 .login-container {
-  position: fixed;
-  top: 0;
-  left: 0;
-  bottom: 0;
-  right: 0;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  background-color: #eee;
+
+  .login-bg {
+    position: fixed;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 99;
+  }
+
   .login-form-wrap {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
     // box-sizing: border-box;
     width: 300px;
     height: 460px;
     padding: 10px;
     background: #fff;
+    z-index: 100;
     .login-header {
       display: flex;
       justify-content: space-between;

@@ -1,4 +1,4 @@
-import request from './request'
+import request from '@/utils/request'
 
 /**
  * 获取歌单所有歌曲
@@ -22,5 +22,17 @@ export function _getDetailByListId (id, s = 8) {
   return request({
     url: '/playlist/detail',
     params: { id, s }
+  })
+}
+
+/**
+ * 收藏歌单
+ * @param { number } t 类型,1:收藏,2:取消收藏
+ * @param { number } id 歌单id
+ */
+export function _subsPlaylist (t, id) {
+  return request({
+    url: '/playlist/subscribe',
+    params: { t, id }
   })
 }

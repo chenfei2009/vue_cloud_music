@@ -5,8 +5,10 @@
       :playlist="playlist"
       :songsLength="songs.length"
       @playAll="handlePlayAll"
+      @subscribe="handleSubs"
+      @share="handleShare"
       @addToPlaylist="handleAddToPlaylist"/>
-    <!-- 歌单详情模块/ -->
+    <!--/ 歌单详情模块 -->
     <!-- tab选项卡 -->
     <TabBar class="tab-bar">
       <TabBarItem v-for="item in tabs"
@@ -16,7 +18,7 @@
         @tabClick="handleTabClick"
         ><div slot="item-text">{{item.text}}</div></TabBarItem>
     </TabBar>
-    <!-- tab选项卡/ -->
+    <!-- /tab选项卡 -->
     <section v-if="currentIndex===1" class="section-songs">
       <!-- 歌单列表模块 -->
       <SongsTable :songs="songs"
@@ -26,7 +28,7 @@
         :showIndex="true"
         :showAlbum="true"
         @rowDbClick="handleRowDbClick"/>
-      <!-- 歌单列表模块/ -->
+      <!-- /歌单列表模块 -->
     </section>
     <section v-else-if="currentIndex===2">
       <!-- 评论表单模块 -->
@@ -41,22 +43,24 @@
           <button class="btn-round" @click="handleSubmit">评论</button>
         </div>
       </form>
-      <!-- 评论表单模块/ -->
+      <!-- /评论表单模块 -->
       <!-- 精彩评论模块 -->
       <Comment title="精彩评论" :comments="hotComments" />
-      <!-- 精彩评论模块/ -->
+      <!-- /精彩评论模块 -->
       <!-- 全部评论模块 -->
       <Comment title="全部评论"
         :comments="comments"
         :isShowCount="true"
         :pagination="true"/>
-      <!-- 全部评论模块/ -->
+      <!-- /全部评论模块 -->
     </section>
     <section v-else>
-      <ul class="user-wrap">
-        <li v-for="item in playlist.subscribers" :key="item.userId" class="user-item">
+      <ul class="subs-wrap">
+        <li v-for="item in playlist.subscribers" :key="item.userId" class="subs-item">
           <div class="avatar-wrap"><el-image :src="item.avatarUrl"></el-image></div>
-          <span class="user-name">{{item.nickname}}</span>
+          <a class="user-name"
+            :href="'/#/user/home?'+item.userId"
+            >{{item.nickname}}</a>
         </li>
       </ul>
     </section>
@@ -73,7 +77,7 @@
         <el-button @click="dialogVisible = false">取 消</el-button>
       </span>
     </el-dialog>
-    <!-- 对话框/ -->
+    <!-- /对话框 -->
   </div>
 </template>
 
@@ -84,7 +88,11 @@ import PlaylistInfo from './childComps/PlaylistInfo.vue'
 import TabBar from '@/components/common/TabBar.vue'
 import TabBarItem from '@/components/common/TabBarItem.vue'
 
-import { _getSongsByListId, _getDetailByListId } from '@/network/playlist.js'
+import {
+  _getSongsByListId,
+  _getDetailByListId,
+  _subsPlaylist
+} from '@/network/playlist.js'
 import { _getSongUrlById } from '@/network/song.js'
 import { _getCommentByListId } from '@/network/comment.js'
 
@@ -198,6 +206,18 @@ export default {
       console.log(this.inputText)
     },
 
+    async handleSubs () {
+      const id = this.$route.query.id
+      // const { data: res } = await _subsPlaylist(1, id)
+      // console.log(res)
+      try {
+        const { data: res } = await _subsPlaylist(1, id)
+        console.log(res)
+      } catch (err) {
+        console.log('请求函数内部错误处理', err.msg)
+      }
+    },
+
     handleShare () {
       console.log('handleShare')
     },
@@ -229,15 +249,15 @@ export default {
   }
 }
 
-.user-wrap {
+.subs-wrap {
   display: flex;
   min-width: 300px;
   // justify-content: space-between;
   flex-wrap: wrap;
-  .user-item {
+  .subs-item {
     display: flex;
     align-items: center;
-    width: 400px;
+    width: 300px;
     margin: 10px 0;
     .avatar-wrap {
       width: 90px;
@@ -248,10 +268,6 @@ export default {
     }
   }
 }
-
-// .tab-bar {
-//   padding-left: 20px;
-// }
 
 .section-songs {
   margin: 0 -20px;

@@ -158,6 +158,9 @@ export default {
 </script>
 
 <style lang="less" scoped>
+.user-container {
+  padding: 20px;
+}
 .list-item {
   display: flex;
   align-items: center;

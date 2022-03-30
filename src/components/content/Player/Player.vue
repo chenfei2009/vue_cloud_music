@@ -27,8 +27,8 @@
           :simiPlaylists="simiPlaylists"
           :simiSongs="simiSongs" />
         <!-- 歌曲评论模块 -->
-        <Comment :hotComments="hotComments"
-          :comments="comments" />
+        <Comment title="全部评论" :comments="hotComments" class="comment"/>
+        <Comment title="最新评论" :comments="comments" class="comment"/>
       </Scroll>
       <div class="scroll-bg"></div>
       <!-- 底部悬浮按钮组 -->
@@ -62,11 +62,11 @@ import Scroll from '@/components/common/Scroll.vue'
 import Header from '@/components/common/Header.vue'
 import SearchBar from '@/components/content/SearchBar.vue'
 import SongsTable from '@/components/content/SongsTable.vue'
+import Comment from '@/components/content/Comment/Comment.vue'
 
 import PlayBar from './PlayBar.vue'
 import SideBar from './SideBar.vue'
 import PlayDetail from './PlayDetail.vue'
-import Comment from './Comment.vue'
 
 import {
   _getRecentPlaylist
@@ -280,6 +280,11 @@ export default {
 //   width: 4px; /* 高宽分别对应横竖滚动条的尺寸 */
 //   height: 20px;
 // }
+
+.comment {
+  max-width: 900px;
+  margin: 0 auto;
+}
 
 .back-top {
   position: fixed;

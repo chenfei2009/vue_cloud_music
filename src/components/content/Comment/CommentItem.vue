@@ -4,11 +4,15 @@
     <div class="item-detail-wrap">
       <!-- 根据 user.userId 跳转到个人主页 -->
       <div class="content-wrap">
-        <a class="item-username" href="#">{{item.user.nickname}}: </a>
+        <a class="item-username link"
+          :href="'/#/user/home?'+item.user.userId"
+          >{{item.user.nickname}}: </a>
         <span class="item-content">{{item.content}}</span>
       </div>
       <div class="replied-wrap" v-if="item.beReplied.length>0">
-        <a class="item-username" href="#">@{{item.beReplied[0].user.nickname}}: </a>
+        <a class="item-username link"
+          :href="'/#/user/home?'+item.beReplied[0].user.userId"
+          >@{{item.beReplied[0].user.nickname}}: </a>
         <span class="item-content">{{item.beReplied[0].content}}</span>
       </div>
       <div class="item-time text-small fl">{{item.timeStr}}</div>
@@ -57,9 +61,6 @@ export default {
     margin-bottom: 10px;
     a, span {
       font-size: 12px;
-    }
-    a {
-      color: rgb(80, 125, 175);
     }
   }
   .replied-wrap {

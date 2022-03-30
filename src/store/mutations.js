@@ -1,4 +1,7 @@
 import {
+  SHOW_LOGIN,
+  HIDDLE_LOGIN,
+  ADD_USER,
   SET_CONTENT,
   SET_CURRENTTIME,
   SET_PLAYLISTINFO,
@@ -25,6 +28,21 @@ function setPlayList (state, payload) {
 export default {
   // mutations 唯一的目的就是修改 state 中的状态
   // mutations 中的每个方法尽可能完成的事情单一
+
+  /* 登录及权限 */
+  [SHOW_LOGIN] (state, payload) {
+    state.isShowLogin = true
+  },
+
+  [HIDDLE_LOGIN] (state, payload) {
+    state.isShowLogin = false
+  },
+
+  [ADD_USER] (state, payload) {
+    state.user = payload
+  },
+
+  /* 音乐播放 */
   [SET_CONTENT] (state, payload) {
     setPlayList(state, payload)
     state.playContent = payload
@@ -53,6 +71,7 @@ export default {
     state.playContent = item
   },
 
+  /* 主题颜色 */
   [RESET_THEMECOLOR] (state, payload) {
     const themeItem = state.themeList.find(item => item.name === payload)
     state.themeColor = themeItem.color

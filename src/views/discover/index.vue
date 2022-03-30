@@ -4,7 +4,7 @@
       <TabBar>
         <TabBarItem path="/discover"><div slot="item-text">个性推荐</div></TabBarItem>
         <TabBarItem path="/discover/djradios"><div slot="item-text">专属定制</div></TabBarItem>
-        <TabBarItem path="/discover/playlists"><div slot="item-text">歌单</div></TabBarItem>
+        <TabBarItem path="/discover/playlist"><div slot="item-text">歌单</div></TabBarItem>
         <TabBarItem path="/discover/toplists"><div slot="item-text">排行榜</div></TabBarItem>
         <TabBarItem path="/discover/artists"><div slot="item-text">歌手</div></TabBarItem>
         <TabBarItem path="/discover/newests"><div slot="item-text">最新音乐</div></TabBarItem>

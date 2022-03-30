@@ -27,6 +27,11 @@ a {
   color: #333;
 }
 
+.link {
+  color: #1737a1;
+  cursor: pointer;
+}
+
 #app {
   --themeColor: #ec4141;
 }
@@ -76,6 +81,7 @@ textarea:hover {
   outline: none;
 }
 
+/* 默认按钮 */
 button {
   border: 1px solid #ccc;
   height: 30px;
@@ -83,8 +89,47 @@ button {
   background-color: #fff;
   margin-right: 10px;
   font-size: 13px;
+  cursor: pointer;
 }
 
-.btn-round {
+button:hover {
+  background-color: #eee;
+}
+
+/* 主要按钮 */
+button.primary {
+  color: #fff;
+  background-color: var(--themeColor);
+  border: 0;
+}
+
+button.primary:hover {
+  background-color: #a10000;
+}
+
+/* 圆角按钮 */
+button.round {
   border-radius: 15px;
+}
+
+/* 左侧圆角按钮 */
+button.round-left {
+  border-top-left-radius: 15px;
+  border-bottom-left-radius: 15px;
+  padding-right: 5px;
+  margin-right: 0;
+}
+
+/* 右侧圆角按钮 */
+button.round-right {
+  border-top-right-radius: 15px;
+  border-bottom-right-radius: 15px;
+  padding-left: 5px;
+}
+
+.tag {
+  padding: 1px 3px;
+  color: var(--themeColor);
+  border: 1px solid var(--themeColor);
+  border-radius: 5px;
 }

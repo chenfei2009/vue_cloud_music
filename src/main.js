@@ -25,7 +25,7 @@ import {
   Select,
   Option,
   Checkbox,
-  Avatar
+  Tag
 } from 'element-ui'
 
 import App from './App.vue'
@@ -61,7 +61,7 @@ Vue.use(Input)
 Vue.use(Select)
 Vue.use(Option)
 Vue.use(Checkbox)
-Vue.use(Avatar)
+Vue.use(Tag)
 
 Vue.config.productionTip = false
 
