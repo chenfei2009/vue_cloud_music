@@ -5,7 +5,7 @@
       <!-- 根据 user.userId 跳转到个人主页 -->
       <div class="content-wrap">
         <a class="item-username link"
-          :href="'/#/user/home?'+item.user.userId"
+          :href="'/#/user/home?uid='+item.user.userId"
           >{{item.user.nickname}}: </a>
         <span class="item-content">{{item.content}}</span>
       </div>

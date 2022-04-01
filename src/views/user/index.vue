@@ -1,10 +1,6 @@
 <template>
-  <div class="user-container">
-    <div class="title">搜索 {{searchWord}}</div>
-    <div class="rec">
-      <div>你可能感兴趣</div>
-      <!-- 头像 歌手 粉丝 歌曲 -->
-    </div>
+  <div class="user-container container">
+    <UserInfo :user="user"/>
     <!-- tab选项卡 -->
     <TabBar>
       <TabBarItem v-for="item in tabs"
@@ -16,23 +12,24 @@
     </TabBar>
     <!-- /tab选项卡 -->
     <section v-if="currentIndex===1">
+      暂无数据
       <ul>
         <li v-for="item in createdPlaylists" :key="item.id" class="list-item">
           <Cover :picUrl="item.picUrl" :fixWidth="80" />
-          <!-- <el-image :src="item.picUrl"></el-image> -->
+          <el-image :src="item.picUrl"></el-image>
           <div class="name">{{item.name}}</div>
           <div class="alias" v-if="item.alias">{{item.alias}}</div>
         </li>
       </ul>
     </section>
     <section v-else-if="currentIndex===2">
-      歌单
+      暂无数据
     </section>
     <section v-else-if="currentIndex===3">
-      播客
+      暂无数据
     </section>
     <section v-else>
-      专栏
+      暂无数据
     </section>
   </div>
 </template>
@@ -41,18 +38,23 @@
 import TabBar from '@/components/common/TabBar.vue'
 import TabBarItem from '@/components/common/TabBarItem.vue'
 import Cover from '@/components/content/Cover.vue'
+import UserInfo from './childComps/UserInfo.vue'
 
-import { _getCloudSearch, _getSearch, _getMultiMatch } from '@/network/search.js'
-import { _getSongUrlById } from '@/network/song.js'
+import {
+  _getUserDetail,
+  _getUserDj
+} from '@/network/user.js'
 
 export default {
   name: 'UserIndex',
-  components: { TabBar, TabBarItem, Cover },
+  components: { UserInfo, TabBar, TabBarItem, Cover },
   data () {
     return {
+      uid: null,
+      user: {},
       activeName: 0,
       createdPlaylists: [],
-      collectedPlaylists: [],
+      subsdPlaylists: [],
       createdVlogs: [],
       collectedVlogs: [],
       currentIndex: 1,
@@ -68,47 +70,33 @@ export default {
   created () {},
 
   activated () {
-    this.searchWord = this.$route.query.s
-    // this.getSongs(this.searchWord)
+    this.uid = this.$route.query.uid
+    this.getUserDetail(this.uid)
+    this.getUserDj(this.uid)
     // this.getSuggest(this.searchWord)
   },
 
   methods: {
     /**
-     * 关键词搜索
+     * 获取用户详情
      */
-    async getSongs (keywords) {
-      const { data: res } = await _getCloudSearch(keywords)
-      this.songs = res.result.songs
+    async getUserDetail (uid) {
+      const { data: res } = await _getUserDetail(uid)
+      this.user = res
+      console.log(this.user)
     },
-    async getArtists (keywords) {
-      const { data: res } = await _getSearch(keywords, 100)
-      this.artists = res.result.artists
+    async getUserDj (uid) {
+      const { data: res } = await _getUserDj(uid)
+      console.log(res)
     },
-    async getAlbums (keywords) {
-      const { data: res } = await _getCloudSearch(keywords, 10)
-      this.albums = res.result.albums
-    },
-    async getPlaylists (keywords) {
-      const { data: res } = await _getCloudSearch(keywords, 1000)
-      this.playlists = res.result.playlists
-    },
-
-    /**
-     * 获取歌曲url
-     */
-    async getSongUrlById (id) {
-      const { data: res } = await _getSongUrlById(id)
-      return res.data[0]
-    },
-
-    /**
-     * 获取搜索建议
-     */
-    async getMultiMatch (keywords) {
-      const { data: res } = await _getMultiMatch(keywords)
-      console.log('搜索建议', res)
-    },
+    // async getAlbums (keywords) {
+    //   const { data: res } = await _getCloudSearch(keywords, 10)
+    //   this.albums = res.result.albums
+    // },
+    // async getPlaylists (keywords) {
+    //   const { data: res } = await _getCloudSearch(keywords, 1000)
+    //   this.playlists = res.result.playlists
+    // },
 
     handleTabClick (id) {
       this.currentIndex = id
@@ -138,17 +126,17 @@ export default {
     currentIndex () {
       switch (this.currentIndex) {
         case 1:
-          this.getSongs(this.searchWord)
+          this.getUserDetail(this.uid)
           break
-        case 2:
-          this.getArtists(this.searchWord)
-          break
-        case 3:
-          this.getAlbums(this.searchWord)
-          break
-        case 5:
-          this.getPlaylists(this.searchWord)
-          break
+        // case 2:
+        //   this.getArtists(this.searchWord)
+        //   break
+        // case 3:
+        //   this.getAlbums(this.searchWord)
+        //   break
+        // case 5:
+        //   this.getPlaylists(this.searchWord)
+        //   break
         default:
           break
       }
@@ -158,9 +146,9 @@ export default {
 </script>
 
 <style lang="less" scoped>
-.user-container {
-  padding: 20px;
-}
+// .user-container {
+//   padding: 20px;
+// }
 .list-item {
   display: flex;
   align-items: center;

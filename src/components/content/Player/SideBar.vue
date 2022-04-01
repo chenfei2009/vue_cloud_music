@@ -36,7 +36,8 @@ export default {
   width: 450px;
   top: 60px;
   bottom: 70px;
-  z-index: 99;
+  z-index: 9;
+  box-shadow: -1px 0 1px #eee;
   // height: calc(~'100% - 70px');
   background-color: #fff;
   .title-wrap {
@@ -66,16 +67,12 @@ export default {
   .table-wrap {
     width: 450px;
     height: calc(~"100vh - 210px");
-    overflow: scroll;
-    // /deep/ tr {
-    //   :first-child {
-    //     padding-left: 10px;
-    //   }
-    //   td {
-    //     font-size: 12px;
-    //     padding: 4px 0;
-    //   }
-    // }
+    overflow-x: hidden;
+    overflow-y: scroll;
+    &::-webkit-scrollbar { /* 滚动条整体样式 */
+      width: 4px; /* 高宽分别对应横竖滚动条的尺寸 */
+      height: 20px;
+    }
     .cell-text {
       overflow: hidden;
       white-space: nowrap;

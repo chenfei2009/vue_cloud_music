@@ -1,9 +1,9 @@
 <template>
   <div class="artist-info-container">
-    <div class="cover-wrap"><el-image :src="artist.picUrl" cover></el-image></div>
+    <el-image class="cover-wrap" :src="artist.picUrl" fit="cover"/>
     <div class="info-wrap">
-      <h1 class="name">{{artist.name}}</h1>
-      <div class="alias" v-if="artist.alias">{{artist.alias[0]}}</div>
+      <h1 class="info-name">{{artist.name}}</h1>
+      <div class="info-alias" v-if="artist.alias">{{artist.alias[0]}}</div>
       <div class="btn-wrap">
         <button class="round"
           @click="handleSubs"
@@ -57,8 +57,11 @@ export default {
 }
 .info-wrap {
   margin-left: 20px;
-  .name {
-    font-size: 20px;
+  > * {
+    margin-bottom: 15px;
+  }
+  .info-alias {
+    font-size: 10px;
   }
   .user-wrap  {
     display: flex;

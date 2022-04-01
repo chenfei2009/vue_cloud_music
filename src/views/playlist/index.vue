@@ -107,10 +107,10 @@ export default {
         { id: 2, text: `评论(${this.comments.length})` },
         { id: 3, text: '收藏者' }
       ]
+    },
+    curSongs () {
+      return this.songs
     }
-    // commentLabel () {
-    //   return `评论(${this.comments.length})`
-    // }
   },
   components: { SongsTable, PlaylistInfo, Comment, TabBar, TabBarItem },
   mixins: [SongsDbClickMixin],

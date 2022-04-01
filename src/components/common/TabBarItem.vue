@@ -67,7 +67,7 @@ export default {
 }
 
 .tab-bar-item /deep/ div {
-  font-size: 16px;
+  font-size: 14px;
 }
 
 .active /deep/ div {

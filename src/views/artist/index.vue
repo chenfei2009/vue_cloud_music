@@ -16,35 +16,39 @@
         <!-- 热门50首 -->
         <li class="album-item">
           <div class="cover-wrap">
-            <Cover slot="left" picUrl="/image/default.png" :fixWidth="150">
+            <Cover picUrl="/image/default.png" :fixWidth="150">
               <span class="center">TOP50</span>
             </Cover>
           </div>
-          <div class="info-wrap" slot="center">
+          <div class="info-wrap">
             <SongsTable :songs="songs"
               :activeId="activeId"
               :title="true"
               name="热门50首"
+              :showIndex="true"
+              :showAction="true"
               :showArtist="false"
-              @rowDbClick="handleRowDbClick"/>
+              @rowDbClick="handleRowDbClick($event)"/>
           </div>
         </li>
-        <!-- 热门50首/ -->
+        <!-- /热门50首 -->
         <!-- 专辑列表 -->
-        <li class="album-item" v-for="item in hotAlbums" :key="item.id">
+        <li class="album-item" v-for="(item, index) in hotAlbums" :key="item.id">
           <div class="cover-wrap">
             <Cover slot="left" :picUrl="item.picUrl" :fixWidth="150">
               <div class="date" slot="text">{{item.publishTime | dateFilter}}</div>
             </Cover>
           </div>
-          <div class="info-wrap" slot="center">
+          <div class="info-wrap">
             <SongsTable :songs="item.songs"
               :activeId="activeId"
               :title="true"
               :name="item.name"
+              :showIndex="true"
+              :showAction="true"
               :showAll="false"
               :showArtist="false"
-              @rowDbClick="handleRowDbClick"/>
+              @rowDbClick="handleRowDbClick($event, index)"/>
           </div>
         </li>
         <!-- 专辑列表/ -->
@@ -53,7 +57,7 @@
     <section v-else-if="currentIndex===2">
       <div class="mvs-wrap">
         <Cover v-for="item in mvs" :key="item.id" :picUrl="item.imgurl" :ratio="16/9" :columns="4">
-          <span slot="text" class="mv-name">{{item.name}}</span>
+          <span slot="text" class="text-hide">{{item.name}}</span>
         </Cover>
       </div>
     </section>
@@ -102,6 +106,7 @@ export default {
       artist: {},
       hotSongs: [],
       hotAlbums: [],
+      // albumIndex: null,
       mvs: [],
       isShowAll: false,
       activeName: '0', // 当前tab选项卡
@@ -117,13 +122,25 @@ export default {
   computed: {
     songs () {
       return this.isShowAll ? this.hotSongs : this.hotSongs.slice(0, 10)
+    },
+    curSongs () {
+      return this.albumIndex ? this.hotAlbums[this.albumIndex].songs : this.hotSongs
     }
   },
   created () {
     this.getDatas()
   },
   activated () {
+    this.currentIndex = 1
     this.getDatas()
+  },
+  watch: {
+    currentIndex (val) {
+      const { id } = this.$route.query
+      if (val === 2) {
+        this.getArtistMV(id)
+      }
+    }
   },
   methods: {
     // 网络请求相关方法
@@ -133,7 +150,7 @@ export default {
     getDatas () {
       const { id } = this.$route.query
       this.getArtistInfo(id)
-      this.getArtistMV(id)
+      // this.getArtistMV(id)
       this.getArtistAlbum(id)
     },
 
@@ -189,21 +206,23 @@ export default {
   flex-wrap: wrap;
 }
 
-.mv-name {
-  text-overflow: ellipsis;
-  white-space: nowrap;
-  overflow: hidden;
-}
+// .mv-name {
+//   // width: 100%;
+//   text-overflow: ellipsis;
+//   white-space: nowrap;
+//   overflow: hidden;
+// }
 
 .album-item {
   display: flex;
-  margin-top: 30px;
+  margin-bottom: 30px;
   width: 100%;
   // flex-direction: column;
   // justify-content: right;
   // margin-left: 20px;
   .cover-wrap {
     width: 200px;
+    margin-top: -10px ;
   }
   .info-wrap {
     margin-left: 20px;

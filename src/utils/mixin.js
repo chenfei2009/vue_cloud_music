@@ -8,15 +8,17 @@ export const SongsDbClickMixin = {
       dialogVisible: false,
       dialogContent: '',
       activeId: 0,
-      rowId: null
+      rowId: null,
+      albumIndex: null
     }
   },
   methods: {
     /**
      * 双击歌曲表行事件
      */
-    handleRowDbClick (id) {
-      console.log('rowDbClick')
+    handleRowDbClick (id, index) {
+      console.log('rowDbClick', id, index)
+      this.albumIndex = index
       this.rowId = id
       this.dialogContent = '"双击播放"将会替换当前的播放列表，是否继续?'
       this.dialogVisible = true
@@ -27,9 +29,9 @@ export const SongsDbClickMixin = {
      */
     handleConfirm () {
       if (!this.rowId) { // 替换歌单并从头开始播放
-        this.$store.commit('resetPlayList', { songs: this.songs })
+        this.$store.commit('resetPlayList', { songs: this.curSongs })
       } else { // 替换歌单并播放选中歌曲
-        this.$store.commit('resetPlayList', { songs: this.songs, id: this.rowId })
+        this.$store.commit('resetPlayList', { songs: this.curSongs, id: this.rowId })
         this.activeId = this.rowId
         this.rowId = null
       }

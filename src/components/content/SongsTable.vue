@@ -1,8 +1,9 @@
 <template>
   <div class="songs-table-container">
-    <div class="title-bar" v-if="title">
-      {{name}}
+    <div class="title-wrap" v-if="title">
+      <h2>{{name}}</h2>
       <i class="iconfont icon-play"></i>
+      <span class="division"></span>
       <i class="iconfont icon-add"></i>
     </div>
     <el-table
@@ -230,6 +231,22 @@ export default {
   width: 100%;
 }
 
+.title-wrap {
+  display: flex;
+  align-items: center;
+  margin-bottom: 10px;
+  h2 {
+    margin-right: 20px;
+  }
+  .division {
+    display: inline-block;
+    margin: 0 10px;
+    width: 1px;
+    height: 12px;
+    background-color: #ccc;
+  }
+}
+
 .el-table /deep/ td:first-child {
   .cell {
     padding-left: 20px;
@@ -258,5 +275,14 @@ export default {
   overflow: hidden;
   white-space: nowrap;
   text-overflow: ellipsis;
+}
+
+.show-all {
+  padding: 8px 50px 8px 0;
+  text-align: right;
+}
+
+.show-all::after {
+  content: ' >'
 }
 </style>

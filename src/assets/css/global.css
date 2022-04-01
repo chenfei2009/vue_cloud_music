@@ -38,14 +38,14 @@ a {
 
 .container {
   /* max-width: 1100px; */
-  margin: 10px auto;
-  padding: 0 20px;
+  margin: 0 auto;
+  padding: 25px 25px 0 25px;
 }
 
 .tab-container {
   max-width: 1140px;
   margin: 20px auto;
-  padding: 0 20px;
+  padding: 0 25px;
 }
 
 .text-title {
@@ -60,6 +60,12 @@ a {
 
 .text-highlight {
   color: #065299;
+}
+
+.text-hide {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .fl {
@@ -127,9 +133,31 @@ button.round-right {
   padding-left: 5px;
 }
 
+/* 圆形按钮 */
+button.circle {
+  width: 30px;
+  border-radius: 50%;
+}
+
 .tag {
   padding: 1px 3px;
   color: var(--themeColor);
   border: 1px solid var(--themeColor);
   border-radius: 5px;
+}
+
+.br5 {
+  border-radius: 5px;
+}
+
+/* 标题字体 */
+h1 {
+  /* 歌手名 歌单名 */
+  font-size: 22px;
+}
+
+h2 {
+  /* 专辑名 */
+  font-size: 16px;
+  font-weight: 550;
 }

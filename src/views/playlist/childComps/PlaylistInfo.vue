@@ -1,12 +1,12 @@
 <template>
   <div class="playlist-info-container">
-    <div class="cover-wrap"><el-image :src="playlist.coverImgUrl"></el-image></div>
+    <el-image class="cover-wrap" :src="playlist.coverImgUrl"/>
     <div class="info-wrap">
       <h1 class="title-wrap"><span class="tag">歌单</span>{{playlist.name}}</h1>
       <div class="user-wrap">
         <div class="avatar-wrap"><el-image :src="playlist.creator.avatarUrl"></el-image></div>
         <a class="user-name link"
-          :href="'/#/user/home?'+playlist.creator.userId"
+          :href="'/#/user/home?uid='+playlist.creator.userId"
           >{{playlist.creator.nickname}}</a>
         <span class="create-time text-small">{{playlist.createTime | dateFilter}}创建</span>
       </div>
@@ -131,7 +131,6 @@ export default {
     margin-bottom: 15px;
   }
   .title-wrap {
-    font-size: 20px;
     .tag {
       margin-right: 10px;
       font-weight: 400;

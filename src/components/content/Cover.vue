@@ -29,7 +29,7 @@ export default {
   },
   computed: {
     totalDivision () {
-      return this.dividsion * (this.column - 1) + 240
+      return this.dividsion * (this.column - 1) + 250
     },
     width () {
       if (this.fixWidth) return (this.fixWidth + 'px')
@@ -41,7 +41,7 @@ export default {
     },
     maxWidth () {
       if (this.fixWidth) return false
-      return (1100 - this.totalDivision + 240) / this.column + 'px'
+      return (1100 - this.totalDivision + 250) / this.column + 'px'
     },
     minWidth () {
       if (this.fixWidth) return false
@@ -49,7 +49,7 @@ export default {
     },
     maxHeight () {
       if (this.fixWidth) return false
-      return (1100 - this.totalDivision + 240) / (this.column * this.ratio) + 'px'
+      return (1100 - this.totalDivision + 250) / (this.column * this.ratio) + 'px'
     },
     minHeight () {
       if (this.fixWidth) return false
@@ -145,6 +145,12 @@ export default {
     margin-top: 10px;
     cursor: pointer;
     font-size: 12px;
+    overflow: hidden;
+    // /deep/ * {
+    //   text-overflow: ellipsis;
+    //   white-space: nowrap;
+    //   overflow: hidden;
+    // }
   }
 }
 </style>
