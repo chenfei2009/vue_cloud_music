@@ -42,6 +42,7 @@ import UserInfo from './childComps/UserInfo.vue'
 
 import {
   _getUserDetail,
+  _getUserDetailByName,
   _getUserDj
 } from '@/network/user.js'
 
@@ -70,9 +71,14 @@ export default {
   created () {},
 
   activated () {
-    this.uid = this.$route.query.uid
-    this.getUserDetail(this.uid)
-    this.getUserDj(this.uid)
+    this.uid = this.$route.query.uid || null
+    if (this.uid) {
+      this.getUserDetail(this.uid)
+      this.getUserDj(this.uid)
+      return
+    }
+    const nickname = this.$route.query.nickname || null
+    this.getUserDetailByName(nickname)
     // this.getSuggest(this.searchWord)
   },
 
@@ -82,6 +88,11 @@ export default {
      */
     async getUserDetail (uid) {
       const { data: res } = await _getUserDetail(uid)
+      this.user = res
+      console.log(this.user)
+    },
+    async getUserDetailByName (nickname) {
+      const { data: res } = await _getUserDetailByName(nickname)
       this.user = res
       console.log(this.user)
     },

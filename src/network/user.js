@@ -10,6 +10,13 @@ export function _getUserDetail (uid) {
   })
 }
 
+export function _getUserDetailByName (nickname) {
+  return request({
+    url: 'user/detail',
+    params: { nickname }
+  })
+}
+
 /**
  * 获取账号信息
  */

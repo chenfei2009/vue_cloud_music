@@ -4,7 +4,8 @@
     <div class="event-list">
       <EventItem v-for="(item, index) in events"
         :key="index"
-        :item="item">
+        :item="item"
+        @refClick="handleRefClick">
         <PicList :pics="item.pics" />
       </EventItem>
     </div>
@@ -44,7 +45,12 @@ export default {
       this.events = res.events
       this.lasttime = res.lasttime
       this.more = res.more
-      console.log(this.events[0])
+      console.log(this.events[2])
+      const jsonObj = JSON.parse(this.events[2].json)
+      console.log(jsonObj.song.artists)
+    },
+    handleRefClick (id) {
+      console.log(id)
     }
   }
 }
