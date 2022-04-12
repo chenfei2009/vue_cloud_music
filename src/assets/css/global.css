@@ -104,13 +104,15 @@ button:hover {
 
 /* 主要按钮 */
 button.primary {
-  color: #fff;
-  background-color: var(--themeColor);
+  color: rgba(var(--primaryTextColor), 1);
+  /* background-color: var(--primaryColor); */
+  background: rgba(var(--primaryColor), 1);
   border: 0;
 }
 
 button.primary:hover {
-  background-color: #a10000;
+  /* background-color: rgb(161, 0, 0); */
+  background-color: rgba(var(--primaryHoverColor), 1);
 }
 
 /* 圆角按钮 */

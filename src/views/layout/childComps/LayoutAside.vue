@@ -49,7 +49,7 @@
 
 <script>
 export default {
-  name: 'Aside',
+  name: 'LayoutAside',
   data () {
     return {}
   },

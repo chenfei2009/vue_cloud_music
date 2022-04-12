@@ -40,7 +40,30 @@
         </div>
       </DropDown>
     </div>
-    <div class="bar-item"><i class="iconfont icon-yifu"></i></div>
+    <div class="bar-item">
+      <!-- 自定义主题 -->
+      <DropDown title="主题">
+        <div class="theme-title">主题</div>
+        <div class="default-wrap">
+          <div class="default-item" @click="defaultTheme">默认主题</div>
+          <div class="default-item" @click="dark">暗黑主题</div>
+          <div class="default-item" @click="light">浅色主题</div>
+        </div>
+        <div class="theme-title">颜色</div>
+        <div class="color-picker-wrap">
+          <div class="block">
+            <span class="demonstration">选择颜色</span>
+            <el-color-picker color-format="rgb"
+              v-model="color"
+              @change="handleColorChange"
+              ></el-color-picker>
+          </div>
+        </div>
+        <!-- <button @click="custom">自定义主题</button> -->
+      </DropDown>
+      <!-- /自定义主题 -->
+      <!-- <i class="iconfont icon-yifu"></i> -->
+    </div>
     <div class="bar-item"><i class="iconfont icon-setting"></i></div>
     <div class="bar-item"><i class="iconfont icon-Email"></i></div>
     <Login v-show="isShowLogin"/>
@@ -53,6 +76,7 @@ import DropDownItem from '@/components/common/DropDownItem.vue'
 import Login from '@/components/content/Login.vue'
 
 import { _getLoginStatus } from '@/network/login.js'
+import { setTheme } from '@/assets/theme/theme.js'
 
 export default {
   name: 'UserBar',
@@ -69,13 +93,17 @@ export default {
   data () {
     return {
       isShowPanel: false,
-      profile: {}
+      profile: {},
+      color: null
     }
   },
   created () {
     this.getLoginStatus()
     // const profile = JSON.parse(window.localStorage.getItem('profile')) || null
     // this.profile = profile
+  },
+  mounted () {
+    this.init()
   },
   methods: {
     /**
@@ -91,6 +119,36 @@ export default {
       }
       // 当前登录状态已过期
       console.log('登录超时')
+    },
+
+    // 初始化主题
+    init () {
+      const theme = localStorage.getItem('theme') || null
+      if (theme) return setTheme(theme)
+      setTheme('default')
+    },
+    // 更改为默认主题
+    defaultTheme () {
+      console.log('default')
+      setTheme('default')
+    },
+    // 更改为暗黑主题
+    dark () {
+      console.log('dark')
+      setTheme('dark')
+    },
+    // 更改为浅色主题
+    light () {
+      console.log('light')
+      setTheme('light')
+    },
+    // 更改为自定义主题
+    handleColorChange () {
+      const regexp = /[0-9]+/g
+      const re = this.color.match(regexp)
+      const newPrimaryColor = `${re[0]},${re[1]},${re[2]}`
+      localStorage.setItem('primaryColor', newPrimaryColor) // 将新的主题色存入本地
+      setTheme()
     }
   }
 }
@@ -146,6 +204,17 @@ export default {
     margin: 0 5px;
     .iconfont {
       font-size: 18px;
+    }
+    .theme-title {
+      padding: 10px;
+    }
+    .default-wrap {
+      width: 200px;
+      padding: 0 10px;
+      // display: flex;
+    }
+    .color-picker-wrap {
+      padding: 0 10px;
     }
   }
 }

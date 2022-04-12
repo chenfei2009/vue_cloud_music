@@ -10,9 +10,9 @@
 export default {
   name: 'app',
   computed: {
-    themeColor () {
-      return this.$store.state.themeColor
-    }
+    // themeColor () {
+    //   return this.$store.state.themeColor
+    // }
   },
   data () {
     return {
@@ -20,11 +20,11 @@ export default {
     }
   },
   watch: {
-    themeColor (val) {
-      document.getElementById('app').style.setProperty('--themeColor', val)
-    }
+    // themeColor (val) {
+    //   document.getElementById('app').style.setProperty('--themeColor', val)
+    // }
   }
 }
 </script>
 
-<style></style>
+<style lang="less"></style>

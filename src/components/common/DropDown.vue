@@ -1,11 +1,11 @@
 <template>
   <div class="dropdown" ref="dropDownRef">
-    <a href="#"
+    <div href="#"
       @click.prevent="toggleOpen"
       class="btn">
       <span>{{title}}</span>
       <i class="el-icon-arrow-down el-icon--right"></i>
-    </a>
+    </div>
     <div class="dropdown-menu" :style="menuStyle" v-show="isOpen">
       <slot></slot>
     </div>
@@ -72,6 +72,9 @@ export default {
 .dropdown {
   position: relative;
   margin: 0 5px;
+  .btn {
+    cursor: pointer;
+  }
   .dropdown-menu {
     position: absolute;
     top: 50px;
@@ -79,6 +82,7 @@ export default {
     transform: translateX(-50%);
     z-index: 11;
     background-color: #fff;
+    color: #333;
     border-radius: 5px;
     box-shadow: 0 2px 2px 2px #eee;
   }

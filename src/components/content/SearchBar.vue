@@ -370,6 +370,7 @@ export default {
   height: calc(~"100vh - 160px");
   z-index: 99;
   background-color: #fff;
+  color: #333;
   border-radius: 5px;
   box-shadow: 0 2px 2px 2px #eee;
 

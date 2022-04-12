@@ -25,7 +25,8 @@ import {
   Select,
   Option,
   Checkbox,
-  Tag
+  Tag,
+  ColorPicker
 } from 'element-ui'
 
 import App from './App.vue'
@@ -62,6 +63,7 @@ Vue.use(Select)
 Vue.use(Option)
 Vue.use(Checkbox)
 Vue.use(Tag)
+Vue.use(ColorPicker)
 
 Vue.config.productionTip = false
 

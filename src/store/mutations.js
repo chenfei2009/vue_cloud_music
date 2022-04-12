@@ -44,6 +44,7 @@ export default {
 
   /* 音乐播放 */
   [SET_CONTENT] (state, payload) {
+    console.log(payload)
     setPlayList(state, payload)
     state.playContent = payload
   },

@@ -1,62 +1,34 @@
 <template>
-  <section :style="bgStyle" class="header-container">
+  <section class="header-container">
     <div class="left-bar">
       <div class="logo-wrap" v-if="!isShowPlayDetail">
         <div class="logo-bg">
           <i class="logo iconfont icon-netease-cloud-music-line"></i>
         </div>
-        <span>网易云音乐</span>
+        <span>云音乐</span>
       </div>
       <i class="btn iconfont icon-arrow"
         @click="onArrowClick"
         v-else></i>
     </div>
-    <SearchBar />
-    <!-- <div class="search-bar"></div> -->
-    <div class="user-bar">
-      <div class="login-wrap" v-if="!isShowPlayDetail" @click="handleLogin">
-        <!-- <el-image :scr="profile.avatarUrl"
-          v-if="profile"></el-image>
-        <i class="avatar iconfont icon-user01"></i> -->
-        <el-avatar :size="30">
-          <img :scr="profile.avatarUrl" v-if="profile.avatarUrl"/>
-          <i class="avatar iconfont icon-user01" v-else></i>
-        </el-avatar>
-        <el-dropdown>
-          <span class="el-dropdown-link">
-            {{nickname}}<i class="el-icon-arrow-down el-icon--right"></i>
-          </span>
-          <el-dropdown-menu slot="dropdown">
-            <div>12345678</div>
-            <el-dropdown-item>会员中心</el-dropdown-item>
-            <el-dropdown-item>等级</el-dropdown-item>
-            <el-dropdown-item>商城</el-dropdown-item>
-            <el-dropdown-item>个人信息设置</el-dropdown-item>
-            <el-dropdown-item>绑定社交账号</el-dropdown-item>
-            <el-dropdown-item>我的客服</el-dropdown-item>
-            <el-dropdown-item>退出登录</el-dropdown-item>
-          </el-dropdown-menu>
-        </el-dropdown>
-      </div>
-      <div class="bar-item"><i class="iconfont icon-yifu"></i></div>
-      <div class="bar-item"><i class="iconfont icon-setting"></i></div>
-      <div class="bar-item"><i class="iconfont icon-Email"></i></div>
-    </div>
+    <search-bar />
+    <user-bar />
   </section>
 </template>
 
 <script>
-
 import SearchBar from '@/components/content/SearchBar.vue'
+import UserBar from '@/components/content/UserBar.vue'
 
 export default {
-  name: 'Header',
-  components: { SearchBar },
+  name: 'LayoutHeader',
+  components: { SearchBar, UserBar },
   props: {
-    bgColor: {
-      type: String,
-      default: 'var(--themeColor)'
-    },
+    // bgColor: {
+    //   type: String,
+    //   default: 'rgba(@primaryColor, 1)'
+    //   // default: 'var(--themeColor)'
+    // },
     isShowPlayDetail: {
       type: Boolean,
       default: false
@@ -94,6 +66,8 @@ export default {
   justify-content: space-between;
   height: 60px;
   padding: 0 20px;
+  background: rgba(@primaryColor, 1);
+  color: rgba(@primaryTextColor, 0.8);
 
   .left-bar {
     display: flex;

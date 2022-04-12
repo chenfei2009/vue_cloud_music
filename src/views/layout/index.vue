@@ -1,17 +1,12 @@
 <template>
   <div class="layout-container">
-    <Header>
-      <div class="left-wrap" slot="left">
-        <div class="logo-bg">
-          <i class="logo iconfont icon-netease-cloud-music-line"></i>
-        </div>
-        <span>网易云音乐</span>
-      </div>
-      <SearchBar slot="center"/>
-      <UserBar slot="right"/>
-    </Header>
+    <!-- 头部模块 -->
+    <layout-header/>
+    <!-- /头部模块 -->
     <section class="main-container">
-      <Aside></Aside>
+      <!-- 导航栏模块 -->
+      <layout-aside/>
+      <!-- /导航栏模块 -->
       <main class="main">
         <keep-alive>
           <router-view />
@@ -20,21 +15,20 @@
     </section>
     <section class="footer-container" height="70px">
       <!-- 播放器模块 -->
-      <Player />
+      <player />
+      <!-- /播放器模块 -->
     </section>
   </div>
 </template>
 
 <script>
-import Aside from './childComps/Aside.vue'
-import Header from '@/components/common/Header.vue'
-import SearchBar from '@/components/content/SearchBar.vue'
-import UserBar from '@/components/content/UserBar.vue'
 import Player from '@/components/content/Player/Player.vue'
+import LayoutHeader from './childComps/LayoutHeader.vue'
+import LayoutAside from './childComps/LayoutAside.vue'
 
 export default {
   name: 'LayoutIndex',
-  components: { Header, Aside, Player, SearchBar, UserBar },
+  components: { LayoutHeader, LayoutAside, Player },
   data () {
     return {
       name: 'Butterfly',

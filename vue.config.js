@@ -5,5 +5,13 @@ module.exports = {
   // publicPath: '/src/assets'
   // publicPath: ''
   // publicPath: '/'
-  publicPath: './'
+  publicPath: './',
+  pluginOptions: {
+    'style-resources-loader': {
+      preProcessor: 'less',
+      patterns: [
+        path.resolve(__dirname, 'src/assets/theme/style.less')
+      ]
+    }
+  }
 }

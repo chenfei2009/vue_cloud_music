@@ -53,7 +53,7 @@ export default {
 }
 </script>
 
-<style scoped>
+<style lang="less" scoped>
 .tab-bar-item {
   position: relative;
   text-align: center;
@@ -82,6 +82,6 @@ export default {
   transform: translateX(-50%);
   height: 3px;
   width: 80%;
-  background: var(--themeColor);
+  background: rgba(@primaryColor, 1);
 }
 </style>

@@ -13,20 +13,54 @@
         >{{item.eventTime | dateFilter}}</div>
       <div class="content-wrap" v-if="item.json" v-html="msg"
         >{{msg}}</div>
-      <div class="ref-wrap" @click="onRefClick">
+      <!-- 分享歌曲 -->
+      <div class="ref-wrap" @click="onRefClick" v-if="json.song">
         <el-image fit :src="json.song.img80x80" class="ref-cover"/>
         <div class="ref-info">
           <div class="name">{{json.song.name}}</div>
           <div class="artist text-small">{{json.song.artists[0].name}}</div>
         </div>
       </div>
-      <slot></slot>
-      <div class="right-wrap fr">
-        <span class="iconfont icon-dianzan">{{item.info.liked}}</span>
-        <span class="item-liked-count" v-if="item.likedCount>0">{{item.info.likedCount}}</span>
-        <span class="iconfont icon-share">{{item.info.shareCount}}</span>
-        <span class="iconfont icon-comment">{{item.info.commentCount}}</span>
+      <!-- /分享歌曲 -->
+      <!-- 分享歌单 -->
+      <div class="ref-wrap" @click="onRefClick" v-else-if="json.playlist">
+        <el-image fit :src="json.playlist.coverImgUrl" class="ref-cover"/>
+        <div class="ref-info">
+          <div class="name">{{json.playlist.name}}</div>
+          <div class="artist text-small">{{json.playlist.creator.nickname}}</div>
+        </div>
       </div>
+      <!-- /分享歌单 -->
+      <!-- 分享节目 -->
+      <div class="ref-wrap" @click="onRefClick" v-else-if="item.type === 17">
+        <el-image fit :src="json.program.img80x80" class="ref-cover"/>
+        <div class="ref-info">
+          <div class="name">{{json.program.mainSong.name}}</div>
+          <div class="artist text-small">{{json.program.radio.name}}</div>
+        </div>
+      </div>
+      <!-- /分享节目 -->
+      <!-- 图片列表插槽 -->
+      <slot name="picList"></slot>
+      <!-- /图片列表插槽 -->
+      <!-- 点赞 分享 转发 -->
+      <div class="right-wrap fr">
+        <span class="iconfont icon-dianzan"
+          :class="{'active': item.info.liked}"
+          @click="onLikeClick"
+          > ({{item.info.likedCount}})</span>
+        <span class="iconfont icon-share"
+          @click="onShareClick"
+          > ({{item.info.shareCount}})</span>
+        <span class="iconfont icon-comment"
+          @click="onCommentClick"
+          > ({{item.info.commentCount}})</span>
+      </div>
+      <!-- /点赞 分享 转发 -->
+      <!-- 评论模块插槽 -->
+      <slot name="comment"></slot>
+      <div>{{item}}</div>
+      <!-- /评论模块插槽 -->
     </div>
   </li>
 </template>
@@ -37,12 +71,7 @@ import formatDate from '@/utils/formatDate.js'
 export default {
   name: 'EventItem',
   props: {
-    item: {
-      type: Object,
-      default () {
-        return {}
-      }
-    }
+    item: Object
   },
   computed: {
     type () {
@@ -75,10 +104,28 @@ export default {
      * 引用数据点击事件
      */
     onRefClick () {
-      // 判断引用数据类型 歌曲 歌单
-      const id = this.json.song.mMusic.id
-      console.log('refClick', id)
-      this.$emit('refClick', id)
+      this.$emit('refClick', this.json, this.item.type)
+    },
+
+    /**
+     * 点赞动态
+     */
+    onLikeClick () {
+      console.log('点赞，验证是否登录')
+    },
+
+    /**
+     * 分享动态
+     */
+    onShareClick () {
+      console.log('分享，验证是否登录')
+    },
+
+    /**
+     * 评论动态
+     */
+    onCommentClick () {
+      console.log('分享，验证是否登录')
     },
 
     /**
@@ -102,7 +149,7 @@ export default {
   },
   filters: {
     dateFilter (date) {
-      return formatDate(new Date(date), 'yyyy-MM-dd')
+      return formatDate(new Date(date), 'yyyy年MM月dd日 hh:mm')
     }
   }
 }
@@ -125,6 +172,14 @@ export default {
 .item-detail-wrap {
   flex: 1;
   margin-left: 10px;
+  .user-wrap {
+    span {
+      color: #777777;
+    }
+  }
+  .item-time {
+    margin: 5px 0;
+  }
   .content-wrap {
     margin-bottom: 10px;
     a, span {
@@ -165,6 +220,9 @@ export default {
       padding: 0 15px;
       border-left: 1px solid #ccc;
       border-right: 1px solid #ccc;
+    }
+    span .active {
+      color: var(--themeColor);
     }
   }
 }
