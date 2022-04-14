@@ -1,17 +1,17 @@
 <template>
   <div class="index-container">
     <div class="fix-wrap">
-      <TabBar>
-        <TabBarItem path="/discover"><div slot="item-text">个性推荐</div></TabBarItem>
-        <TabBarItem path="/discover/djradios"><div slot="item-text">专属定制</div></TabBarItem>
-        <TabBarItem path="/discover/playlist"><div slot="item-text">歌单</div></TabBarItem>
-        <TabBarItem path="/discover/toplists"><div slot="item-text">排行榜</div></TabBarItem>
-        <TabBarItem path="/discover/artists"><div slot="item-text">歌手</div></TabBarItem>
-        <TabBarItem path="/discover/newests"><div slot="item-text">最新音乐</div></TabBarItem>
-      </TabBar>
+      <tab-bar>
+        <tab-bar-item path="/discover"><div slot="item-text">个性推荐</div></tab-bar-item>
+        <tab-bar-item path="/discover/djradios"><div slot="item-text">专属定制</div></tab-bar-item>
+        <tab-bar-item path="/discover/playlist"><div slot="item-text">歌单</div></tab-bar-item>
+        <tab-bar-item path="/discover/toplists"><div slot="item-text">排行榜</div></tab-bar-item>
+        <tab-bar-item path="/discover/artists"><div slot="item-text">歌手</div></tab-bar-item>
+        <tab-bar-item path="/discover/newests"><div slot="item-text">最新音乐</div></tab-bar-item>
+      </tab-bar>
     </div>
     <keep-alive>
-      <router-view></router-view>
+      <router-view />
     </keep-alive>
   </div>
 </template>
