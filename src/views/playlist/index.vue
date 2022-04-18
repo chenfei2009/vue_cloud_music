@@ -8,20 +8,21 @@
       @subscribe="handleSubs"
       @share="handleShare"
       @addToPlaylist="handleAddToPlaylist"/>
-    <!--/ 歌单详情模块 -->
+    <!--/歌单详情模块 -->
     <!-- tab选项卡 -->
-    <TabBar class="tab-bar">
-      <TabBarItem v-for="item in tabs"
+    <tab-bar class="tab-bar">
+      <tab-bar-item v-for="item in tabs"
         :key="item.id"
         :id="item.id"
         :currentIndex="currentIndex"
         @tabClick="handleTabClick"
-        ><div slot="item-text">{{item.text}}</div></TabBarItem>
-    </TabBar>
+        ><div slot="item-text">{{item.text}}</div></tab-bar-item>
+    </tab-bar>
     <!-- /tab选项卡 -->
     <section v-if="currentIndex===1" class="section-songs">
       <!-- 歌单列表模块 -->
-      <SongsTable :songs="songs"
+      <songs-table :songs="songs"
+        :loading="tabs[0].loading"
         :activeId="activeId"
         :showAction="true"
         :showHeader="true"
@@ -44,15 +45,17 @@
         </div>
       </form>
       <!-- /评论表单模块 -->
-      <!-- 精彩评论模块 -->
-      <Comment title="精彩评论" :comments="hotComments" />
-      <!-- /精彩评论模块 -->
-      <!-- 全部评论模块 -->
-      <Comment title="全部评论"
-        :comments="comments"
-        :isShowCount="true"
-        :pagination="true"/>
-      <!-- /全部评论模块 -->
+      <div class="comments-wrap" v-loading="tabs[1].loading">
+        <!-- 精彩评论模块 -->
+        <Comment title="精彩评论" :comments="hotComments" />
+        <!-- /精彩评论模块 -->
+        <!-- 全部评论模块 -->
+        <Comment title="全部评论"
+          :comments="comments"
+          :isShowCount="true"
+          :pagination="true"/>
+        <!-- /全部评论模块 -->
+      </div>
     </section>
     <section v-else>
       <ul class="subs-wrap">
@@ -100,19 +103,28 @@ import { SongsDbClickMixin } from '@/utils/mixin.js'
 
 export default {
   name: 'PlaylistIndex',
+
   computed: {
     tabs () {
       return [
-        { id: 1, text: '歌曲列表' },
-        { id: 2, text: `评论(${this.comments.length})` },
-        { id: 3, text: '收藏者' }
+        { id: 1, text: '歌曲列表', loading: false },
+        { id: 2, text: `评论(${this.comments.length})`, loading: false },
+        { id: 3, text: '收藏者', loading: false }
       ]
     },
     curSongs () {
       return this.songs
     }
   },
-  components: { SongsTable, PlaylistInfo, Comment, TabBar, TabBarItem },
+
+  components: {
+    SongsTable,
+    PlaylistInfo,
+    Comment,
+    TabBar,
+    TabBarItem
+  },
+
   mixins: [SongsDbClickMixin],
 
   data () {
@@ -126,30 +138,47 @@ export default {
       currentIndex: 1 // 当前tab选项卡
     }
   },
+
   created () {
     this.getDatas()
   },
+
   activated () {
+    // console.log('activated')
+    this.songs = []
     this.getDatas()
   },
-  mounted () {},
+
+  watch: {
+    // $route (val) {
+    //   console.log('$route change', val.query)
+    //   // this.songs = []
+    //   // this.getDatas()
+    // },
+    currentIndex (val) {
+      if (val === 2) {
+        const id = this.$route.query.id
+        this.getCommentByListId(id)
+      }
+    }
+  },
+
   methods: {
-    // 网络请求相关方法
     /**
-     * 请求本页所有数据
+     * 网络请求相关方法
      */
+    // 请求本页所有数据
     getDatas () {
       const id = this.$route.query.id
+      console.log(id)
       this.getDetailByListId(id)
       this.getSongsByListId(id)
-      this.getCommentByListId(id)
+      // this.getCommentByListId(id)
     },
 
-    /**
-     * 请求歌单对应的歌曲数据
-     * @param { integer } id 歌单编号
-     */
+    // 请求歌单对应的歌曲数据
     async getSongsByListId (id) {
+      this.tabs[0].loading = true
       const { data: res } = await _getSongsByListId(id)
       // console.log(res)
       const songs = res.songs
@@ -158,47 +187,40 @@ export default {
         v.url = res.data[0].url
       })
       this.songs = songs
+      this.tabs[0].loading = false
     },
 
-    /**
-     * 请求歌单详情数据
-     * @param { integer } id 歌单编号
-     */
+    // 请求歌单详情数据
     async getDetailByListId (id) {
       const { data: res } = await _getDetailByListId(id)
       this.playlist = res.playlist
     },
 
-    /**
-     * 请求歌单评论数据
-     * @param { integer } id 歌单编号
-     */
+    // 请求歌单评论数据
     async getCommentByListId (id) {
+      this.tabs[1].loading = true
       const { data: res } = await _getCommentByListId(id)
       this.comments = res.comments
       this.hotComments = res.hotComments.slice(0, 5)
+      this.tabs[1].loading = false
     },
 
-    // 事件监听相关方法
     /**
-     * 播放全部按钮点击事件
+     * 事件监听相关方法
      */
+    // 播放全部
     handlePlayAll () {
       this.dialogContent = '"播放全部"将会替换当前的播放列表，是否继续?'
       this.dialogVisible = true
     },
 
-    /**
-     * 对话框关闭按钮点击事件
-     */
+    // 关闭对话框
     handleAddToPlaylist () {
       // 判断是否为同一个播放列表
       this.$store.commit('addToPlayList', this.songs)
     },
 
-    /**
-     * 表单提交事件
-     */
+    // 表单提交事件
     handleSubmit (e) {
       // e.preventDefault()
       // 表单预验证

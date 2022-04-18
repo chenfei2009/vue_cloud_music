@@ -39,7 +39,9 @@ import Scroll from '@/components/common/Scroll.vue'
 
 export default {
   name: 'LyricPanel',
+
   components: { Scroll },
+
   props: {
     lyric: {
       type: Array,
@@ -48,9 +50,10 @@ export default {
       }
     }
   },
+
   computed: {
     currentTime () {
-      return this.$store.state.currentTime
+      return this.$store.getters.currentTime
     },
     currentIndex () {
       if (!this.lyric || this.lyric.length === 1) return 0
@@ -62,6 +65,7 @@ export default {
     //   return formatTime(this.lyric[this.scrollIndex].time)
     // }
   },
+
   data () {
     return {
       // currentIndex: 0,
@@ -73,7 +77,9 @@ export default {
       scrollTimer: '00:00'
     }
   },
+
   created () {},
+
   mounted () {
     // const posY = this.lyricTopYs[this.currentIndex]
     // this.$refs.scroll.scrollTo(0, -posY, 500)
@@ -83,38 +89,7 @@ export default {
       this.$refs.scroll.scrollTo(0, 80, 500)
     })
   },
-  methods: {
-    contentScroll (pos) {
-      // const index = parseInt((80 + pos.y) / 40)
-      // console.log('scroll')
-      // 显示定位线
-      // this.isShowTimeLine = true
-      // 修改 currentIndex
-      this.scrollIndex = parseInt((-pos.y) / 40) + 3
-      if (this.scrollIndex > this.lyric.length - 1) return false
-      const timer = this.lyric[this.scrollIndex].time
-      this.scrollTimer = formatTime(timer)
-    },
-    handleMouseEnter () {
-      // console.log('mouseEnter')
-      // this.isShowTimeLine = true
-    },
-    handleMouseLeave () {
-      // console.log('mouseLeave')
-      this.isShowTimeLine = false
-      this.isAutoScroll = true
-    },
-    handleMouseWheel () {
-      // console.log('mouseWheel')
-      this.isAutoScroll = false
-      if (!this.isShowTimeLine) this.isShowTimeLine = true
-    },
-    handleTimerClick () {
-      const timer = this.lyric[this.scrollIndex].time
-      console.log('setCurrentTime', this.lyric[this.scrollIndex].time)
-      this.$store.commit('setCurrentTime', timer)
-    }
-  },
+
   watch: {
     lyric () {
       this.$nextTick(() => {
@@ -127,10 +102,48 @@ export default {
         // console.log(this.lyricTopYs)
       })
     },
+
     currentIndex () {
       if (!this.isAutoScroll) return
       const posY = this.lyricTopYs[this.currentIndex]
       this.$refs.scroll.scrollTo(0, -posY, 500)
+    }
+  },
+
+  methods: {
+    contentScroll (pos) {
+      // const index = parseInt((80 + pos.y) / 40)
+      // console.log('scroll')
+      // 显示定位线
+      // this.isShowTimeLine = true
+      // 修改 currentIndex
+      this.scrollIndex = parseInt((-pos.y) / 40) + 3
+      if (this.scrollIndex > this.lyric.length - 1) return false
+      const timer = this.lyric[this.scrollIndex].time
+      this.scrollTimer = formatTime(timer)
+    },
+
+    handleMouseEnter () {
+      // console.log('mouseEnter')
+      // this.isShowTimeLine = true
+    },
+
+    handleMouseLeave () {
+      // console.log('mouseLeave')
+      this.isShowTimeLine = false
+      this.isAutoScroll = true
+    },
+
+    handleMouseWheel () {
+      // console.log('mouseWheel')
+      this.isAutoScroll = false
+      if (!this.isShowTimeLine) this.isShowTimeLine = true
+    },
+
+    handleTimerClick () {
+      const timer = this.lyric[this.scrollIndex].time
+      console.log('setCurrentTime', this.lyric[this.scrollIndex].time)
+      this.$store.commit('setCurrentTime', timer)
     }
   }
 }

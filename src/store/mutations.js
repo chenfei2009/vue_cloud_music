@@ -6,8 +6,7 @@ import {
   SET_CURRENTTIME,
   SET_PLAYLISTINFO,
   ADD_TO_PLAYLIST,
-  RESET_PLAYLIST,
-  RESET_THEMECOLOR
+  RESET_PLAYLIST
 } from './mutations-type'
 
 function setPlayList (state, payload) {
@@ -22,7 +21,10 @@ function setPlayList (state, payload) {
   // return state.playList.findIndex(item => item.id === payload.id) >= 0 ? '' : state.playList.splice(currentIndex + 1, 0, payload)
   if (state.playList.findIndex(item => item.id === payload.id) >= 0) return console.log('已存在')
   // if (Array.isArray(payload)) return state.playList.splice(currentIndex + 1, 0, ...payload)
-  return state.playList.splice(currentIndex + 1, 0, payload)
+  state.playList.splice(currentIndex + 1, 0, payload)
+  // 保存更新后的列表到本地存储
+  console.log(state.playList)
+  window.localStorage.setItem('playList', JSON.stringify(state.playList))
 }
 
 export default {
@@ -47,6 +49,7 @@ export default {
     console.log(payload)
     setPlayList(state, payload)
     state.playContent = payload
+    localStorage.setItem('playContent', JSON.stringify(payload))
   },
 
   [SET_CURRENTTIME] (state, payload) {
@@ -64,17 +67,14 @@ export default {
   [RESET_PLAYLIST] (state, payload) {
     const { songs, id } = payload
     state.playList = songs
+    localStorage.setItem('playList', JSON.stringify(songs))
     if (!id) {
       state.playContent = songs[0]
+      localStorage.setItem('playContent', JSON.stringify(songs[0]))
       return
     }
     const item = songs.find(v => v.id === payload.id)
     state.playContent = item
-  },
-
-  /* 主题颜色 */
-  [RESET_THEMECOLOR] (state, payload) {
-    const themeItem = state.themeList.find(item => item.name === payload)
-    state.themeColor = themeItem.color
+    localStorage.setItem('playContent', JSON.stringify(item))
   }
 }

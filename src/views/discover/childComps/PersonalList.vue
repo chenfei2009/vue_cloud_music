@@ -14,7 +14,8 @@
     <cover v-for="item in personalizedList"
       :key="item.id"
       :picUrl="item.picUrl"
-      @itemClick="handleCoverClick(item.id)">
+      @itemClick="handleCoverClick(item.id)"
+      @load="imgCount++">
       <div class="hover-wrap">
         <play-button :isPlay="false" @btnClick="handleBtnClick(item)"/>
       </div>
@@ -35,28 +36,52 @@ import { _getSongUrlById } from '@/network/song.js'
 
 export default {
   name: 'PersonalList',
+
   components: { PlayButton, Cover },
+
   data () {
     return {
+      imgCount: 0,
       personalizedList: []
     }
   },
+
   computed: {
     day () {
       return new Date().getDate()
     }
   },
-  activated () {
+
+  created () {
     this.getPersonalized()
   },
-  mounted () {},
+
+  // activated () {
+  //   this.getPersonalized()
+  // },
+
+  watch: {
+    imgCount (val) {
+      if (val === 9) {
+        console.log('Personalized')
+        this.$parent.compCount++
+      }
+    }
+  },
+
+  deactivated () {
+    this.imgCount = 0
+  },
+
   methods: {
     /**
-     * 获取推荐歌单数据
+     * 网络请求相关方法
      */
+    // 获取推荐歌单数据
     async getPersonalized () {
       const { data: res } = await _getPersonalized()
-      this.personalizedList.push(...res.result.slice(0, 9))
+      this.personalizedList = [...res.result.slice(0, 9)]
+      // this.$parent.compCount++
     },
 
     async getSongsByListId (id) {
@@ -69,20 +94,21 @@ export default {
       this.$store.commit('resetPlayList', { songs })
     },
 
+    /**
+     * 事件监听相关方法
+     */
     onBtnClick () {
       console.log('BtnClick')
     },
-    /**
-     * 歌单播放按钮点击事件
-     */
+
+    // 歌单播放按钮点击事件
     handleBtnClick (item) {
       console.log('播放歌单', item)
       this.$store.commit('setPlayListInfo', item)
       this.getSongsByListId(item.id)
     },
-    /**
-     * 歌单封面点击事件
-     */
+
+    // 歌单封面点击事件
     handleCoverClick (id) {
       console.log('跳转到歌单详情页', id)
       this.$router.push({
@@ -91,6 +117,7 @@ export default {
       })
     }
   },
+
   filters: {
     countFilter (playCount) {
       return playCount > 10000 ? parseInt(playCount / 10000) + '万' : playCount

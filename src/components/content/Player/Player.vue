@@ -68,6 +68,8 @@ import PlayBar from './PlayBar.vue'
 import SideBar from './SideBar.vue'
 import PlayDetail from './PlayDetail.vue'
 
+import { mapGetters } from 'vuex'
+
 import {
   _getRecentPlaylist
 } from '@/network/record.js'
@@ -83,6 +85,7 @@ import {
 
 export default {
   name: 'Player',
+
   components: {
     PlayBar,
     PlayDetail,
@@ -94,13 +97,9 @@ export default {
     Scroll,
     Comment
   },
+
   computed: {
-    playContent () {
-      return this.$store.state.playContent
-    },
-    playList () {
-      return this.$store.state.playList
-    },
+    ...mapGetters(['playContent', 'playList']),
     btnStyle () {
       return { // 返回顶部按钮
         bottom: this.isShowBackTop ? '90px' : '20px',
@@ -114,6 +113,7 @@ export default {
       }
     }
   },
+
   data () {
     return {
       lyric: [],
@@ -129,6 +129,7 @@ export default {
       // isTabFixed: false
     }
   },
+
   created () {
     this.getRecentPlaylist()
     // this.getLyricById()
@@ -139,11 +140,12 @@ export default {
       this.getCommentById()
     }
   },
+
   methods: {
-    // 网络请求相关方法
     /**
-     * 获取歌词
+     * 网络请求相关方法
      */
+    // 获取歌词
     async getLyricById () {
       const { data: res } = await _getLyricById(this.playContent.id)
       if (!res.lrc.lyric) {
@@ -169,34 +171,26 @@ export default {
       this.lyric = lyricObj
     },
 
-    /**
-     * 获取最近播放歌单
-     */
+    // 获取最近播放歌单
     async getRecentPlaylist () {
       const { data: res } = await _getRecentPlaylist()
       console.log(res)
       // this.simiPlaylists = res.playlists
     },
 
-    /**
-     * 获取相似歌单
-     */
+    // 获取相似歌单
     async getSimiPlaylistsById () {
       const { data: res } = await _getSimiPlaylistsById(this.playContent.id)
       this.simiPlaylists = res.playlists
     },
 
-    /**
-     * 获取相似歌曲
-     */
+    // 获取相似歌曲
     async getSimiSongsById () {
       const { data: res } = await _getSimiSongsById(this.playContent.id)
       this.simiSongs = res.songs
     },
 
-    /**
-     * 获取热门评论
-     */
+    // 获取热门评论
     async getHotComments () {
       const { data: res } = await _getHotComments(this.playContent.id, 0, 10)
       this.hotComments = res.hotComments
@@ -206,9 +200,7 @@ export default {
       })
     },
 
-    /**
-     * 获取最新评论
-     */
+    // 获取最新评论
     async getCommentById () {
       const { data: res } = await _getCommentById(this.playContent.id)
       this.comments = res.comments
@@ -218,10 +210,10 @@ export default {
       })
     },
 
-    // 事件监听相关方法
     /**
-     * 切换歌曲详情显示/隐藏
+     * 事件监听相关方法
      */
+    // 切换歌曲详情显示/隐藏
     handleShowPlayDetail () {
       this.isShowPlayDetail = !this.isShowPlayDetail
       if (this.isShowPlayDetail) {
@@ -232,18 +224,14 @@ export default {
       }
     },
 
-    /**
-     * 双击侧边栏歌曲
-     */
+    // 双击侧边栏歌曲
     handleRowDbClick (id) {
       // console.log(id)
       const content = this.playList.find(v => v.id === id)
       this.$store.commit('setContent', content)
     },
 
-    /**
-     * 监听页面滚动
-     */
+    // 监听页面滚动
     contentScroll (pos) {
       // console.log(pos.y)
       // 1. 控制返回顶部图标是否显示
@@ -256,6 +244,7 @@ export default {
       // this.isTabFixed = (-pos.y) > this.tabOffsetTop
     }
   },
+
   watch: {
     playContent () {
       this.getLyricById()

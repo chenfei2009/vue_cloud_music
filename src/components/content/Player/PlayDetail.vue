@@ -3,17 +3,21 @@
     <div class="main container">
       <div class="left">
         <div class="cover-wrap">
-          <el-image class="cover" :src="playContent.al.picUrl"></el-image>
+          <el-image class="cover"
+            :src="playContent.picUrl ? playContent.picUrl : playContent.al.picUrl"
+            ></el-image>
         </div>
       </div>
       <div class="center">
         <div class="title">
           <div class="name">{{playContent.name}}</div>
           <div class="ar-al-wrap">
-            <div class="artist" v-for="item in playContent.ar" :key="item.id">
+            <div class="artist" v-for="item in artists" :key="item.id">
             -{{item.name}}
             </div>
-            <div class="album">-{{playContent.al.name}}</div>
+            <div class="album">
+              {{playContent.al ? playContent.al.name : playContent.song.album.name}}
+            </div>
           </div>
         </div>
         <LyricPanel :lyric="lyric" />
@@ -28,18 +32,20 @@
           :mouseWheel="true"
           :scrollbar="true">
           <el-tooltip :content="playListInfo.name" placement="bottom" effect="light" :open-delay=500>
-            <div class="play-list-info">播放来源：{{playListInfo.name}}</div>
+            <div class="play-list-info">
+              播放来源：{{playListInfo.name}}
+            </div>
           </el-tooltip>
-          <div class="title">包含这首歌的歌单</div>
           <!-- 相关歌单列表 -->
+          <div class="title">包含这首歌的歌单</div>
           <ul class="rec-list-wrap">
             <li v-for="item in simiPlaylists" :key="item.id" class="rec-list-item">
               <el-image fit :src="item.coverImgUrl" class="item-cover"></el-image>
               <div class="item-name">{{item.name}}</div>
             </li>
           </ul>
-          <div class="title">喜欢这首歌的人也听</div>
           <!-- 推荐歌曲列表 -->
+          <div class="title">喜欢这首歌的人也听</div>
           <ul class="rec-list-wrap">
             <li v-for="item in simiSongs" :key="item.id" class="rec-list-item">
               <el-image fit :src="item.album.picUrl" class="item-cover"></el-image>
@@ -61,6 +67,8 @@
 <script>
 import LyricPanel from './LyricPanel.vue'
 import Scroll from '@/components/common/Scroll.vue'
+
+import { mapGetters } from 'vuex'
 
 export default {
   name: 'PlayDetail',
@@ -86,14 +94,9 @@ export default {
     }
   },
   computed: {
-    playContent () {
-      return this.$store.state.playContent
-    },
-    currentTime () {
-      return this.$store.state.currentTime
-    },
-    playListInfo () {
-      return this.$store.state.playListInfo
+    ...mapGetters(['playContent', 'currentTime', 'playListInfo']),
+    artists () {
+      return this.playContent.ar || this.playContent.song.artists
     }
   },
   data () {
@@ -105,12 +108,15 @@ export default {
   mounted () {},
   methods: {},
   watch: {
-    simiPlaylists () {
+    playContent (val) {
+      console.log(val)
+    },
+    simiPlaylists (val) {
       this.$nextTick(() => {
         this.$refs.scroll.refresh()
       })
     },
-    simiSongs () {
+    simiSongs (val) {
       this.$nextTick(() => {
         this.$refs.scroll.refresh()
       })

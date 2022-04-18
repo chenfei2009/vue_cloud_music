@@ -19,9 +19,12 @@ export default {
       newSongs: []
     }
   },
-  activated () {
+  created () {
     this.getNewSong()
   },
+  // activated () {
+  //   this.getNewSong()
+  // },
   methods: {
     /*
      * 网络请求相关方法
@@ -30,6 +33,8 @@ export default {
     async getNewSong () {
       const { data: res } = await _getNewSong()
       this.newSongs = res.result.slice(0, 6)
+      console.log('HotPro')
+      this.$parent.compCount++
     }
   }
 }

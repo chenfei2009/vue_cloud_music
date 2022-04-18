@@ -1,7 +1,12 @@
 <template>
   <div class="cover-item-container" @click="onItemClick" :style="itemStyle">
     <div class="item-cover-wrap" :style="coverStyle">
-      <el-image lazy :src="picUrl" fit="cover" class="item-img"></el-image>
+      <el-image
+        :src="picUrl"
+        fit="cover"
+        class="item-img"
+        @load="load"
+        ></el-image>
       <slot></slot>
     </div>
     <div class="text-wrap"><slot name="text"></slot></div>
@@ -81,6 +86,9 @@ export default {
     },
     onBtnClick () {
       this.$emit('btnClick', this.item)
+    },
+    load () {
+      this.$emit('load')
     }
   }
 }

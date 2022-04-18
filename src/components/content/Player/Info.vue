@@ -18,12 +18,12 @@
       <el-tooltip content="展开音乐详情页" placement="bottom" effect="light" :open-delay=500>
         <div class=info-tooltip @click="onCoverClick"></div>
       </el-tooltip>
-      <el-image :src="playContent.al.picUrl" alt="#" />
+      <el-image :src="picUrl" />
     </div>
     <div class="info-text">
       <div class="info-name">{{playContent.name}}</div>
       <div class="info-artist">
-        <span v-for="item in playContent.ar" :key="item.id">{{item.name}}</span>
+        <span v-for="item in artists" :key="item.id">{{item.name}}</span>
       </div>
     </div>
     <div class="info-zan"><i class="iconfont icon-dianzan"></i></div>
@@ -31,15 +31,24 @@
 </template>
 
 <script>
+import { mapGetters } from 'vuex'
+
 export default {
   name: 'Info',
   props: {},
   computed: {
-    playContent () {
-      return this.$store.state.playContent
-    },
+    ...mapGetters(['playContent']),
+    // playContent () {
+    //   return this.$store.getters.playContent
+    // },
     actionStyle () {
       return { top: this.isShowDetail ? '0' : '-70px' }
+    },
+    picUrl () {
+      return this.playContent.al ? this.playContent.al.picUrl : this.playContent.picUrl
+    },
+    artists () {
+      return this.playContent.ar ? this.playContent.ar : this.playContent.song.artists
     }
   },
   data () {

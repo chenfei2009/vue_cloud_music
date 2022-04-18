@@ -63,19 +63,25 @@ import SliderBar from '@/components/common/SliderBar.vue'
 import Tools from './Tools.vue'
 import Info from './Info.vue'
 
+import { mapGetters } from 'vuex'
+
 export default {
-  name: 'AudioBar',
+  name: 'PlayBar',
+
   components: { SliderBar, Info, Tools },
+
   computed: {
-    currentTime () {
-      return this.$store.state.currentTime
-    },
-    playContent () {
-      return this.$store.state.playContent
-    },
-    playList () {
-      return this.$store.state.playList
-    },
+    ...mapGetters(['playContent', 'playList', 'currentTime']),
+    // currentTime () {
+    //   return this.$store.state.currentTime
+    // },
+    // playContent () {
+    //   console.log(this.$store.getters.playContent)
+    //   return this.$store.getters.playContent
+    // },
+    // playList () {
+    //   return this.$store.getters.playList
+    // },
     loopOptionClass () {
       const index = this.loopOptions.findIndex(v => v.id === this.audio.loop)
       return this.loopOptions[index].icon
@@ -88,6 +94,7 @@ export default {
       return this.audio.playing ? '暂停' : '播放'
     }
   },
+
   data () {
     return {
       audio: {
@@ -110,6 +117,7 @@ export default {
       sliderVol: 0 // 音量滑动条对应的值
     }
   },
+
   methods: {
     // 播放进度条拖拽事件
     changeTimeByDrag (...args) {
@@ -252,12 +260,13 @@ export default {
       this.audio.maxTime = parseInt(res.target.duration)
     }
   },
+
   filters: {
     formatSecond (second = 0) {
       return formatTime(second)
     }
   },
-  created () {},
+
   watch: {
     currentTime () {
       if (!this.$refs.sliderBar.isMouseDownOnBall) {

@@ -26,7 +26,8 @@ import {
   Option,
   Checkbox,
   Tag,
-  ColorPicker
+  ColorPicker,
+  Loading
 } from 'element-ui'
 
 import App from './App.vue'
@@ -64,6 +65,8 @@ Vue.use(Option)
 Vue.use(Checkbox)
 Vue.use(Tag)
 Vue.use(ColorPicker)
+Vue.use(Loading) // 使用服务方式的话，只安装Loading即可
+Vue.use(Loading.directive) // 指令方式(v-loading)的话这两行都得有
 
 Vue.config.productionTip = false
 

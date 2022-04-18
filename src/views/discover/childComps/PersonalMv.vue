@@ -24,27 +24,39 @@ import {
 
 export default {
   name: 'PersonalMv',
+
   components: {
     Cover,
     Artists
   },
+
   data () {
     return {
       personalizedMv: []
     }
   },
+
   created () {
     this.getPersonalizedMv()
   },
+
+  // activated () {
+  //   this.getPersonalizedMv()
+  // },
+
   methods: {
     async getPersonalizedMv () {
       const { data: res } = await _getPersonalizedMv()
       // console.log(res)
       this.personalizedMv = res.result
+      console.log('MV')
+      this.$parent.compCount++
     },
+
     /**
-     * MV封面点击事件
+     * 事件监听相关方法
      */
+    // MV封面点击
     handleCoverClick (id) {
       console.log('跳转到歌单详情页', id)
       this.$router.push({

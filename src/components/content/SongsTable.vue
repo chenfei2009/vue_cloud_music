@@ -7,6 +7,7 @@
       <i class="iconfont icon-add"></i>
     </div>
     <el-table
+      v-loading="loading"
       :data="songsData"
       @row-dblclick="onDbClick"
       stripe
@@ -45,7 +46,7 @@
         <template slot-scope="scope">
           <!-- <span :class="scope.row.id === activeId ? 'active' : ''"
             class="cell-text">{{scope.row.ar[0].name}}</span> -->
-          <Artists :artists="scope.row.ar"
+          <Artists :artists="scope.row.ar || scope.row.song.artists"
             :search="search"/>
         </template>
       </el-table-column>
@@ -94,6 +95,8 @@
 import Slider from '@/components/common/Slider.vue'
 import Artists from '@/components/content/Artists.vue'
 
+import { mapGetters } from 'vuex'
+
 import formatTime from '@/utils/formatTime.js'
 import highlight from '@/utils/highlight.js'
 
@@ -108,10 +111,10 @@ export default {
         return []
       }
     },
-    // activeId: {
-    //   type: Number,
-    //   default: null
-    // },
+    loading: {
+      type: Boolean,
+      default: false
+    },
     title: {
       type: Boolean,
       default: false
@@ -179,15 +182,10 @@ export default {
   },
 
   computed: {
+    ...mapGetters(['playContent', 'playList']),
     songsData () {
       if (this.showAll || this.songs.length <= 10 || this.isShowAll) return this.songs
       return this.songs.slice(0, 10)
-    },
-    playContent () {
-      return this.$store.state.playContent
-    },
-    playList () {
-      return this.$store.state.playList
     },
     activeId () {
       const index = this.playList.findIndex(v => v.id === this.playContent.id)
@@ -203,10 +201,16 @@ export default {
   data () {
     return {
       isShowAll: false
+      // loading: true
     }
   },
 
   created () {},
+
+  activated () {
+    // console.log('songTable activited')
+    // this.loading = true
+  },
 
   methods: {
     onDbClick (row) {

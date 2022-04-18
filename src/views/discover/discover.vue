@@ -1,7 +1,10 @@
 <template>
   <div class="discover-container tab-container">
+    <div class="loading-wrap"
+      v-if="compCount !== compList.length"
+      >页面加载中...</div>
     <!-- 轮播图模块 -->
-    <el-carousel :interval="5000" type="card" height="175px">
+    <el-carousel :interval="5000" type="card" height="175px" v-show="compCount === compList.length">
       <el-carousel-item v-for="(item, index) in banners" :key="index">
         <div @click="handleItemClick(item)">
           <el-image :src="item.imageUrl" fit="cover" class="item-img"></el-image>
@@ -10,14 +13,15 @@
     </el-carousel>
     <!-- 轮播图模块/ -->
     <!-- 推荐歌单等模块 -->
-    <div v-for="item in compList" :key="item.id">
+    <div v-for="item in compList" :key="item.id" v-show="compCount === compList.length">
       <Title :title="item.label" :path="item.path" />
-      <keep-alive>
+      <component :is="item.component"></component>
+      <!-- <keep-alive>
         <component :is="item.component"></component>
-      </keep-alive>
+      </keep-alive> -->
     </div>
     <!-- /推荐歌单等模块 -->
-    <div class="tool">
+    <div class="tool" v-show="compCount === compList.length">
       <div class="tool-tip text-small">现在可以根据个人喜好，调整首页栏目的顺序啦</div>
       <button @click="dialogVisible=true"
         class="tool-btn"
@@ -30,6 +34,9 @@
       center>
       <div class="tips">按住拖拽可调整顺序</div>
       <drag-list :data="compList" @sort="handleSort" ref="sortRef"/>
+      <div class="tips-sort text-small"
+        @click="reSort"
+        >恢复默认排序</div>
       <span slot="footer" class="dialog-footer">
         <button class="primary round" @click="dialogConfirm">确认</button>
         <button class="round" @click="dialogCancel">取消</button>
@@ -79,7 +86,9 @@ export default {
       // personalizedDj: [] // 推荐播客
       daySongs: [],
       topSongs: [],
+      loading: false,
       dialogVisible: false,
+      compCount: 0,
       compList: [
         { id: 1, label: '推荐歌单', component: 'PersonalList', path: '/discover/playlists' },
         { id: 2, label: '热门播客', component: 'HotProgram', path: '/vlog' },
@@ -91,11 +100,28 @@ export default {
   },
 
   created () {
+    this.loading = true
     this.getBanner()
     // this.getTopSongs()
     // this.getDaySongs() // 需要登录
     this.temp = [...this.compList]
   },
+
+  watch: {
+    compCount (val) {
+      console.log(val)
+      if (val !== this.compList.length) return
+      this.loading = false
+    }
+  },
+
+  // deactivated () {
+  //   this.compCount = 0
+  // },
+
+  // beforeDestroy () {
+  //   this.compCount = 0
+  // },
 
   methods: {
     /**
@@ -166,6 +192,12 @@ export default {
       console.log('cancel')
       this.$refs.sortRef.dataList = [...this.compList]
       this.dialogVisible = false
+    },
+
+    reSort () {
+      this.$refs.sortRef.dataList.sort((a, b) => {
+        return b.id - a.id
+      })
     }
   },
 
@@ -220,5 +252,18 @@ export default {
 }
 .tips {
   margin: 0 0 20px 10px;
+}
+.tips-sort {
+  margin: 20px auto;
+  text-decoration: underline;
+  text-align: center;
+  cursor: pointer;
+}
+.loading-wrap {
+  width: 100%;
+  height: calc(~"100vh - 200px");
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 </style>

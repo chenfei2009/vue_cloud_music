@@ -23,18 +23,26 @@ import {
 
 export default {
   name: 'PrivateContent',
+
   components: {
     Cover,
     PlayButton
   },
+
   data () {
     return {
       privateContent: []
     }
   },
+
   created () {
     this.getPrivateContent()
   },
+
+  // activated () {
+  //   this.getPrivateContent()
+  // },
+
   methods: {
     /**
      * 网络请求相关方法
@@ -43,8 +51,13 @@ export default {
     async getPrivateContent () {
       const { data: res } = await _getPrivateContent()
       this.privateContent = res.result
+      console.log('PrivateContent')
+      this.$parent.compCount++
     },
 
+    /**
+     * 事件监听相关方法
+     */
     onBtnClick () {
       console.log('BtnClick')
     },
