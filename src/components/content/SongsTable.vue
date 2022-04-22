@@ -65,7 +65,7 @@
         width="30">
         <i class="iconfont icon-link"></i>
       </el-table-column>
-      <el-table-column
+      <el-table-column v-if="showDt"
         prop="dt"
         label="时长"
         :width="dtWidth"
@@ -161,6 +161,10 @@ export default {
     showAlbum: { // 是否显示专辑
       type: Boolean,
       default: false
+    },
+    showDt: { // 是否显示时长
+      type: Boolean,
+      default: true
     },
     showOrigin: { // 是否显示来源
       type: Boolean,

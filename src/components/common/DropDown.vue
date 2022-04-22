@@ -6,7 +6,10 @@
       <span>{{title}}</span>
       <i class="el-icon-arrow-down el-icon--right"></i>
     </div>
-    <div class="dropdown-menu" :style="menuStyle" v-show="isOpen">
+    <div class="dropdown-menu"
+      :class="align"
+      :style="menuStyle"
+      v-show="isOpen">
       <slot></slot>
     </div>
   </div>
@@ -21,7 +24,11 @@ export default {
       required: true
     },
     width: Number,
-    height: Number
+    height: Number,
+    align: {
+      type: String,
+      default: 'center'
+    }
   },
   computed: {
     menuStyle () {
@@ -78,13 +85,22 @@ export default {
   .dropdown-menu {
     position: absolute;
     top: 50px;
-    left: 50%;
-    transform: translateX(-50%);
     z-index: 11;
     background-color: #fff;
     color: #333;
     border-radius: 5px;
     box-shadow: 0 2px 2px 2px #eee;
+    &.left {
+      left: 0;
+    }
+    &.center {
+      left: 50%;
+      transform: translateX(-50%);
+    }
+    &.right {
+      right: 0;
+      transform: translateX(-100%);
+    }
   }
 }
 </style>

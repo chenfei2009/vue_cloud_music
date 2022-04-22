@@ -8,19 +8,11 @@
         :placeholder="showKeyword"
         v-model="inputVal"
         @click.stop="isShowPanel=true"
-        @input="handleInput"
+        @input="debounceInput"
         @keyup.enter="handleSubmit">
     </div>
     <div class="search-panel" v-if="isShowPanel" ref="panelRef">
-      <Scroll v-if="songs.length === 0"
-        ref="scroll"
-        class="scroll-wrap"
-        :probeType="3"
-        :stopPropagation="true"
-        :bounce="false"
-        :mouseWheel="true"
-        :scrollbar="true">
-        <!-- 搜索历史 -->
+      <div class="defult-wrap" v-if="songs.length === 0">
         <div class="scroll-title">搜索历史
           <i class="iconfont icon-delete"
             v-if="history.length>0"
@@ -59,7 +51,7 @@
           </li>
         </ul>
         <!-- 热搜榜/ -->
-      </Scroll>
+      </div>
       <div class="result-wrap" v-else>
         <div class="songs-wrap" v-if="songs.length>0">
           <div class="title">单曲
@@ -118,14 +110,13 @@
 </template>
 
 <script>
-import Scroll from '@/components/common/Scroll.vue'
-
 import { _getDefaultKey, _getHotKeys, _getSuggest } from '@/network/search.js'
+import debounce from '@/utils/debounce.js'
 import highlight from '@/utils/highlight.js'
 
 export default {
   name: 'SearchBar',
-  components: { Scroll },
+
   props: {
     bgColor: {
       type: String,
@@ -178,27 +169,23 @@ export default {
   },
 
   methods: {
-    // 网络请求相关方法
     /**
-     * 获取默认搜索关键词
+     * 网络请求相关方法
      */
+    // 获取默认搜索关键词
     async getDefaultKey () {
       const { data: res } = await _getDefaultKey()
       // console.log(res.data)
       this.showKeyword = res.data.showKeyword
     },
 
-    /**
-     * 获取热搜列表
-     */
+    // 获取热搜列表
     async getHotKeys () {
       const { data: res } = await _getHotKeys()
       this.hotData = res.data
     },
 
-    /**
-     * 搜索建议
-     */
+    // 搜索建议
     async getSuggest (keywords) {
       const { data: res } = await _getSuggest(keywords)
       this.order = res.result.order
@@ -208,15 +195,14 @@ export default {
       this.playlists = res.result.playlists || []
     },
 
-    // 事件监听相关方法
-
+    /**
+     *事件监听相关方法
+     */
     onArrowClick () {
       this.$emit('arrowClick')
     },
 
-    /**
-     * 热门搜索关键词点击事件
-     */
+    // 热门搜索关键词点击事件
     handleWordClick (s) {
       this.inputVal = s
       this.history.unshift(s)
@@ -228,9 +214,7 @@ export default {
       })
     },
 
-    /**
-     * 关闭搜索弹窗
-     */
+    // 关闭搜索弹窗
     bodyCloseMenus (e) {
       if (this.$refs.panelRef && !this.$refs.panelRef.contains(e.target)) {
         if (this.isShowPanel === true) {
@@ -239,9 +223,7 @@ export default {
       }
     },
 
-    /**
-     * input 输入事件
-     */
+    // input 输入事件
     handleInput () {
       const inputVal = this.inputVal.replace(/\s+$/, '')
       if (inputVal) return this.getSuggest(inputVal)
@@ -252,9 +234,12 @@ export default {
       // this.playlists = []
     },
 
-    /**
-     * input 回车事件
-     */
+    // input 输入防抖
+    debounceInput () {
+      debounce(this.handleInput, 500)()
+    },
+
+    // input 回车事件
     handleSubmit (e) {
       // 表单预验证
       const inputVal = this.inputVal.replace(/\s+$/, '')
@@ -289,14 +274,6 @@ export default {
       this.history = []
       window.localStorage.removeItem('history')
       this.dialogVisible = false
-    }
-  },
-
-  watch: {
-    hotData () {
-      this.$nextTick(() => {
-        this.$refs.scroll.refresh()
-      })
     }
   },
 
@@ -373,10 +350,10 @@ export default {
   color: #333;
   border-radius: 5px;
   box-shadow: 0 2px 2px 2px #eee;
-
-  .scroll-wrap {
-    height: 100%;
-    overflow: hidden;
+  overflow-y: auto;
+  &::-webkit-scrollbar { /* 滚动条整体样式 */
+    width: 4px; /* 高宽分别对应横竖滚动条的尺寸 */
+    height: 20px;
   }
 
   .scroll-title {

@@ -1,7 +1,7 @@
 <template>
   <div class="playlist-container">
     <!-- 歌单详情模块 -->
-    <PlaylistInfo v-if="playlist.coverImgUrl"
+    <playlist-info v-if="playlist.coverImgUrl"
       :playlist="playlist"
       :songsLength="songs.length"
       @playAll="handlePlayAll"
@@ -47,10 +47,10 @@
       <!-- /评论表单模块 -->
       <div class="comments-wrap" v-loading="tabs[1].loading">
         <!-- 精彩评论模块 -->
-        <Comment title="精彩评论" :comments="hotComments" />
+        <comment title="精彩评论" :comments="hotComments" />
         <!-- /精彩评论模块 -->
         <!-- 全部评论模块 -->
-        <Comment title="全部评论"
+        <comment title="全部评论"
           :comments="comments"
           :isShowCount="true"
           :pagination="true"/>

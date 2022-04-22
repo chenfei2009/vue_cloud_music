@@ -7,7 +7,7 @@
       :ratio="1080/399"
       @itemClick="handleCoverClick">
       <div class="fix-btn-wrap">
-        <play-button :isPlay="false" @btnClick.stop="handleBtnClick(item)"/>
+        <play-button :isPlay="false" />
       </div>
       <span slot="text" class="text-hide">{{item.name}}</span></cover>
   </ul>
@@ -17,9 +17,7 @@
 import Cover from '@/components/content/Cover.vue'
 import PlayButton from '@/components/common/PlayButton.vue'
 
-import {
-  _getPrivateContent
-} from '@/network/discover.js'
+import { _getPrivateContent } from '@/network/discover.js'
 
 export default {
   name: 'PrivateContent',
@@ -51,31 +49,19 @@ export default {
     async getPrivateContent () {
       const { data: res } = await _getPrivateContent()
       this.privateContent = res.result
-      console.log('PrivateContent')
-      this.$parent.compCount++
+      if (this.$parent.compCount < 5) return this.$parent.compCount++
     },
 
     /**
      * 事件监听相关方法
      */
-    onBtnClick () {
-      console.log('BtnClick')
-    },
-
-    // 歌单播放按钮点击事件
-    handleBtnClick (item) {
-      console.log('播放歌单', item)
-      this.$store.commit('setPlayListInfo', item)
-      this.getSongsByListId(item.id)
-    },
-
-    // 歌单封面点击事件
+    // MV封面点击事件
     handleCoverClick (id) {
-      console.log('跳转到歌单详情页', id)
-      this.$router.push({
-        path: '/playlist',
-        query: { id }
-      })
+      console.log('跳转到MV详情页', id)
+      // this.$router.push({
+      //   path: '/playlist',
+      //   query: { id }
+      // })
     }
   }
 }

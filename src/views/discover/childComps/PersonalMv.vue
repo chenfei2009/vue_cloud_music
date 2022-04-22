@@ -47,10 +47,8 @@ export default {
   methods: {
     async getPersonalizedMv () {
       const { data: res } = await _getPersonalizedMv()
-      // console.log(res)
       this.personalizedMv = res.result
-      console.log('MV')
-      this.$parent.compCount++
+      if (this.$parent.compCount < 5) return this.$parent.compCount++
     },
 
     /**
@@ -58,11 +56,11 @@ export default {
      */
     // MV封面点击
     handleCoverClick (id) {
-      console.log('跳转到歌单详情页', id)
-      this.$router.push({
-        path: '/playlist',
-        query: { id }
-      })
+      console.log('跳转到MV详情页', id)
+      // this.$router.push({
+      //   path: '/playlist',
+      //   query: { id }
+      // })
     }
   }
 }

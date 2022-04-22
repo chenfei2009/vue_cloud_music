@@ -63,8 +63,7 @@ export default {
   watch: {
     imgCount (val) {
       if (val === 9) {
-        console.log('Personalized')
-        this.$parent.compCount++
+        if (this.$parent.compCount < 5) return this.$parent.compCount++
       }
     }
   },

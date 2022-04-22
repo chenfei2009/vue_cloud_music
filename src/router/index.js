@@ -31,9 +31,9 @@ const routes = [
             component: () => import(/* webpackChunkName: "home" */ '@/views/discover/playlist.vue')
           },
           { // 排行榜
-            path: 'toplists',
-            name: 'Toplists',
-            component: () => import(/* webpackChunkName: "home" */ '@/views/discover/toplists.vue')
+            path: 'toplist',
+            name: 'Toplist',
+            component: () => import(/* webpackChunkName: "home" */ '@/views/discover/toplist.vue')
           },
           { // 歌手
             path: 'artists',

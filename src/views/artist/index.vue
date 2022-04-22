@@ -1,15 +1,15 @@
 <template>
   <div class="artist-container container">
-    <ArtistInfo :artist="artist"/>
+    <artist-info :artist="artist"/>
     <!-- tab选项卡 -->
-    <TabBar>
-      <TabBarItem v-for="item in tabs"
+    <tab-bar>
+      <tab-bar-item v-for="item in tabs"
         :key="item.id"
         :id="item.id"
         :currentIndex="currentIndex"
         @tabClick="handleTabClick"
-        ><div slot="item-text">{{item.text}}</div></TabBarItem>
-    </TabBar>
+        ><div slot="item-text">{{item.text}}</div></tab-bar-item>
+    </tab-bar>
     <!-- /tab选项卡 -->
     <section v-if="currentIndex===1">
       <ul class="album-list">
@@ -21,7 +21,7 @@
             </Cover>
           </div>
           <div class="info-wrap">
-            <SongsTable :songs="songs"
+            <songs-table :songs="songs"
               :activeId="activeId"
               :title="true"
               name="热门50首"
@@ -35,12 +35,12 @@
         <!-- 专辑列表 -->
         <li class="album-item" v-for="(item, index) in hotAlbums" :key="item.id">
           <div class="cover-wrap">
-            <Cover slot="left" :picUrl="item.picUrl" :fixWidth="150">
+            <cover slot="left" :picUrl="item.picUrl" :fixWidth="150">
               <div class="date" slot="text">{{item.publishTime | dateFilter}}</div>
-            </Cover>
+            </cover>
           </div>
           <div class="info-wrap">
-            <SongsTable :songs="item.songs"
+            <songs-table :songs="item.songs"
               :activeId="activeId"
               :title="true"
               :name="item.name"
@@ -56,9 +56,9 @@
     </section>
     <section v-else-if="currentIndex===2">
       <div class="mvs-wrap">
-        <Cover v-for="item in mvs" :key="item.id" :picUrl="item.imgurl" :ratio="16/9" :columns="4">
+        <cover v-for="item in mvs" :key="item.id" :picUrl="item.imgurl" :ratio="16/9" :columns="4">
           <span slot="text" class="text-hide">{{item.name}}</span>
-        </Cover>
+        </cover>
       </div>
     </section>
     <section v-else-if="currentIndex===3">

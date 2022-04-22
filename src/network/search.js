@@ -39,10 +39,10 @@ export function _getSearch (keywords, type = 1, limit = 30) {
  * @param { number } limit 返回数量，默认为30
  * @param { number } offset 返偏移数量，用于分页，默认为0
  */
-export function _getCloudSearch (keywords, type = 1, limit = 30) {
+export function _getCloudSearch (keywords, type = 1, limit = 30, offset = 0) {
   return request({
     url: '/cloudsearch',
-    params: { keywords, type, limit }
+    params: { keywords, type, limit, offset }
   })
 }
 

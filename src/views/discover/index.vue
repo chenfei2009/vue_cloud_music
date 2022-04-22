@@ -5,7 +5,7 @@
         <tab-bar-item path="/discover"><div slot="item-text">个性推荐</div></tab-bar-item>
         <tab-bar-item path="/discover/djradios"><div slot="item-text">专属定制</div></tab-bar-item>
         <tab-bar-item path="/discover/playlist"><div slot="item-text">歌单</div></tab-bar-item>
-        <tab-bar-item path="/discover/toplists"><div slot="item-text">排行榜</div></tab-bar-item>
+        <tab-bar-item path="/discover/toplist"><div slot="item-text">排行榜</div></tab-bar-item>
         <tab-bar-item path="/discover/artists"><div slot="item-text">歌手</div></tab-bar-item>
         <tab-bar-item path="/discover/newests"><div slot="item-text">最新音乐</div></tab-bar-item>
       </tab-bar>

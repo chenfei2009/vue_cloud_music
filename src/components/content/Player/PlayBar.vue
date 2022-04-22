@@ -71,17 +71,7 @@ export default {
   components: { SliderBar, Info, Tools },
 
   computed: {
-    ...mapGetters(['playContent', 'playList', 'currentTime']),
-    // currentTime () {
-    //   return this.$store.state.currentTime
-    // },
-    // playContent () {
-    //   console.log(this.$store.getters.playContent)
-    //   return this.$store.getters.playContent
-    // },
-    // playList () {
-    //   return this.$store.getters.playList
-    // },
+    ...mapGetters(['currentTime', 'playContent', 'playList']),
     loopOptionClass () {
       const index = this.loopOptions.findIndex(v => v.id === this.audio.loop)
       return this.loopOptions[index].icon

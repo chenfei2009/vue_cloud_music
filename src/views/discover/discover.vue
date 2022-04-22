@@ -109,7 +109,6 @@ export default {
 
   watch: {
     compCount (val) {
-      console.log(val)
       if (val !== this.compList.length) return
       this.loading = false
     }

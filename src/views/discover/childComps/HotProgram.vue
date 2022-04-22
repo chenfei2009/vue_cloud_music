@@ -1,9 +1,16 @@
 <template>
-  <song-group :list="newSongs" :column="2" />
+  <div class="hot-program-list">
+    <song v-for="(item, index) in newSongs"
+      :key="index"
+      :item="item"
+      :column="2"
+      @coverClick="handleCoverClick(index)"
+      @songDbClick="handleSongDbClick(index)"/>
+  </div>
 </template>
 
 <script>
-import SongGroup from '@/components/content/SongGroup/SongGroup.vue'
+import Song from '@/components/content/Song.vue'
 
 import {
   _getNewSong
@@ -12,7 +19,7 @@ import {
 export default {
   name: 'HotProgram',
   components: {
-    SongGroup
+    Song
   },
   data () {
     return {
@@ -33,11 +40,16 @@ export default {
     async getNewSong () {
       const { data: res } = await _getNewSong()
       this.newSongs = res.result.slice(0, 6)
-      console.log('HotPro')
-      this.$parent.compCount++
+      if (this.$parent.compCount < 5) return this.$parent.compCount++
     }
   }
 }
 </script>
 
-<style lang="less" scoped></style>
+<style lang="less" scoped>
+.hot-program-list {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+}
+</style>

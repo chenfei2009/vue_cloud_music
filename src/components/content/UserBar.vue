@@ -5,10 +5,10 @@
         v-if="profile"></el-image>
       <i class="avatar iconfont icon-user01"></i> -->
       <div class="avatar">
-        <img :src="profile.avatarUrl" v-if="profile.avatarUrl"/>
+        <img :src="profile.avatarUrl" v-if="profile && profile.avatarUrl"/>
         <i class="avatar-icon iconfont icon-user01" v-else></i>
       </div>
-      <DropDown :title="nickname">
+      <drop-down :title="nickname" v-if="profile && profile.avatarUrl">
         <div class="data-wrap">
           <div class="data-item">
             <span>{{profile.eventCount}}</span>
@@ -29,20 +29,21 @@
           </div>
         </div>
         <div class="list-wrap">
-          <DropDownItem>会员中心</DropDownItem>
-          <DropDownItem>等级</DropDownItem>
-          <DropDownItem>商城</DropDownItem>
-          <DropDownItem>个人信息设置</DropDownItem>
-          <DropDownItem>绑定社交账号</DropDownItem>
-          <DropDownItem>我的客服</DropDownItem>
-          <DropDownItem>退出登录</DropDownItem>
-          <DropDownItem>会员中心</DropDownItem>
+          <drop-down-item>会员中心</drop-down-item>
+          <drop-down-item>等级</drop-down-item>
+          <drop-down-item>商城</drop-down-item>
+          <drop-down-item>个人信息设置</drop-down-item>
+          <drop-down-item>绑定社交账号</drop-down-item>
+          <drop-down-item>我的客服</drop-down-item>
+          <drop-down-item>退出登录</drop-down-item>
+          <drop-down-item>会员中心</drop-down-item>
         </div>
-      </DropDown>
+      </drop-down>
+      <div v-else>未登录</div>
     </div>
     <div class="bar-item">
       <!-- 自定义主题 -->
-      <DropDown title="主题">
+      <drop-down title="主题">
         <div class="theme-title">主题</div>
         <div class="default-wrap">
           <div class="default-item" @click="defaultTheme">默认主题</div>
@@ -60,13 +61,13 @@
           </div>
         </div>
         <!-- <button @click="custom">自定义主题</button> -->
-      </DropDown>
+      </drop-down>
       <!-- /自定义主题 -->
       <!-- <i class="iconfont icon-yifu"></i> -->
     </div>
     <div class="bar-item"><i class="iconfont icon-setting"></i></div>
     <div class="bar-item"><i class="iconfont icon-Email"></i></div>
-    <Login v-show="isShowLogin"/>
+    <login v-show="isShowLogin"/>
   </div>
 </template>
 
@@ -80,16 +81,18 @@ import { setTheme } from '@/assets/theme/theme.js'
 
 export default {
   name: 'UserBar',
-  props: {},
+
   components: { DropDown, DropDownItem, Login },
+
   computed: {
     nickname () {
-      return this.profile.nickname || '未登录'
+      return this.profile && this.profile.nickname ? this.profile.nickname : '未登录'
     },
     isShowLogin () {
       return this.$store.state.isShowLogin
     }
   },
+
   data () {
     return {
       isShowPanel: false,
@@ -97,18 +100,22 @@ export default {
       color: null
     }
   },
+
   created () {
     this.getLoginStatus()
     // const profile = JSON.parse(window.localStorage.getItem('profile')) || null
     // this.profile = profile
   },
+
   mounted () {
     this.init()
   },
+
   methods: {
     /**
-     * 获取登录状态
+     * 网络请求相关方法
      */
+    // 获取登录状态
     async getLoginStatus () {
       const { data: res } = await _getLoginStatus()
       if (res.data.code === 200) {
@@ -127,21 +134,25 @@ export default {
       if (theme) return setTheme(theme)
       setTheme('default')
     },
+
     // 更改为默认主题
     defaultTheme () {
       console.log('default')
       setTheme('default')
     },
+
     // 更改为暗黑主题
     dark () {
       console.log('dark')
       setTheme('dark')
     },
+
     // 更改为浅色主题
     light () {
       console.log('light')
       setTheme('light')
     },
+
     // 更改为自定义主题
     handleColorChange () {
       const regexp = /[0-9]+/g
