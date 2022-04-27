@@ -90,7 +90,8 @@ export default {
         const { data: res } = await _getSongUrlById(v.id)
         v.url = res.data[0].url
       })
-      this.$store.commit('resetPlayList', { songs })
+      this.$store.commit('setPlaylist', songs)
+      this.$store.commit('setContent', songs[0])
     },
 
     /**
@@ -103,8 +104,8 @@ export default {
     // 歌单播放按钮点击事件
     handleBtnClick (item) {
       console.log('播放歌单', item)
-      this.$store.commit('setPlayListInfo', item)
       this.getSongsByListId(item.id)
+      this.$store.commit('setPlaylistInfo', item)
     },
 
     // 歌单封面点击事件

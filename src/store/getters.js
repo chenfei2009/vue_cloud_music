@@ -10,15 +10,11 @@ export default {
     return state.playContent.id ? state.playContent : JSON.parse(window.localStorage.getItem('playContent')) || {}
   },
 
-  playList (state) {
-    return state.playList.length ? state.playList : JSON.parse(window.localStorage.getItem('playList')) || []
+  playlist (state) {
+    return state.playlist.length ? state.playlist : JSON.parse(window.localStorage.getItem('playlist')) || []
   },
 
-  playListInfo (state) {
-    return state.playListInfo
-  },
-
-  audio (state) {
-    return state.audio
+  playlistInfo (state) {
+    return state.playlistInfo
   }
 }

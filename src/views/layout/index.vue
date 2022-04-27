@@ -28,44 +28,10 @@ import LayoutAside from './childComps/LayoutAside.vue'
 
 export default {
   name: 'LayoutIndex',
-  components: { LayoutHeader, LayoutAside, Player },
-  data () {
-    return {
-      name: 'Butterfly',
-      singer: 'Mariah Carey',
-      audio: {
-        url: 'upload/test.mp3',
-        speed: 1
-      },
-      // activeId: 0, // 当前选中歌曲 id
-      isShowPlayList: false // 是否显示播放列表
-    }
-  },
-  computed: {
-    playContent () {
-      return this.$store.getters.playContent
-    },
-    playList () {
-      return this.$store.getters.playList
-    }
-  },
-  created () {
-    // 加载播放列表数据
-    // this.setPlayListData()
-    // this.setAudio()
-  },
-  methods: {
-    handleShowList () {
-      this.isShowPlayList = !this.isShowPlayList
-    }
-    /**
-     * 设置当前歌曲数据
-     */
-    // setAudio () {
-    //   const index = this.playList.findIndex(v => v.id === this.activeId)
-    //   this.audio = this.playList[index]
-    //   this.$store.commit('setContent', this.audio)
-    // }
+  components: {
+    LayoutHeader,
+    LayoutAside,
+    Player
   }
 }
 </script>

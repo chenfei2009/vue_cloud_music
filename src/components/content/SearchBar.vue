@@ -110,7 +110,11 @@
 </template>
 
 <script>
-import { _getDefaultKey, _getHotKeys, _getSuggest } from '@/network/search.js'
+import {
+  _getDefaultKey,
+  _getHotKeys,
+  _getSuggest
+} from '@/network/search.js'
 import debounce from '@/utils/debounce.js'
 import highlight from '@/utils/highlight.js'
 

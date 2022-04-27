@@ -186,14 +186,14 @@ export default {
   },
 
   computed: {
-    ...mapGetters(['playContent', 'playList']),
+    ...mapGetters(['playContent', 'playlist']),
     songsData () {
       if (this.showAll || this.songs.length <= 10 || this.isShowAll) return this.songs
       return this.songs.slice(0, 10)
     },
     activeId () {
-      const index = this.playList.findIndex(v => v.id === this.playContent.id)
-      return this.playList[index].id
+      const index = this.songs.findIndex(v => v.id === this.playContent.id)
+      return this.songs[index].id
     },
     formatData () {
       return function (str) {

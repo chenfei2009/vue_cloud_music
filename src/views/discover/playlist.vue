@@ -1,13 +1,18 @@
 <template>
   <div class="playlist-container tab-container">
     <!-- 精品歌单 -->
-    <div class="high-list-wrap" :style="bgStyle">
-      <cover :picUrl="highList.coverImgUrl"
+    <div class="high-list-wrap">
+      <cover class="cover"
+        :picUrl="highList.coverImgUrl"
         @itemClick="handleCoverClick(highList.id)"
         :fixWidth="150">
       </cover>
-      <button>精品歌单</button>
-      <div class="name">{{highList.name}}</div>
+      <div class="desc">
+        <button class="round">精品歌单</button>
+        <div class="name">{{highList.name}}</div>
+      </div>
+      <div class="blur-mask"></div>
+      <div class="blur-bg" :style="bgStyle"></div>
     </div>
     <!-- /精品歌单 -->
     <!-- 头部 筛选分类 -->
@@ -16,11 +21,14 @@
         :title="curCat"
         class="main-list"
         align="left">
+        <div class="sub-all" @click="allClick">全部歌单</div>
         <div v-for="(item, index) in cats" :key="index" class="main-item">
           <div class="sub-label">{{item.label}}</div>
           <ul class="sub-list"
             @click="subClick">
-            <li v-for="(sub, index2) in item.subs" :key="index2" class="sub-item">
+            <li v-for="(sub, index2) in item.subs"
+              :key="index2"
+              class="sub-item">
               <div class="sub-btn" :class="{'active': sub.name === curCat}">
                 <span class="btn-text">{{sub.name}}</span>
                 <span class="btn-tag" v-if="sub.hot">HOT</span>
@@ -29,12 +37,20 @@
           </ul>
         </div>
       </drop-down>
-      <ul class="tag-list">
-        <li class="text-small tag-item"
+      <ul class="tag-list" @click="subClick">
+        <!-- <li class="text-small tag-item"
           v-for="(item, index) in tags"
           :key="index"
-          >{{item.name}}</li>
+          >{{item.name}}</li> -->
+        <li v-for="(tag, index) in tags"
+          :key="index"
+          class="text-small sub-item">
+          <div class="sub-btn" :class="{'active': tag.name === curCat}">
+            <span class="btn-text">{{tag.name}}</span>
+          </div>
+        </li>
       </ul>
+
     </div>
     <!-- /头部 筛选分类 -->
     <!-- 歌单列表 -->
@@ -75,8 +91,10 @@ import {
   _getPlaylistCats,
   _getPlaylistHots,
   _getPlaylistByCat,
-  _getHighPlaylist
+  _getHighPlaylist,
+  _getSongsByListId
 } from '@/network/playlist.js'
+import { _getSongUrlById } from '@/network/song.js'
 
 export default {
   name: 'Playlist',
@@ -94,14 +112,14 @@ export default {
     bgStyle () {
       return {
         height: '200px',
-        backgoundImage: `url(${this.highList.coverImgUrl})`
+        backgroundImage: `url(${this.highList.coverImgUrl})`
       }
     }
   },
 
   data () {
     return {
-      curCat: '华语',
+      curCat: '全部歌单',
       cats: [],
       tags: [],
       playlists: [],
@@ -166,16 +184,47 @@ export default {
       this.highList = res.playlists[0]
     },
 
+    async getSongsByListId (id) {
+      const { data: res } = await _getSongsByListId(id)
+      const songs = res.songs
+      songs.forEach(async v => {
+        const { data: res } = await _getSongUrlById(v.id)
+        v.url = res.data[0].url
+      })
+      this.$store.commit('resetPlayList', { songs })
+    },
+
     /**
      * 事件监听相关方法
      */
     subClick (e) {
       this.curCat = e.target.innerText
+      this.getPlaylistByCat()
+      this.getHighList()
       this.$refs.dropDownRef.isOpen = false
     },
 
+    allClick () {
+      this.curCat = '全部歌单'
+      this.getPlaylistByCat()
+      this.getHighList()
+      this.$refs.dropDownRef.isOpen = false
+    },
+
+    // 歌单封面点击事件
     handleCoverClick (id) {
-      console.log(id)
+      console.log('跳转到歌单详情页', id)
+      this.$router.push({
+        path: '/playlist',
+        query: { id }
+      })
+    },
+
+    // 歌单播放按钮点击事件
+    handleBtnClick (item) {
+      console.log('播放歌单', item)
+      this.$store.commit('setPlayListInfo', item)
+      this.getSongsByListId(item.id)
     },
 
     // 改变页码
@@ -195,11 +244,62 @@ export default {
 </script>
 
 <style lang="less" scoped>
+.high-list-wrap {
+  position: relative;
+  overflow: hidden;
+  border-radius: 5px;
+  height: 180px;
+  .cover {
+    position: absolute;
+    left: 15px;
+    top: 5px;
+    z-index: 3;
+  }
+  .desc {
+    position: absolute;
+    left: 180px;
+    top: 30px;
+    z-index: 3;
+    button {
+      height: 30px;
+      background: none;
+      border: 1px solid rgb(255, 204, 128);
+      margin-bottom: 20px;
+      font-size: 16px;
+      color: rgb(255, 204, 128);;
+    }
+    .name {
+      font-size: 16px;
+      color: #fff;
+    }
+  }
+  .blur-mask {
+    background-color: rgba(0, 0, 0, 0.3);
+    position: absolute;
+    left: 0;
+    width: 100%;
+    top: 0;
+    height: 100%;
+    z-index: 2;
+  }
+  .blur-bg {
+    -webkit-filter: blur(25px);
+    filter: blur(25px);
+    background-size: cover;
+    background-position: center;
+  }
+}
+
 .select-wrap {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin: 10px 0;
+  margin: 20px 0 10px 0;
+}
+
+.sub-all {
+  padding: 20px;
+  border-bottom: 1px solid #eee;
 }
 
 .main-item {
@@ -217,39 +317,43 @@ export default {
     flex-wrap: wrap;
     .sub-item {
       width: 100px;
-      cursor: pointer;
-      &:hover {
-        .btn-text {
-          color: red;
-        }
-      }
-      .sub-btn {
-        display: inline-block;
-        position: relative;
-        padding: 5px 10px;
-        border-radius: 15px;
-        border: 0;
-        .btn-text {
-          font-size: 12px;
-        }
-        .btn-tag {
-          font-size: 3px;
-          position: absolute;
-          color: red;
-        }
-        &.active {
-          background-color: #eee;
-        }
-      }
+    }
+  }
+}
+
+.sub-item {
+  // width: 100px;
+  cursor: pointer;
+  &:hover {
+    .btn-text {
+      color: red;
+    }
+  }
+  .sub-btn {
+    display: inline-block;
+    position: relative;
+    padding: 5px 10px;
+    border-radius: 15px;
+    border: 0;
+    .btn-text {
+      font-size: 12px;
+    }
+    .btn-tag {
+      font-size: 3px;
+      position: absolute;
+      color: red;
+    }
+    &.active {
+      background-color: #eee;
     }
   }
 }
 
 .tag-list {
   display: flex;
-  .tag-item {
-    padding-left: 10px;
-  }
+  flex-wrap: wrap;
+  width: 800px;
+  justify-content: right;
 }
 
 .playlists-wrap {

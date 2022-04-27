@@ -31,9 +31,9 @@
           :bounce="false"
           :mouseWheel="true"
           :scrollbar="true">
-          <el-tooltip :content="playListInfo.name" placement="bottom" effect="light" :open-delay=500>
+          <el-tooltip :content="playlistInfo.name" placement="bottom" effect="light" :open-delay=500>
             <div class="play-list-info">
-              播放来源：{{playListInfo.name}}
+              播放来源：{{playlistInfo.name}}
             </div>
           </el-tooltip>
           <!-- 相关歌单列表 -->
@@ -94,7 +94,7 @@ export default {
     }
   },
   computed: {
-    ...mapGetters(['playContent', 'currentTime', 'playListInfo']),
+    ...mapGetters(['playContent', 'currentTime', 'playlistInfo']),
     artists () {
       return this.playContent.ar || this.playContent.song.artists
     }

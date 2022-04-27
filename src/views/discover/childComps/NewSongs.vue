@@ -54,6 +54,7 @@ export default {
       console.log('handleCoverClick', index)
       this.$store.commit('setContent', this.newSongs[index])
     },
+
     handleSongDbClick (index) {
       // 替换播放列表，弹出对话框
       console.log('handleSongDbClick', index)

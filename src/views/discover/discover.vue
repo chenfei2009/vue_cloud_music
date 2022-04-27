@@ -114,14 +114,6 @@ export default {
     }
   },
 
-  // deactivated () {
-  //   this.compCount = 0
-  // },
-
-  // beforeDestroy () {
-  //   this.compCount = 0
-  // },
-
   methods: {
     /**
      * 网络请求相关方法
@@ -134,7 +126,6 @@ export default {
 
     async getDaySongs () {
       const { data: res } = await _getDaySongs()
-      // console.log(res)
       this.daySongs = res.result
     },
 

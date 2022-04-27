@@ -2,7 +2,7 @@
   <div class="player-container">
     <!-- 底部栏模块 -->
     <PlayBar @showDetail="handleShowPlayDetail"
-      @showList="isShowPlayList=!isShowPlayList" />
+      @showList="isShowPlaylist=!isShowPlaylist" />
     <!-- 抽屉模块 -->
     <Drawer :drawer="isShowPlayDetail"
       height="calc(100% - 70px)"
@@ -43,9 +43,9 @@
       </div>
     </Drawer>
     <!-- 播放列表侧边栏 -->
-    <SideBar v-show="isShowPlayList">
+    <SideBar v-show="isShowPlaylist">
       <SongsTable slot="table"
-        :songs="playList"
+        :songs="playlist"
         :activeId="activeId"
         :artistsWidth="100"
         :dtWidth="80"
@@ -99,7 +99,7 @@ export default {
   },
 
   computed: {
-    ...mapGetters(['playContent', 'playList']),
+    ...mapGetters(['playContent', 'playlist']),
     btnStyle () {
       return { // 返回顶部按钮
         bottom: this.isShowBackTop ? '90px' : '20px',
@@ -123,7 +123,7 @@ export default {
       comments: [], // 最新评论
       activeId: 0, // 当前选中歌曲 id
       isShowPlayDetail: false, // 是否显示歌曲详情
-      isShowPlayList: false, // 是否显示播放列表
+      isShowPlaylist: false, // 是否显示播放列表
       isShowBackTop: false
       // tabOffsetTop: 0,
       // isTabFixed: false
@@ -227,7 +227,7 @@ export default {
     // 双击侧边栏歌曲
     handleRowDbClick (id) {
       // console.log(id)
-      const content = this.playList.find(v => v.id === id)
+      const content = this.playlist.find(v => v.id === id)
       this.$store.commit('setContent', content)
     },
 

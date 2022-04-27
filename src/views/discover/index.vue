@@ -22,14 +22,9 @@ import TabBarItem from '@/components/common/TabBarItem.vue'
 
 export default {
   name: 'DiscoverIndex',
-  components: { TabBar, TabBarItem },
-  data () {
-    return {}
-  },
-  methods: {
-    handleSelect (tab, event) {
-      console.log(tab, event)
-    }
+  components: {
+    TabBar,
+    TabBarItem
   }
 }
 </script>
@@ -39,7 +34,7 @@ export default {
   position: relative;
   height: 100%;
   overflow: scroll;
-  padding-top: 40px;
+  padding-top: 45px;
 }
 
 .index-container::-webkit-scrollbar { /* 滚动条整体样式 */

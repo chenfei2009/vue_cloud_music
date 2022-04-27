@@ -3,7 +3,9 @@
     <Info @showDetailClick="handleShowDetail" />
     <div class="di main-wrap">
       <audio ref="audio" class="hidden"
-        :src="playContent.url" :preload="audio.preload" :autoplay="audio.autoplay"
+        :src="playContent.url"
+        :preload="audio.preload"
+        :autoplay="audio.autoplay"
         @play="onPlay"
         @error="onError"
         @ended="onEnded"
@@ -42,11 +44,14 @@
         <div class="slider-wrap">
           <!-- <span>{{ audio.currentTime | formatSecond}}</span> -->
           <span>{{ sliderTime | formatSecond}}</span>
-          <SliderBar height="6px" width="350px" ref="sliderBar"
+          <SliderBar ref="sliderBar"
+            height="6px"
+            width="350px"
             :max="audio.maxTime"
             @drag="changeTimeByDrag"
             @change="changeTimeByClick"
-            :value="sliderTime"></SliderBar>
+            :value="sliderTime"
+            ></SliderBar>
           <span>{{ audio.maxTime | formatSecond }}</span>
         </div>
       </div>
@@ -68,10 +73,14 @@ import { mapGetters } from 'vuex'
 export default {
   name: 'PlayBar',
 
-  components: { SliderBar, Info, Tools },
+  components: {
+    SliderBar,
+    Info,
+    Tools
+  },
 
   computed: {
-    ...mapGetters(['currentTime', 'playContent', 'playList']),
+    ...mapGetters(['playContent', 'playlist']),
     loopOptionClass () {
       const index = this.loopOptions.findIndex(v => v.id === this.audio.loop)
       return this.loopOptions[index].icon
@@ -87,6 +96,7 @@ export default {
 
   data () {
     return {
+      initAudio: false, // 初始化音频准备
       audio: {
         playing: false, // 该字段是音频是否处于播放状态
         autoplay: false,
@@ -94,8 +104,7 @@ export default {
         maxTime: 0, // 音频最大播放时长
         speed: 1,
         loop: 0,
-        waiting: false,
-        url: ''
+        waiting: false
       },
       loopOptions: [
         { id: 0, text: '顺序播放', icon: 'icon-shunxubofang' }, // 'notLoop' 顺序播放
@@ -108,19 +117,21 @@ export default {
     }
   },
 
+  created () {
+    this.$store.commit('setPlaylist', this.playlist)
+    this.$store.commit('setContent', this.playContent)
+  },
+
   methods: {
     // 播放进度条拖拽事件
     changeTimeByDrag (...args) {
       this.sliderTime = arguments[0]
-      // this.$refs.audio.currentTime = parseInt(index / 100 * this.audio.maxTime)
     },
 
     // 播放条单击事件
     changeTimeByClick (...args) {
       this.sliderTime = arguments[0]
-      // this.$refs.audio.currentTime = parseInt(index / 100 * this.audio.maxTime)
-      // this.$refs.audio.currentTime = this.sliderTime
-      this.$store.commit('setCurrentTime', this.sliderTime)
+      this.$refs.audio.currentTime = this.sliderTime
     },
 
     // 音量调节事件
@@ -145,23 +156,23 @@ export default {
 
     // 根据循环类型切换歌曲
     switchContent () {
-      let index = this.playList.indexOf(this.playContent)
+      let index = this.playlist.indexOf(this.playContent)
       if (this.audio.loop === 0) { // 顺序播放
         index = index + 1
-        this.$store.commit('setContent', this.playList[index])
+        this.$store.commit('setContent', this.playlist[index])
       } else if (this.audio.loop === 1) { // 列表循环
         index === this.playList.length - 1 ? index = 0 : index = index + 1
-        this.$store.commit('setContent', this.playList[index])
+        this.$store.commit('setContent', this.playlist[index])
       } else if (this.audio.loop === 2) { // 单曲循环
-        this.$store.commit('setContent', this.playList[index])
+        this.$store.commit('setContent', this.playlist[index])
       } else if (this.audio.loop === 3) { // 随机播放
         let newIndex
-        newIndex = parseInt(Math.random() * this.playList.length)
+        newIndex = parseInt(Math.random() * this.playlist.length)
         while (newIndex === index) {
-          newIndex = parseInt(Math.random() * this.playList.length)
+          newIndex = parseInt(Math.random() * this.playlist.length)
           return newIndex
         }
-        this.$store.commit('setContent', this.playList[newIndex])
+        this.$store.commit('setContent', this.playlist[newIndex])
       }
       // 切换歌曲后自动开始播放
       if (this.audio.playing === false) {
@@ -181,10 +192,10 @@ export default {
 
     // 上一首
     setPrev () {
-      let index = this.playList.indexOf(this.playContent)
+      let index = this.playlist.indexOf(this.playContent)
       // 如果是第一首则跳转到列表末尾
-      index === 0 ? index = this.playList.length - 1 : index = index - 1
-      this.$store.commit('setContent', this.playList[index])
+      index === 0 ? index = this.playlist.length - 1 : index = index - 1
+      this.$store.commit('setContent', this.playlist[index])
     },
 
     // 下一首
@@ -216,7 +227,8 @@ export default {
     },
 
     // 当发生错误, 就出现loading状态
-    onError () {
+    onError (err) {
+      console.log('error', err)
       this.audio.waiting = true
     },
 
@@ -233,19 +245,16 @@ export default {
       this.switchContent()
     },
 
-    // 当timeupdate事件大概每秒一次，用来更新音频流的当前播放时间
+    // timeupdate事件大概每秒一次，用来更新音频流的当前播放时间
     onTimeupdate (res) {
       this.audio.currentTime = res.target.currentTime
-      this.$store.commit('setCurrentTime', res.target.currentTime)
-      // this.sliderTime = parseInt(this.audio.currentTime / this.audio.maxTime * 100)
-      if (!this.$refs.sliderBar.isMouseDownOnBall) this.sliderTime = this.audio.currentTime
+      if (this.$refs.sliderBar.isMouseDownOnBall) return
+      this.sliderTime = this.audio.currentTime
     },
 
     // 当加载语音流元数据完成后，会触发该事件的回调函数
     // 语音元数据主要是语音的长度之类的数据
     onLoadedmetadata (res) {
-      // console.log('loadedmetadata')
-      // console.log(res)
       this.audio.waiting = false
       this.audio.maxTime = parseInt(res.target.duration)
     }
@@ -258,16 +267,15 @@ export default {
   },
 
   watch: {
-    currentTime () {
-      if (!this.$refs.sliderBar.isMouseDownOnBall) {
-        this.$refs.audio.currentTime = this.currentTime
-        // this.sliderTime = this.currentTime
-      }
-    },
+    // currentTime () {
+    //   if (!this.$refs.sliderBar.isMouseDownOnBall) {
+    //     this.$refs.audio.currentTime = this.currentTime
+    //     // this.sliderTime = this.currentTime
+    //   }
+    // },
     playContent () {
-      this.audio.url = this.playContent.url
       this.startPlay()
-      this.$refs.audio.currentTime = 0
+      // this.$refs.audio.currentTime = 0
     }
   }
 }
