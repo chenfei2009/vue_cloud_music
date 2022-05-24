@@ -19,6 +19,20 @@
     </li>
     <!-- /官方榜列表 -->
     <Title title="全球榜" />
+    <!-- 对话框 -->
+    <el-dialog
+      title="替换播放列表"
+      :visible.sync="dialogVisible"
+      width="500px"
+      center
+      :before-close="handleClose">
+      <span>{{dialogContent}}</span>
+      <span slot="footer" class="dialog-footer">
+        <el-button type="primary" @click="handleConfirm">继 续</el-button>
+        <el-button @click="handleClose">取 消</el-button>
+      </span>
+    </el-dialog>
+    <!-- /对话框 -->
   </div>
 </template>
 
@@ -31,6 +45,8 @@ import { _getToplist } from '@/network/toplist.js'
 import { _getSongsByListId } from '@/network/playlist.js'
 import { _getSongUrlById } from '@/network/song.js'
 
+import { SongsDbClickMixin } from '@/utils/mixin.js'
+
 export default {
   name: 'Toplist',
 
@@ -38,6 +54,14 @@ export default {
     Title,
     Cover,
     SongsTable
+  },
+
+  mixins: [SongsDbClickMixin],
+
+  computed: {
+    curSongs () {
+      return this.albumIndex ? this.lists[this.albumIndex].songs : []
+    }
   },
 
   data () {
@@ -54,12 +78,6 @@ export default {
     this.getToplist()
     // this.initSongsTables()
   },
-
-  // watch: {
-  //   lists (val) {
-
-  //   }
-  // },
 
   methods: {
     async getToplist () {

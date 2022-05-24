@@ -105,7 +105,7 @@ export default {
     handleBtnClick (item) {
       console.log('播放歌单', item)
       this.getSongsByListId(item.id)
-      this.$store.commit('setPlaylistInfo', item)
+      // this.$store.commit('setPlaylistInfo', item)
     },
 
     // 歌单封面点击事件

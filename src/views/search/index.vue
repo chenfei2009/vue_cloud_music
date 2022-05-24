@@ -33,7 +33,6 @@
     <!-- 单曲 选项卡 -->
     <section v-if="currentIndex === 1" v-loading="loading">
       <songs-table :songs="songs"
-        :activeId="activeId"
         name="热门50首"
         :showHeader="true"
         :showIndex="true"
@@ -43,13 +42,13 @@
         :showPop="true"
         :search="searchWord"
         @rowDbClick="handleRowDbClick"/>
-        <el-pagination
-          background
-          layout="prev, pager, next"
-          :page-size="100"
-          :total="songCount"
-          @current-change="curChange">
-        </el-pagination>
+      <el-pagination
+        background
+        layout="prev, pager, next"
+        :page-size="100"
+        :total="songCount"
+        @current-change="curChange">
+      </el-pagination>
     </section>
     <!-- /单曲 选项卡 -->
     <!-- 歌手 选项卡 -->
@@ -239,13 +238,14 @@ export default {
      * 事件监听相关方法
      */
     // 双击歌曲表行事件
-    handleRowDbClick (id) {
+    async handleRowDbClick (id) {
       // console.log('rowDbClick')
       this.activeId = id
       const song = this.songs.find(v => v.id === id)
-      const data = this.getSongUrlById(id)
+      const data = await this.getSongUrlById(id)
       song.url = data.url
       this.$store.commit('setContent', song)
+      this.$store.commit('addToPlaylist', song)
     },
 
     handleItemClick (id) {

@@ -102,6 +102,7 @@ import highlight from '@/utils/highlight.js'
 
 export default {
   name: 'SongsTable',
+
   components: { Slider, Artists },
 
   props: {
@@ -193,6 +194,7 @@ export default {
     },
     activeId () {
       const index = this.songs.findIndex(v => v.id === this.playContent.id)
+      if (index < 0) return null
       return this.songs[index].id
     },
     formatData () {
@@ -209,12 +211,7 @@ export default {
     }
   },
 
-  created () {},
-
-  activated () {
-    // console.log('songTable activited')
-    // this.loading = true
-  },
+  activated () {},
 
   methods: {
     onDbClick (row) {
@@ -263,9 +260,10 @@ export default {
 
 .el-table /deep/ .el-table__cell {
   padding: 8px 0;
-  // .cell-text {
-  //   font-size: 14px;
-  // }
+  cursor: pointer;
+  .cell-text {
+    font-size: 13px;
+  }
 }
 
 .active {

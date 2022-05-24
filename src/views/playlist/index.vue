@@ -1,7 +1,8 @@
 <template>
   <div class="playlist-container">
     <!-- 歌单详情模块 -->
-    <playlist-info v-if="playlist.coverImgUrl"
+    <playlist-info
+      v-if="playlist.coverImgUrl"
       :playlist="playlist"
       :songsLength="songs.length"
       @playAll="handlePlayAll"
@@ -11,7 +12,8 @@
     <!--/歌单详情模块 -->
     <!-- tab选项卡 -->
     <tab-bar class="tab-bar">
-      <tab-bar-item v-for="item in tabs"
+      <tab-bar-item
+        v-for="item in tabs"
         :key="item.id"
         :id="item.id"
         :currentIndex="currentIndex"
@@ -21,9 +23,9 @@
     <!-- /tab选项卡 -->
     <section v-if="currentIndex===1" class="section-songs">
       <!-- 歌单列表模块 -->
-      <songs-table :songs="songs"
+      <songs-table
+        :songs="songs"
         :loading="tabs[0].loading"
-        :activeId="activeId"
         :showAction="true"
         :showHeader="true"
         :showIndex="true"
@@ -170,7 +172,6 @@ export default {
     // 请求本页所有数据
     getDatas () {
       const id = this.$route.query.id
-      console.log(id)
       this.getDetailByListId(id)
       this.getSongsByListId(id)
       // this.getCommentByListId(id)

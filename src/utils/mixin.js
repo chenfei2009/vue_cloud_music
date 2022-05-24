@@ -8,7 +8,7 @@ export const SongsDbClickMixin = {
       dialogVisible: false,
       dialogContent: '',
       activeId: 0,
-      rowId: null,
+      rowId: null, // 双击行的id
       albumIndex: null
     }
   },
@@ -28,13 +28,13 @@ export const SongsDbClickMixin = {
      * 对话框确认按钮点击事件
      */
     handleConfirm () {
-      if (!this.rowId) { // 替换歌单并从头开始播放
-        this.$store.commit('resetPlayList', { songs: this.curSongs })
-      } else { // 替换歌单并播放选中歌曲
-        this.$store.commit('resetPlayList', { songs: this.curSongs, id: this.rowId })
-        this.activeId = this.rowId
-        this.rowId = null
-      }
+      // rowId 为 null，播放列表第一首
+      // rowId 不为 null，播放 rowId 对应的歌曲
+      const song = this.rowId ? this.curSongs.find(v => v.id === this.rowId) : this.curSongs[0]
+      this.$store.commit('setContent', song)
+      this.$store.commit('setPlaylist', this.curSongs)
+      // 重置 rowId 为 null
+      this.rowId = null
       this.dialogVisible = false
     },
 
@@ -42,8 +42,8 @@ export const SongsDbClickMixin = {
      * 对话框关闭按钮点击事件
      */
     handleClose (done) {
-      this.dialogVisible = false
       this.rowId = null
+      this.dialogVisible = false
     }
   }
 }

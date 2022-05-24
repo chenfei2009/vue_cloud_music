@@ -81,6 +81,9 @@ export default {
     .item-text {
       display: inline-block;
       cursor: pointer;
+      & > * {
+        font-size: 13px;
+      }
     }
     .item-text:hover {
       color: rgb(140, 140, 140);

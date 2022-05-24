@@ -77,7 +77,7 @@
       <span>{{dialogContent}}</span>
       <span slot="footer" class="dialog-footer">
         <el-button type="primary" @click="handleConfirm">继 续</el-button>
-        <el-button @click="dialogVisible = false">取 消</el-button>
+        <el-button @click="handleClose">取 消</el-button>
       </span>
     </el-dialog>
     <!-- /对话框 -->
